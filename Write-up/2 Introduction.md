@@ -1,0 +1,6 @@
+##Introduction
+There is a problem with the current systems of content delivery. The current methods fail to work for people and their hectic lifestyles. As physical media's scarcity increases and more and more rental stores shut down - even large chains such as Blockbuster have been shutting several retail outlets - the world seems to be moving steadily towards digital content distribution. However, many current use cases for these services are flawed.
+
+The purchase of 1080p movies or modern PC games - both files which would likely exceed 10GB in size - over the internet, is common. However, the issue is that these files can often take a large amount of time to download, particularly on connections with lower bandwidth. And on these connections, streaming of movies becomes almost impossible too - a stream with too-low bandwidth will often stutter, providing a poor viewing experience. This project proposes a solution to this problem, not by decreasing download times but by taking an alternative approach to this whole workflow of content delivery. The solution will be in the form of a software product which will allow files to be downloaded without any user intervention required at the PC the downloading occurs on. Downloads could instead be instantiated remotely, through a web interface or even mobile app.
+
+###Objectives
