@@ -1,5 +1,0 @@
-C:\Users\Kieran\Dropbox\BU_Work\Dissertation\git\Donatello\Components\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\Kieran\Dropbox\BU_Work\Dissertation\git\Donatello\Components\bin\Debug\Components.dll
-C:\Users\Kieran\Dropbox\BU_Work\Dissertation\git\Donatello\Components\bin\Debug\Components.pdb
-C:\Users\Kieran\Dropbox\BU_Work\Dissertation\git\Donatello\Components\obj\Debug\Components.dll
-C:\Users\Kieran\Dropbox\BU_Work\Dissertation\git\Donatello\Components\obj\Debug\Components.pdb

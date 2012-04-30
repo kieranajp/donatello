@@ -30,38 +30,28 @@ namespace Donatello
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Dashboard));
-            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.pnl_Login = new System.Windows.Forms.Panel();
             this.btn_CreateAcc = new System.Windows.Forms.Button();
             this.btn_Login = new System.Windows.Forms.Button();
+            this.passBox = new Donatello.FocusTextBox();
+            this.emailBox = new Donatello.FocusTextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pnl_NewAccount = new System.Windows.Forms.Panel();
             this.btn_ExistingAccount = new System.Windows.Forms.Button();
-            this.btn_NewAccount = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.pnl_AccountDetails = new System.Windows.Forms.Panel();
-            this.btn_Start = new System.Windows.Forms.Button();
-            this.label3 = new System.Windows.Forms.Label();
-            this.new_dobBox = new System.Windows.Forms.DateTimePicker();
-            this.new_nameBox = new Donatello.FocusTextBox();
             this.new_repeatPasswordBox = new Donatello.FocusTextBox();
+            this.btn_NewAccount = new System.Windows.Forms.Button();
             this.new_passwordBox = new Donatello.FocusTextBox();
             this.new_emailBox = new Donatello.FocusTextBox();
-            this.passBox = new Donatello.FocusTextBox();
-            this.emailBox = new Donatello.FocusTextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.pnl_AccountDetails = new System.Windows.Forms.Panel();
+            this.new_dobBox = new System.Windows.Forms.DateTimePicker();
+            this.btn_Start = new System.Windows.Forms.Button();
+            this.new_nameBox = new Donatello.FocusTextBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.pnl_Login.SuspendLayout();
             this.pnl_NewAccount.SuspendLayout();
             this.pnl_AccountDetails.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // notifyIcon
-            // 
-            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
-            this.notifyIcon.Text = "notifyIcon";
-            this.notifyIcon.Visible = true;
-            this.notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon_DoubleClick);
             // 
             // pnl_Login
             // 
@@ -96,6 +86,27 @@ namespace Donatello
             this.btn_Login.Text = "Go";
             this.btn_Login.UseVisualStyleBackColor = true;
             this.btn_Login.Click += new System.EventHandler(this.btn_Login_Click);
+            // 
+            // passBox
+            // 
+            this.passBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.passBox.ForeColor = System.Drawing.Color.DimGray;
+            this.passBox.Location = new System.Drawing.Point(31, 153);
+            this.passBox.Name = "passBox";
+            this.passBox.PasswordChar = '●';
+            this.passBox.Size = new System.Drawing.Size(255, 35);
+            this.passBox.TabIndex = 2;
+            this.passBox.Text = "password";
+            // 
+            // emailBox
+            // 
+            this.emailBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.emailBox.ForeColor = System.Drawing.Color.DimGray;
+            this.emailBox.Location = new System.Drawing.Point(31, 93);
+            this.emailBox.Name = "emailBox";
+            this.emailBox.Size = new System.Drawing.Size(255, 35);
+            this.emailBox.TabIndex = 1;
+            this.emailBox.Text = "email@address.com";
             // 
             // label1
             // 
@@ -132,6 +143,17 @@ namespace Donatello
             this.btn_ExistingAccount.UseVisualStyleBackColor = true;
             this.btn_ExistingAccount.Click += new System.EventHandler(this.btn_ExistingAccount_Click);
             // 
+            // new_repeatPasswordBox
+            // 
+            this.new_repeatPasswordBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.new_repeatPasswordBox.ForeColor = System.Drawing.Color.DimGray;
+            this.new_repeatPasswordBox.Location = new System.Drawing.Point(31, 157);
+            this.new_repeatPasswordBox.Name = "new_repeatPasswordBox";
+            this.new_repeatPasswordBox.PasswordChar = '●';
+            this.new_repeatPasswordBox.Size = new System.Drawing.Size(255, 35);
+            this.new_repeatPasswordBox.TabIndex = 3;
+            this.new_repeatPasswordBox.Text = "passward";
+            // 
             // btn_NewAccount
             // 
             this.btn_NewAccount.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -142,6 +164,27 @@ namespace Donatello
             this.btn_NewAccount.Text = "Go";
             this.btn_NewAccount.UseVisualStyleBackColor = true;
             this.btn_NewAccount.Click += new System.EventHandler(this.btn_NewAccount_Click);
+            // 
+            // new_passwordBox
+            // 
+            this.new_passwordBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.new_passwordBox.ForeColor = System.Drawing.Color.DimGray;
+            this.new_passwordBox.Location = new System.Drawing.Point(31, 116);
+            this.new_passwordBox.Name = "new_passwordBox";
+            this.new_passwordBox.PasswordChar = '●';
+            this.new_passwordBox.Size = new System.Drawing.Size(255, 35);
+            this.new_passwordBox.TabIndex = 2;
+            this.new_passwordBox.Text = "password";
+            // 
+            // new_emailBox
+            // 
+            this.new_emailBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.new_emailBox.ForeColor = System.Drawing.Color.DimGray;
+            this.new_emailBox.Location = new System.Drawing.Point(31, 75);
+            this.new_emailBox.Name = "new_emailBox";
+            this.new_emailBox.Size = new System.Drawing.Size(255, 35);
+            this.new_emailBox.TabIndex = 1;
+            this.new_emailBox.Text = "email@address.com";
             // 
             // label2
             // 
@@ -165,6 +208,14 @@ namespace Donatello
             this.pnl_AccountDetails.TabIndex = 5;
             this.pnl_AccountDetails.Visible = false;
             // 
+            // new_dobBox
+            // 
+            this.new_dobBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.new_dobBox.Location = new System.Drawing.Point(31, 134);
+            this.new_dobBox.Name = "new_dobBox";
+            this.new_dobBox.Size = new System.Drawing.Size(255, 35);
+            this.new_dobBox.TabIndex = 6;
+            // 
             // btn_Start
             // 
             this.btn_Start.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -176,24 +227,6 @@ namespace Donatello
             this.btn_Start.UseVisualStyleBackColor = true;
             this.btn_Start.Click += new System.EventHandler(this.btn_Start_Click);
             // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(13, 13);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(226, 50);
-            this.label3.TabIndex = 1;
-            this.label3.Text = "Your Details";
-            // 
-            // new_dobBox
-            // 
-            this.new_dobBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.new_dobBox.Location = new System.Drawing.Point(31, 134);
-            this.new_dobBox.Name = "new_dobBox";
-            this.new_dobBox.Size = new System.Drawing.Size(255, 35);
-            this.new_dobBox.TabIndex = 6;
-            // 
             // new_nameBox
             // 
             this.new_nameBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -204,58 +237,15 @@ namespace Donatello
             this.new_nameBox.TabIndex = 2;
             this.new_nameBox.Text = "Your Name";
             // 
-            // new_repeatPasswordBox
+            // label3
             // 
-            this.new_repeatPasswordBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.new_repeatPasswordBox.ForeColor = System.Drawing.Color.DimGray;
-            this.new_repeatPasswordBox.Location = new System.Drawing.Point(31, 157);
-            this.new_repeatPasswordBox.Name = "new_repeatPasswordBox";
-            this.new_repeatPasswordBox.PasswordChar = '●';
-            this.new_repeatPasswordBox.Size = new System.Drawing.Size(255, 35);
-            this.new_repeatPasswordBox.TabIndex = 3;
-            this.new_repeatPasswordBox.Text = "password";
-            // 
-            // new_passwordBox
-            // 
-            this.new_passwordBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.new_passwordBox.ForeColor = System.Drawing.Color.DimGray;
-            this.new_passwordBox.Location = new System.Drawing.Point(31, 116);
-            this.new_passwordBox.Name = "new_passwordBox";
-            this.new_passwordBox.PasswordChar = '●';
-            this.new_passwordBox.Size = new System.Drawing.Size(255, 35);
-            this.new_passwordBox.TabIndex = 2;
-            this.new_passwordBox.Text = "password";
-            // 
-            // new_emailBox
-            // 
-            this.new_emailBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.new_emailBox.ForeColor = System.Drawing.Color.DimGray;
-            this.new_emailBox.Location = new System.Drawing.Point(31, 75);
-            this.new_emailBox.Name = "new_emailBox";
-            this.new_emailBox.Size = new System.Drawing.Size(255, 35);
-            this.new_emailBox.TabIndex = 1;
-            this.new_emailBox.Text = "email@address.com";
-            // 
-            // passBox
-            // 
-            this.passBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.passBox.ForeColor = System.Drawing.Color.DimGray;
-            this.passBox.Location = new System.Drawing.Point(31, 153);
-            this.passBox.Name = "passBox";
-            this.passBox.PasswordChar = '●';
-            this.passBox.Size = new System.Drawing.Size(255, 35);
-            this.passBox.TabIndex = 2;
-            this.passBox.Text = "password";
-            // 
-            // emailBox
-            // 
-            this.emailBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.emailBox.ForeColor = System.Drawing.Color.DimGray;
-            this.emailBox.Location = new System.Drawing.Point(31, 93);
-            this.emailBox.Name = "emailBox";
-            this.emailBox.Size = new System.Drawing.Size(255, 35);
-            this.emailBox.TabIndex = 1;
-            this.emailBox.Text = "email@address.com";
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI Semibold", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(13, 13);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(226, 50);
+            this.label3.TabIndex = 1;
+            this.label3.Text = "Your Details";
             // 
             // Dashboard
             // 
@@ -267,9 +257,9 @@ namespace Donatello
             this.Controls.Add(this.pnl_Login);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Dashboard";
             this.Text = "Donatello";
-            this.Resize += new System.EventHandler(this.Dashboard_Resize);
             this.pnl_Login.ResumeLayout(false);
             this.pnl_Login.PerformLayout();
             this.pnl_NewAccount.ResumeLayout(false);
@@ -282,7 +272,6 @@ namespace Donatello
 
         #endregion
 
-        private NotifyIcon notifyIcon;
         private Panel pnl_Login;
         private FocusTextBox passBox;
         private FocusTextBox emailBox;
@@ -303,6 +292,12 @@ namespace Donatello
         private DateTimePicker new_dobBox;
     }
 
+    /// <summary>
+    /// FocusTextBox class
+    /// Creates a textbox that, when receiving focus, highlights all its text (like a URL bar in a browser)
+    /// Inherits from System.Windows.Forms.TextBox
+    /// Used in place of all text boxes in this designer to create the illusion of placeholder text.
+    /// </summary>
     public class FocusTextBox : System.Windows.Forms.TextBox
     {
         private bool _focussed;

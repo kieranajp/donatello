@@ -25,7 +25,7 @@ namespace Donatello.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("email@address.com")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string LastUsername {
             get {
                 return ((string)(this["LastUsername"]));
@@ -37,7 +37,7 @@ namespace Donatello.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("abc")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string LastPassword {
             get {
                 return ((string)(this["LastPassword"]));
@@ -49,7 +49,7 @@ namespace Donatello.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Users\\Kieran\\Downloads\\Donatello\\")]
         public string DownloadDirectory {
             get {
                 return ((string)(this["DownloadDirectory"]));

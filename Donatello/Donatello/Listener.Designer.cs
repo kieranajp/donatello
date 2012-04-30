@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Listener));
             this.txt_log = new System.Windows.Forms.TextBox();
             this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.SuspendLayout();
             // 
             // txt_log
@@ -47,6 +50,12 @@
             // 
             this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_DoWork);
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "notifyIcon";
+            this.notifyIcon.Visible = true;
+            // 
             // Listener
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -55,6 +64,8 @@
             this.Controls.Add(this.txt_log);
             this.Name = "Listener";
             this.Text = "Listener";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Listener_FormClosing);
+            this.Resize += new System.EventHandler(this.Listener_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -64,5 +75,6 @@
 
         private System.Windows.Forms.TextBox txt_log;
         private System.ComponentModel.BackgroundWorker backgroundWorker;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }

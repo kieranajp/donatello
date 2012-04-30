@@ -32,6 +32,7 @@
             this.lblNotification = new System.Windows.Forms.Label();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.label1 = new System.Windows.Forms.Label();
+            this.CloseForm = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblNotification
@@ -47,7 +48,7 @@
             // timer
             // 
             this.timer.Interval = 2500;
-            this.timer.Tick += new System.EventHandler(this.timer_Tick);
+            this.timer.Tick += new System.EventHandler(this.Suicide);
             // 
             // label1
             // 
@@ -60,17 +61,31 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "Donatello";
             // 
+            // CloseForm
+            // 
+            this.CloseForm.AutoSize = true;
+            this.CloseForm.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.CloseForm.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.CloseForm.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CloseForm.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.CloseForm.Location = new System.Drawing.Point(13, 58);
+            this.CloseForm.Name = "CloseForm";
+            this.CloseForm.Size = new System.Drawing.Size(16, 17);
+            this.CloseForm.TabIndex = 2;
+            this.CloseForm.Text = "X";
+            this.CloseForm.Click += new System.EventHandler(this.Suicide);
+            // 
             // Notification
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(263, 84);
             this.ControlBox = false;
+            this.Controls.Add(this.CloseForm);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblNotification);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "Notification";
-            this.Load += new System.EventHandler(this.Notification_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -81,5 +96,6 @@
         private System.Windows.Forms.Label lblNotification;
         private System.Windows.Forms.Timer timer;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label CloseForm;
     }
 }

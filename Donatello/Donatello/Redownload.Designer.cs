@@ -28,20 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.purchasedList = new System.Windows.Forms.CheckedListBox();
             this.label3 = new System.Windows.Forms.Label();
             this.btn_Start = new System.Windows.Forms.Button();
             this.btn_cancel = new System.Windows.Forms.Button();
+            this.purchasedItems = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
-            // 
-            // purchasedList
-            // 
-            this.purchasedList.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.purchasedList.FormattingEnabled = true;
-            this.purchasedList.Location = new System.Drawing.Point(97, 62);
-            this.purchasedList.Name = "purchasedList";
-            this.purchasedList.Size = new System.Drawing.Size(383, 172);
-            this.purchasedList.TabIndex = 0;
             // 
             // label3
             // 
@@ -75,15 +66,24 @@
             this.btn_cancel.UseVisualStyleBackColor = true;
             this.btn_cancel.Click += new System.EventHandler(this.btn_cancel_Click);
             // 
+            // purchasedItems
+            // 
+            this.purchasedItems.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.purchasedItems.FormattingEnabled = true;
+            this.purchasedItems.Location = new System.Drawing.Point(71, 63);
+            this.purchasedItems.Name = "purchasedItems";
+            this.purchasedItems.Size = new System.Drawing.Size(439, 172);
+            this.purchasedItems.TabIndex = 0;
+            // 
             // Redownload
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(576, 316);
+            this.Controls.Add(this.purchasedItems);
             this.Controls.Add(this.btn_cancel);
             this.Controls.Add(this.btn_Start);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.purchasedList);
             this.Name = "Redownload";
             this.Text = "List";
             this.ResumeLayout(false);
@@ -93,9 +93,9 @@
 
         #endregion
 
-        private System.Windows.Forms.CheckedListBox purchasedList;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button btn_Start;
         private System.Windows.Forms.Button btn_cancel;
+        private System.Windows.Forms.ListBox purchasedItems;
     }
 }
