@@ -1,0 +1,29 @@
+*	AIRMIC, ALARM, IRM, 2002. *A Risk Management Standard.* [pdf] Available at: [www.theirm.org/.../Risk_Management_Standard_030820.pdf](www.theirm.org/.../Risk_Management_Standard_030820.pdf)[Accessed 28 Apr 2012] 
+*	Alves, K. and Michael, K., 2005. The Rise and Fall of Digital Music Distribution Services: a Cross-Case Comparison of MP3.com, Napster and Kazaa. In: *Proceedings of the Collaborative Electronic Commerce Technology and Research Conference LatAm*, University of Talea: Chile, 3-5 October 2005, pp. 1-22.
+* Apple Inc., 2008. *iTunes Store Top Music Retailer in the US.* [online] Available at: [http://www.apple.com/pr/library/2008/04/03iTunes-Store-Top-Music-Retailer-in-the-US.html](http://www.apple.com/pr/library/2008/04/03iTunes-Store-Top-Music-Retailer-in-the-US.html) [Accessed: 28 Apr 2012] 
+*	BBC News, 2012. *'Third of UK postcodes' have slow broadband speeds'*. [online] Available at: [http://www.bbc.co.uk/news/technology-17130367](http://www.bbc.co.uk/news/technology-17130367) [Accessed: 28 Apr 2012] 
+*	Beck, K. 2003. *Test Driven Development: By Example*.  Boston.: Addision-Wesley Professional.
+*	Bentley, C., 2002. *Prince 2: A practical handbook*. 2nd ed. Oxford.: Butterworth-Heinemann, pp.1-18.
+*	Cockburn, A., 2006. *Agile Software Development: The Cooperative Game*. 2nd ed. Boston.: Addision-Wesley Professional, pp.147-220.
+*	Entertainment Software Association (ESA), 2011. *2011 Sales, Demographic and Usage Data - Essential Facts about the Computer and Video Game Industry*. Washington, D.C, USA: ESA. Available from: [www.theesa.com/facts/pdfs/ESA_EF_2011.pdf](www.theesa.com/facts/pdfs/ESA_EF_2011.pdf) [Accessed: 28 Apr 2012] 
+*	Flick, U., 2009. *An Introduction to Qualitative Research*. 4th ed. London: SAGE Publications Ltd, pp. 11-25, 89-131.
+*	Haughey, D., (n.d.). *MoSCoW Method.* [online] Available at: http://www.projectsmart.co.uk/moscow-method.html [Accessed 28 Apr 2012].
+*	Higuera, R.P., and Haimes, Y.Y., 1996. *Software Risk Management.* Technical Report C	Iversen, J. et al., 1998. Combining Quantitative and Qualitative Assessment Methods in Software Process Improvement. In: *Proceedings of the 6th European Conference on Information Systems (ECIS'98)*, Aix-En-Provence, France: 4-6 June 1998, pp. 451-166.
+*	Kandil, M. et al., 2012. Cross-View of Testing Techniques Toward Improving Web-Based Application Testing. In: *International Journal of Computer Science Issues (IJCSI)*, 9 (2), pp. 271-277.
+*	Luo, L., 2001. *Software Testing Techniques: Technology Maturation and Research Strategies Class Report.* Institute for Software Research International, Carnegie Mellon University, Pittsburgh, USA.
+*	McConnell, S., 1996. *Rapid Development: Taming Wild Software Schedules*. Redmond, Wa.: Microsoft Press. pp. 133-162
+*	MSDN, the Microsoft Developer Network, 2010. *Choosing a Windows Installer Deployment Tool.* [online] Available at: [http://msdn.microsoft.com/en-us/library/ee721500.aspx](http://msdn.microsoft.com/en-us/library/ee721500.aspx) [Accessed: 30 Apr 2012]
+*	Neuman, W.L., 2006. *Social Research Methods: qualitative and quantitative approaches*. 6th ed., Boston.: Allyn and Bacon.
+*	OnLive, Inc., 2010. *OnLive to Launch Consumer Game Service on June 17, 2010*. [online] Available at: [http://www.onlive.com/corporate/press_releases/442](http://www.onlive.com/corporate/press_releases/442) [Accessed: 28 Apr 2012] 
+*	Palgrave.com, 2011. *Choosing appropriate research methodologies and methods*. [online] Available at: [http://www.palgrave.com/skills4study/studentlife/postgraduate/choosing.asp](http://www.palgrave.com/skills4study/studentlife/postgraduate/choosing.asp) [Accessed 28 Apr 2012].
+*	PMI Standards Committee, 2004. *A Guide to the Project Management Body of Knowledge: PMBOK Guide.* Pennsylvania: Project Management Institute.
+*	Rajapakshe, H. and Quec, D.P., 1995. *Video on Demand*. [online] Available at: [http://www.doc.ic.ac.uk/~nd/surprise_95/journal/vol4/shr/report.html#intro](http://www.doc.ic.ac.uk/~nd/surprise_95/journal/vol4/shr/report.html#intro)[Accessed 28 Apr 2012].
+*	Requirementsauthority.com, (n.d.). *Functional and Non-Functional Requirements.* [online] Available at: [http://www.requirementsauthority.com/functional-and-non-functional.html](http://www.requirementsauthority.com/functional-and-non-functional.html ) [Accessed 28 Apr 2012].
+*	Robertson S. and Robertson J., 2008. *Volere Requirements Techniques: an Overview.*  [pdf] Available at: [www.volere.co.uk/pdf%20files/01%20Volere%20Overview.pdf](www.volere.co.uk/pdf%20files/01%20Volere%20Overview.pdf) London: The Atlantic Systems Guild. [Accessed 28 Apr 2012].
+*	Royce, W.W., 1970. Managing the development of large software systems. In: *Proceedings of IEEE WESCON, 1970* pp. 1-9.
+*	Schwaber, K., 1995. SCRUM Development Process. In: *Proceedings of the 10th Annual ACM Conference on Object Oriented Programming Systems, Languages, and Applications (OOPSLA '95).* Austin, Texas: 15-19 October 1995.
+*	Silverman, D., 2010. *Doing Qualitative Research.* 3rd ed. London: SAGE Publications Ltd., p.122-125
+*	Skelton, D. (n.d.) *Remembering the Gameline*. [online] Available at: [http://www.atariage.com/2600/archives/gameline.html?SystemID=2600](http://www.atariage.com/2600/archives/gameline.html?SystemID=2600)[Accessed: 28 Apr 2012].
+* Staelens, N. et al., 2010. Assessing Quality of Experience of IPTV and Video on Demand Services in Real-life Environments. In: *IEEE Transactions on Broadcasting*, 56 (4), pp. 458-466.
+*	Van den Broeck, W. et al., 2008. Confronting video-on-demand with television viewing practices. In: *Innovating for and by users*, Pierson, J., Mante-Meijer, E., Loos, E., and Sapio, B., Eds. Opoce, 2008. 
+*	Van Vliet, H., 2008. *Software Engineering: Principles and Practice*. 3rd ed. Chichester: Wiley & Sons, pp.49-71.

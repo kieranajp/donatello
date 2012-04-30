@@ -1,0 +1,106 @@
+body {
+  text-rendering: optimizelegibility;
+  font-family: Georgia, serif;
+  font-size: 11pt;
+  text-align: justify;
+  line-height: 150%;
+}
+
+li {
+  text-align: left;
+}
+
+h1, h2, h3 {
+  font-family: Tahoma, sans-serif;
+}
+h1 {
+  font-size: 20pt;
+  border-bottom: solid 1px #aaa;
+  padding: 5px 10px;
+}
+h2 {
+  font-size: 16pt;
+}
+
+header {
+  position: fixed;
+  background: -webkit-linear-gradient(#00a, #00f);
+  border-bottom: 1px solid #447;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 40px;
+}
+header li {
+  list-style-type: none;
+  display: inline-block;
+}
+header li a, footer a {
+  color: #fff;
+  display: inline-block;
+  padding: 0 10px;
+}
+
+nav {
+  position: fixed;
+  left: 0;
+  top: 41px;
+  bottom: 0;
+  width: 400px;
+  border-right: 1px solid #aaa;
+  overflow: auto;
+  padding-bottom: 20px;
+}
+
+footer {
+  position: fixed;
+  left: 400px;
+  bottom: 0;
+  right: 0;
+  height: 40px;
+  background: -webkit-linear-gradient(#00f, #00a);
+  border-top: 1px solid #447;
+  text-align: center;
+}
+footer a {
+  line-height: 40px;
+  margin: 0 10%;
+}
+
+pre.footnotes {
+  line-break-before: avoid;
+  white-space: pre-wrap;
+  font: 11pt inherit;
+  line-height: 100%;
+  padding: 10pt;
+  margin-top: 30pt;
+  border-top: 1px solid #aaa;
+}
+
+pre.prettyprint {
+  padding: 8px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  word-wrap: break-word;
+  border-radius: 4px;
+  background-color: #F7F7F9;
+  border: 1px solid #E1E1E8;  
+}
+pre.prettyprint.linenums {
+  box-shadow: inset 40px 0 0 #fbfbfc, inset 41px 0 0 #ececf0;
+}
+
+figure {
+  width: 80%;
+  margin: 15pt auto;
+}
+figure img {
+  width: 100%;
+  margin: auto;
+}
+figcaption {
+  font-size: 11pt;
+  text-align: center;
+  font-style: italic;
+}splay: none;
+}
