@@ -19,6 +19,7 @@
 *	PMI Standards Committee, 2004. *A Guide to the Project Management Body of Knowledge: PMBOK Guide.* Pennsylvania: Project Management Institute.
 *	Rajapakshe, H. and Quec, D.P., 1995. *Video on Demand*. [online] Available at: [http://www.doc.ic.ac.uk/~nd/surprise_95/journal/vol4/shr/report.html#intro](http://www.doc.ic.ac.uk/~nd/surprise_95/journal/vol4/shr/report.html#intro)[Accessed 28 Apr 2012].
 *	Requirementsauthority.com, (n.d.). *Functional and Non-Functional Requirements.* [online] Available at: [http://www.requirementsauthority.com/functional-and-non-functional.html](http://www.requirementsauthority.com/functional-and-non-functional.html ) [Accessed 28 Apr 2012].
+*	Richardson, L. and Ruby, S., 2007 *RESTful Web Services.* Sebastopol, CA: O'Reilly Media, Inc.
 *	Robertson S. and Robertson J., 2008. *Volere Requirements Techniques: an Overview.*  [pdf] Available at: [www.volere.co.uk/pdf%20files/01%20Volere%20Overview.pdf](www.volere.co.uk/pdf%20files/01%20Volere%20Overview.pdf) London: The Atlantic Systems Guild. [Accessed 28 Apr 2012].
 *	Royce, W.W., 1970. Managing the development of large software systems. In: *Proceedings of IEEE WESCON, 1970* pp. 1-9.
 *	Schwaber, K., 1995. SCRUM Development Process. In: *Proceedings of the 10th Annual ACM Conference on Object Oriented Programming Systems, Languages, and Applications (OOPSLA '95).* Austin, Texas: 15-19 October 1995.

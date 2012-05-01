@@ -1,0 +1,1602 @@
+<h2>Appendix B - Windows Application Code</h2><h3>Account.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// This class is an Account object, which is instantiated for account manipulation.
+    /// &lt;/summary&gt;
+    public class Account
+    {
+        #region Attributes and Constructor
+        public string Email { get; set; }
+        public string Name { get; set; }
+        public string Password { get; set; }
+        public string Dob { get; set; }
+        /// &lt;summary&gt;
+        /// The constructor for this class. Assigns parameters to variables.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;email&quot;&gt;String: Account email address. Also functions as unique identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;String: User's name.&lt;/param&gt;
+        /// &lt;param name=&quot;password&quot;&gt;String: User's password. Only briefly stored in memory - very quickly hashed.&lt;/param&gt;
+        /// &lt;param name=&quot;dob&quot;&gt;String: User's date of birth. Used for age verification when purchasing.&lt;/param&gt;
+        public Account(string email, string name, string password, string dob)
+        {
+            Email = email;
+            Name = name;
+            Password = password;
+            Dob = dob;
+        }
+        #endregion
+        #region Static Methods
+        /// &lt;summary&gt;
+        /// Computes a random salt of between 4 and 8 butes in size.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;Array of bytes: A small array of bytes to function as a salt.&lt;/returns&gt;
+        public static byte[] ComputeSalt()
+        {
+            Random random = new Random();
+            int saltSize = random.Next(4, 8);
+            byte[] saltBytes = new byte[saltSize];
+
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            rng.GetNonZeroBytes(saltBytes);
+
+            return saltBytes;
+        }
+        /// &lt;summary&gt;
+        /// Computes a hash from a password and optionally a salt. If no salt is specified, one is generated.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;pass&quot;&gt;String: Plain-text password to encrypt.&lt;/param&gt;
+        /// &lt;param name=&quot;definedSalt&quot;&gt;String: Optional: a salt, if one is being explicitly provided.&lt;/param&gt;
+        /// &lt;returns&gt;Dictionary of strings against strings: A dictionary containing the password and the salt.&lt;/returns&gt;
+        public static Dictionary&lt;string, string&gt; ComputeHash(string pass, string definedSalt)
+        {
+            byte[] salt;
+            if (String.IsNullOrEmpty(definedSalt))
+            {
+                salt = ComputeSalt();
+            }
+            else
+            {
+                salt = Convert.FromBase64String(definedSalt);
+            }
+            
+            byte[] passBytes = Encoding.UTF8.GetBytes(pass);
+            byte[] passAndSalt = new byte[passBytes.Length + salt.Length];
+
+            for (int i = 0; i &lt; passBytes.Length; i++)
+            {
+                passAndSalt[i] = passBytes[i];
+            }
+
+            for (int i = 0; i &lt; salt.Length; i++)
+            {
+                passAndSalt[passBytes.Length + i] = salt[i];
+            }
+
+            HashAlgorithm algo = new SHA512Managed();
+            byte[] byteHash = algo.ComputeHash(passAndSalt);
+
+            byte[] saltedHash = new byte[byteHash.Length + salt.Length];
+
+            for (int i = 0; i &lt; byteHash.Length; i++)
+            {
+                saltedHash[i] = byteHash[i];
+            }
+            for (int i = 0; i &lt; salt.Length; i++)
+            {
+                saltedHash[byteHash.Length + i] = salt[i];
+            }
+
+            Dictionary&lt;string, string&gt; hashAndSalt = new Dictionary&lt;string, string&gt;();
+            hashAndSalt.Add(&quot;hash&quot;, Convert.ToBase64String(saltedHash));
+            hashAndSalt.Add(&quot;salt&quot;, Convert.ToBase64String(salt));
+
+            return hashAndSalt;
+        }
+        #endregion
+    }
+}
+</pre><h3>ClientHandler.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Net.Sockets;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// ClientHandler object.
+    /// Contains methods handling communication between this application's TCP server and a connected client.
+    /// &lt;/summary&gt;
+    public class ClientHandler
+    {
+        #region Attributes &amp; Constructor
+        private TcpClient _Client;
+        private string receivedData;
+        /// &lt;summary&gt;
+        /// Constructor for this class. Initialises the class then calls a method to handle communication.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;client&quot;&gt;TcpClient: The socket connection that has been made.&lt;/param&gt;
+        public ClientHandler(TcpClient client)
+        {
+            _Client = client;
+            Communicate();
+        }
+        #endregion
+        #region Private Methods
+        /// &lt;summary&gt;
+        /// Method handling the network communication between client and server.
+        /// Receives a byte containing the location of a download to begin, then spawns an instance of the Download class to initiate the download process.
+        /// &lt;/summary&gt;
+        private void Communicate()
+        {
+            byte[] receivedBytes = new byte[65536];
+
+            NetworkStream ns = _Client.GetStream();
+            int size = (int)_Client.ReceiveBufferSize;
+            ns.Read(receivedBytes, 0, size);
+            receivedData = System.Text.Encoding.ASCII.GetString(receivedBytes).Substring(0, 32);
+
+            Download d = new Download(receivedData);
+        }
+        #endregion
+    }
+}
+</pre><h3>Dashboard.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Configuration;
+using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Net.Mail;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// The class for the Dashboard form.
+    /// Contains methods for the management of this form.
+    /// Inherits from System.Windows.Forms.Form.
+    /// &lt;/summary&gt;
+    public partial class Dashboard : Form
+    {
+        #region Attributes &amp; Constructor
+        string newUsername;
+        string newPassword;
+        /// &lt;summary&gt;
+        /// Constructor for this class. 
+        /// Initialises and displays the form.
+        /// Checks if valid user credentials are stored for automatic login. If so, closes this form and opens an instance of Listener.
+        /// Else, shows the login panel.
+        /// &lt;/summary&gt;
+        public Dashboard()
+        {
+            InitializeComponent();
+            this.Visible = false;
+
+            if (DbConnect.CheckLogin(Properties.Settings.Default.LastUsername, Properties.Settings.Default.LastPassword))
+            // if (1 == 2) // For testing purposes
+            {
+                this.Hide();
+                DbConnect.SetClient(Properties.Settings.Default.LastUsername);
+                Listener li = new Listener();
+                li.ShowDialog();
+            }
+            else
+            {
+                this.Visible = true;
+                pnl_Login.Show();
+            }
+        }
+        #endregion
+        #region pnl_Login controls
+        /// &lt;summary&gt;
+        /// Hides the login panel and opens the Create Account panel.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_CreateAcc_Click(object sender, EventArgs e)
+        {
+            pnl_Login.Hide();
+            pnl_NewAccount.Show();
+        }
+        /// &lt;summary&gt;
+        /// Attempts to log in using the input credentials. If successful, hides this form and creates an instance of Listener.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_Login_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(emailBox.Text) || String.IsNullOrEmpty(passBox.Text) || emailBox.Text == &quot;email@address.com&quot;)
+            {
+                MessageBox.Show(&quot;You must fill in all fields!&quot;, &quot;Error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else if (DbConnect.Login(emailBox.Text, passBox.Text))
+            {
+                DbConnect.SetClient(emailBox.Text);
+                WindowState = FormWindowState.Minimized;
+
+                Properties.Settings.Default.LastUsername = emailBox.Text;
+                Properties.Settings.Default.LastPassword = DbConnect.GetPassHash(emailBox.Text);
+
+                Properties.Settings.Default.Save();
+
+                Notification n = new Notification(&quot;Welcome to Donatello, &quot;, false);
+
+                Listener li = new Listener();
+                li.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show(&quot;Incorrect username or password!&quot;);
+            }
+        }
+        #endregion
+        #region pnl_NewAccount controls
+        /// &lt;summary&gt;
+        /// Hides the New Account panel and opens the login panel
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_ExistingAccount_Click(object sender, EventArgs e)
+        {
+            pnl_NewAccount.Hide();
+            pnl_Login.Show();
+        }
+        /// &lt;summary&gt;
+        /// Checks the user's input and, if valid, hides this panel and shows the Account Details panel
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_NewAccount_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(new_emailBox.Text) || String.IsNullOrEmpty(new_passwordBox.Text)
+                || new_emailBox.Text == &quot;email@address.com&quot; || new_repeatPasswordBox.Text == &quot;passward&quot;)
+            {
+                MessageBox.Show(&quot;You must fill in all fields!&quot;, &quot;Error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                // Check for valid email address
+                MailMessage mail = new MailMessage();
+                try
+                {
+                    mail.To.Add(new_emailBox.Text);
+                }
+                catch (FormatException)
+                {
+                    // If the email address is invalid this exception will be thrown.
+                    MessageBox.Show(&quot;You entered an invalid email address&quot;, &quot;Email address error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                
+                // Check if email address exists
+                if (!DbConnect.AccountExists(new_emailBox.Text))
+                {
+                    // Validate password fields
+                    if (new_passwordBox.Text != new_repeatPasswordBox.Text)
+                    {
+                        MessageBox.Show(&quot;The two passwords are not identical!&quot;, &quot;Password error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    newUsername = new_emailBox.Text;
+                    newPassword = new_passwordBox.Text;
+
+                    pnl_NewAccount.Hide();
+                    pnl_AccountDetails.Show();
+                }
+                else
+                {
+                    MessageBox.Show(&quot;Sorry, an account with this email address already exists!&quot;, &quot;User error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+        #endregion
+        #region pnl_AccountDetails controls
+        /// &lt;summary&gt;
+        /// Verifies the user's input and if valid closes this form and starts an instance of Listener.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_Start_Click(object sender, EventArgs e)
+        {
+            // Sort out dates
+            string newDate = new_dobBox.Value.Year + &quot;-&quot; + new_dobBox.Value.Month + &quot;-&quot; + new_dobBox.Value.Day;
+
+            // Create account object
+            Account newAccount = new Account(newUsername, new_nameBox.Text, newPassword, newDate);
+
+            // Get it into the database
+            DbConnect.CreateAccount(newAccount);
+
+            // Send a confirmation email message
+            MailMessage mail = new MailMessage();
+            SmtpClient smtp = new SmtpClient(&quot;mail.kajp.im&quot;);
+            smtp.Port = 25;
+            smtp.Credentials = new System.Net.NetworkCredential(&quot;donatello+kajp.im&quot;, &quot;eijonu&quot;);
+            smtp.EnableSsl = false;
+
+            mail.From = new MailAddress(&quot;donatello@kajp.im&quot;);
+            mail.To.Add(newUsername);
+            mail.Subject = &quot;Welcome to Donatello!&quot;;
+            mail.Body = &quot;Thanks for joining Donatello&quot;;
+
+            try
+            {
+                //smtp.Send(mail);
+            }
+            catch (SmtpException) 
+            { 
+                // Oh well, not the end of the world if the email doesn't send.
+            }
+
+            Properties.Settings.Default.LastUsername = newUsername;
+            Properties.Settings.Default.Save();
+            DbConnect.SetClient(newUsername);
+            Listener li = new Listener();
+            li.ShowDialog();
+            this.Hide();
+        }
+        #endregion
+    }
+}
+</pre><h3>DbConnect.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Net;
+using MySql.Data.MySqlClient;
+using System.Text;
+using System.Net.Sockets;
+using System.Security.Cryptography;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// This class contains methods handling all communication with and manipulation of the (MySQL) database.
+    /// &lt;/summary&gt;
+    public sealed class DbConnect
+    {
+        #region Attributes
+        // The connection string for the database.
+        static readonly string connString = &quot;Server=localhost;Database=fyp;Uid=root;Pwd=;&quot;;
+        #endregion
+        #region Static Methods
+        /// &lt;summary&gt;
+        /// Method to create an account in the database.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;acc&quot;&gt;Account: The account to create.&lt;/param&gt;
+        public static void CreateAccount(Account acc)
+        {
+            // Salt and hash acc.Password
+            Dictionary&lt;string, string&gt; hashAndSalt = Account.ComputeHash(acc.Password, null);
+            
+            // TODO: Escape account name and email
+
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                // TODO: The DOB isn't saving properly.
+                cmd.CommandText = &quot;INSERT INTO accounts (account_id, pass_hash, pass_salt, account_nm, account_dob) VALUES ('&quot; + acc.Email + &quot;', '&quot; + hashAndSalt[&quot;hash&quot;] + &quot;', '&quot; + hashAndSalt[&quot;salt&quot;] + &quot;', '&quot; + acc.Name + &quot;', &quot; + acc.Dob + &quot;);&quot;;
+                cmd.ExecuteNonQuery();
+            }
+        }
+        /// &lt;summary&gt;
+        /// Method to set the current machine as the unique client for the logged-in account.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;account&quot;&gt;String: The account_id to lock to this IP address.&lt;/param&gt;
+        public static void SetClient(string account)
+        {
+            // TODO: This method doesn't seem right.
+            IPAddress[] IP = Dns.GetHostAddresses(Dns.GetHostName());
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                //cmd.CommandText = &quot;SELECT COUNT(*) FROM clients WHERE account_id = '&quot; + account + &quot;';&quot;;
+
+                // Find out the IP address. Here we are doing local addresses; if this were more than a proof-of-concept we'd be using full external addresses.
+                IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+                string localIP = &quot;127.0.0.1&quot;;
+
+                foreach (IPAddress ip in host.AddressList) 
+                {
+                    if (ip.AddressFamily == AddressFamily.InterNetwork) 
+                    {
+                        localIP = ip.ToString();
+                    }
+                }
+
+                if (Convert.ToInt32(cmd.ExecuteScalar()) == 0)
+                {
+                    cmd.CommandText = &quot;INSERT INTO clients (account_id, system_nm, client_ip) VALUES ('&quot; + account + &quot;', '&quot; + Environment.MachineName + &quot;', INET_ATON('&quot; + localIP + &quot;'));&quot;;
+                    cmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    cmd.CommandText = &quot;UPDATE clients SET client_ip = INET_ATON('&quot; + localIP + &quot;') WHERE account_id = '&quot; + account + &quot;';&quot;;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        /// &lt;summary&gt;
+        /// Checks if the specified account exists already in the database.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;email&quot;&gt;String: The account_id to check for.&lt;/param&gt;
+        /// &lt;returns&gt;Boolean: True if the account exists, false if not.&lt;/returns&gt;
+        public static bool AccountExists(string email)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT COUNT(*) FROM accounts WHERE account_id = '&quot; + email + &quot;';&quot;;
+                return Convert.ToInt32(cmd.ExecuteScalar()) == 0 ? false : true;
+            }
+        }
+        /// &lt;summary&gt;
+        /// Gets the stored secure hash of the specified account's password.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;email&quot;&gt;String: The account_id to retrieve the password of.&lt;/param&gt;
+        /// &lt;returns&gt;String: The securely-hashed password for this account.&lt;/returns&gt;
+        public static string GetPassHash(string email)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT pass_hash FROM accounts WHERE account_id = '&quot; + email + &quot;';&quot;;
+                return cmd.ExecuteScalar().ToString();
+            }
+        }
+        /// &lt;summary&gt;
+        /// Checks if the supplied login information is valid
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;email&quot;&gt;String: The account_id to attempt to login with.&lt;/param&gt;
+        /// &lt;param name=&quot;hash&quot;&gt;String: The securely-hashed password to try.&lt;/param&gt;
+        /// &lt;returns&gt;Boolean: True if the supplied login information is valid. False otherwise.&lt;/returns&gt;
+        public static bool CheckLogin(string email, string hash)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT COUNT(*) FROM accounts WHERE account_id = '&quot; + email + &quot;' AND pass_hash = '&quot; + hash + &quot;';&quot;;
+                return Convert.ToInt32(cmd.ExecuteScalar()) == 0 ? false : true;
+            }
+        }
+        /// &lt;summary&gt;
+        /// Checks if the supplied login information is valid, hashing and salting the supplied password first.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;uid&quot;&gt;String: The account_id to attempt to log in.&lt;/param&gt;
+        /// &lt;param name=&quot;pwd&quot;&gt;String: The supplied password.&lt;/param&gt;
+        /// &lt;returns&gt;Boolean: True if the login information is valid. False otherwise.&lt;/returns&gt;
+        public static bool Login(string uid, string pwd)
+        {
+            Dictionary&lt;string, string&gt; userDetails = new Dictionary&lt;string, string&gt;();
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT account_id, pass_hash, pass_salt FROM accounts WHERE account_id = '&quot; + uid + &quot;';&quot;;
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        userDetails.Add(&quot;uid&quot;, reader.GetString(&quot;account_id&quot;));
+                        userDetails.Add(&quot;hash&quot;, reader.GetString(&quot;pass_hash&quot;));
+                        userDetails.Add(&quot;salt&quot;, reader.GetString(&quot;pass_salt&quot;));
+                    }
+                }
+            }
+
+            if (userDetails.Count == 0)
+            {
+                // User doesn't exist
+                return false;
+            }
+
+            // Hash the input password using the salt retrieved from the database
+            Dictionary&lt;string, string&gt; hashAndSalt = Account.ComputeHash(pwd, userDetails[&quot;salt&quot;]);
+            if (hashAndSalt[&quot;hash&quot;] == userDetails[&quot;hash&quot;])
+            {
+                // Username and password are both correct - the hashes match
+                return true;
+            }
+
+            // If it gets this far, the password is incorrect.
+            return false;
+        }
+        /// &lt;summary&gt;
+        /// Gets the user's name from the account_id.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;email&quot;&gt;String: The account_id to look up.&lt;/param&gt;
+        /// &lt;returns&gt;String: The user's name&lt;/returns&gt;
+        public static string GetUsersName(string email)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT account_nm FROM accounts WHERE account_id = '&quot; + email + &quot;';&quot;;
+                return cmd.ExecuteScalar().ToString();
+            }
+        }
+        /// &lt;summary&gt;
+        /// Gets the stored MD5 hash of the supplied product, for checksumming.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;product&quot;&gt;String: The product_id to get the hash of.&lt;/param&gt;
+        /// &lt;returns&gt;String: The stored MD5 hash of the product.&lt;/returns&gt;
+        public static string GetMD5Hash(string product)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT product_hash FROM products WHERE product_nm = '&quot; + product + &quot;';&quot;;
+                return cmd.ExecuteScalar().ToString();
+            }
+        }
+        /// &lt;summary&gt;
+        /// Counts the number of rows in the locations table.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;Integer: The number of rows present in the table.&lt;/returns&gt;
+        public static int CountLocations()
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT COUNT(*) FROM locations;&quot;;
+                return Convert.ToInt32(cmd.ExecuteScalar());
+            }
+        }
+        /// &lt;summary&gt;
+        /// Gets the products that have already been purchased by the specified account.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;account_id&quot;&gt;String: The account_id to get purchases of.&lt;/param&gt;
+        /// &lt;returns&gt;DataTable: Blank if nothing has been purchased on the account.
+        ///     Containing two columns if purchases have been made: the product_id and product name of each purchased product.&lt;/returns&gt;
+        public static DataTable GetAuthorisedProducts(string account_id)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT product_id FROM authentications WHERE account_id = '&quot; + account_id + &quot;';&quot;;
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                List&lt;int&gt; ids = new List&lt;int&gt;();
+
+                while (rdr.Read())
+                {
+                    ids.Add(rdr.GetInt32(&quot;product_id&quot;));
+                }
+
+                rdr.Close();
+
+                if (ids.Count &lt; 1)
+                {
+                    // i.e. nothing has been purchased on this account yet
+                    return new DataTable();
+                }
+
+                StringBuilder sb = new StringBuilder(&quot;SELECT product_id, product_nm FROM products WHERE product_id IN (&quot;);
+
+                foreach (int id in ids)
+                {
+                    sb.Append(id.ToString());
+                    sb.Append(&quot;, &quot;);
+                }
+
+                sb.Remove(sb.Length - 2, 2);
+                sb.Append(&quot;);&quot;);
+
+                cmd.CommandText = sb.ToString();
+
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                return dt;
+            }
+        }
+        /// &lt;summary&gt;
+        /// Gets the name of the product by its hashed location_id.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;location&quot;&gt;String: The location_id to look up, hashed.&lt;/param&gt;
+        /// &lt;returns&gt;String: The product name.&lt;/returns&gt;
+        public static string GetProductNameFromLocationHash(string location)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT product_nm FROM products WHERE location_hash = '&quot; + location + &quot;';&quot;;
+                return cmd.ExecuteScalar().ToString();
+            }
+        }
+        /// &lt;summary&gt;
+        /// Gets the hashed location from the locations table by id.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;location&quot;&gt;Integer: The location_id to look up.&lt;/param&gt;
+        /// &lt;returns&gt;String: The encrypted location of the file.&lt;/returns&gt;
+        public static string GetLocation(int location)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT location FROM locations WHERE location_id = &quot; + location + &quot;;&quot;;
+                return cmd.ExecuteScalar().ToString();
+            }
+        }
+        /// &lt;summary&gt;
+        /// Calculates the MD5 hash of an input string.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;String: The string to hash.&lt;/param&gt;
+        /// &lt;returns&gt;String: An MD5 hash&lt;/returns&gt;
+        public static string CalculateMD5(string input)
+        {
+            MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+            byte[] hash = md5.ComputeHash(inputBytes);
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i &lt; hash.Length; i++)
+            {
+                // Converting to hexadecimal lower-case representation (to match hashes generated in PHP where this is SO MUCH EASIER jeez.)
+                sb.Append(hash[i].ToString(&quot;x2&quot;));
+            }
+            return sb.ToString();
+        }
+        /// &lt;summary&gt;
+        /// Gets the hash of a product's location by its ID. 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;pid&quot;&gt;Integer: The ID of the product to look up.&lt;/param&gt;
+        /// &lt;returns&gt;String: Empty if no location was found or if an error occurred.
+        ///     The hashed location (found by running the GetLocation method) if a location was found.&lt;/returns&gt;
+        public static string GetLocationFromProductId(int pid)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT location_hash FROM products WHERE product_id = &quot; + pid + &quot;;&quot;;
+
+                string location_hash = cmd.ExecuteScalar().ToString();
+                int locs = DbConnect.CountLocations();
+                int decodedLocation = -1;
+
+                for (int i = 1; i &lt; locs + 1; i++)
+                {
+                    if (DbConnect.CalculateMD5(i.ToString()) == location_hash)
+                    {
+                        decodedLocation = i;
+                    }
+                }
+
+                if (decodedLocation != -1)
+                {
+                    return DbConnect.GetLocation(decodedLocation);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
+        #endregion
+    }
+}
+</pre><h3>Download.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.ComponentModel;
+using System.IO;
+using System.Net;
+using System.Security.Cryptography;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// This class handles downloading the files (over FTP) as well as checksumming them.
+    /// &lt;/summary&gt;
+    class Download
+    {
+        #region Attributes &amp; Constructor
+        private Uri _location;
+        private string _product;
+        private string _target;
+        private BackgroundWorker _bw;
+        /// &lt;summary&gt;
+        /// Constructor for the class. Instantiates the class and initialises its properties.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;location&quot;&gt;String: The location of the file to download.&lt;/param&gt;
+        public Download(string location)
+        {
+            // We know the hash of the location of the file we have to get.
+            // First step is to get the product name. We're also going to need the location we're downloading to.
+            _product = DbConnect.GetProductNameFromLocationHash(location);
+
+            // Could-Have: Let users choose download location
+            _target = Properties.Settings.Default.DownloadDirectory;
+
+            if (String.IsNullOrEmpty(_target))
+            {
+                string homePath = (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
+                    ? Environment.GetEnvironmentVariable(&quot;HOME&quot;) : Environment.ExpandEnvironmentVariables(&quot;%HOMEDRIVE%%HOMEPATH%&quot;);
+                Properties.Settings.Default.DownloadDirectory = _target = Path.Combine(homePath, @&quot;\Downloads\Donatello\&quot;);
+                Properties.Settings.Default.Save();
+            }
+
+            // If the target directory doesn't exist, we should create it.
+            if (!Directory.Exists(_target))
+            {
+                Directory.CreateDirectory(_target);
+            }
+
+            // Finally we need to find out where we're downloading the file from, and get it.
+            int locs = DbConnect.CountLocations();
+            int decodedLocation = -1;
+
+            // Iterate through each location in the database until you find the location_id that matches the hash we've got.
+            // TODO: Isn't there a method in DBConnect that does the same thing?
+            for (int i = 1; i &lt; locs + 1; i++)
+            {
+                if (DbConnect.CalculateMD5(i.ToString()) == location)
+                {
+                    decodedLocation = i;
+                }
+            }
+
+            if (decodedLocation == -1) { throw new NullReferenceException(); }
+
+            // Pass the location_id to the database to get the actual location of the file we're after.
+            string secretLoc = DbConnect.GetLocation(decodedLocation);
+
+            _location = new Uri(@&quot;ftp://kieranajp.co.uk/donatello/&quot; + secretLoc + @&quot;/&quot; + secretLoc + &quot;.file&quot;); // TODO: Dynamic file types
+
+            // We're going to need to multithread this now.
+            _bw = new BackgroundWorker { WorkerReportsProgress = true };
+            _bw.DoWork += GetFile;
+            _bw.ProgressChanged += Progress;
+            _bw.RunWorkerCompleted += Complete;
+            
+            _bw.RunWorkerAsync();
+        }
+        #endregion
+        #region BackgroundWorker events
+        /// &lt;summary&gt;
+        /// The main loop of the BackgroundWorker thread (DoWork)
+        /// Gets the filesize of the file to download and then the file itself.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void GetFile(object sender, DoWorkEventArgs e)
+        {
+            long fileSize = FTPGet(false);
+            long returnCode = FTPGet(true);
+            if (returnCode == -1)
+            {
+                // Then an error has occurred.
+            }
+        }
+        /// &lt;summary&gt;
+        /// ProcessChanged event of the BackgroundWorker
+        /// Displays a notification every 10% of the download.
+        /// (Note user feedback is minimal since the program is designed to be used while the user is away from their computer).
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void Progress(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage % 10 == 0)
+            {
+                Notification n = new Notification(&quot;Download of &quot; + _product + &quot;: &quot; + e.ProgressPercentage + &quot;%&quot;, false);
+            }
+        }
+        /// &lt;summary&gt;
+        /// The RunWorkerCompleted event of the BackgroundWorker. Runs when the BackgroundWorker has finished.
+        /// MD5 checksums the download and proclaims it complete or displays an error as appropriate.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void Complete(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                // TODO: Why could there be an error?
+            }
+            else
+            {
+                if (!CheckMD5(Path.Combine(_target, String.Concat(CleanFileName(_product), &quot;.file&quot;)), _product))
+                {
+                    Notification n = new Notification(&quot;Error: Checksum of &quot; + _product + &quot; failed :(&quot;, true);
+                    // TODO: Work out how to deal with this
+                }
+                else
+                {
+                    Notification n = new Notification(&quot;Download complete!&quot;, false);
+                    // The downlad's complete!
+                }
+            }
+        }
+        #endregion
+        #region Private Methods
+        /// &lt;summary&gt;
+        /// Initialises and runs FTP to get a file or its size.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;download&quot;&gt;Boolean: True to download the file, false to merely get its size.&lt;/param&gt;
+        /// &lt;returns&gt;Long: If getting the filesize, the filesize in bytes.
+        ///     If downloading the file, a returncode signifying the download's success or failure.&lt;/returns&gt;
+        private long FTPGet(bool download)
+        {
+            FtpWebRequest req = (FtpWebRequest)WebRequest.Create(_location);
+
+            req.UsePassive = true;
+            req.UseBinary = true;
+            req.Credentials = new NetworkCredential(&quot;fyp@kieranajp.co.uk&quot;, &quot;eijonu&quot;);
+
+            if (download)
+            {
+                int returnCode = 0;
+                req.KeepAlive = false;
+                req.Method = WebRequestMethods.Ftp.DownloadFile;
+
+                FtpWebResponse response = (FtpWebResponse)req.GetResponse();
+                Stream responseStream = response.GetResponseStream();
+
+                string newFileName = CleanFileName(_product);
+                string path = Path.Combine(_target, String.Concat(newFileName, &quot;.file&quot;));
+
+                if (File.Exists(path))
+                {
+                    string bak = &quot;_backup&quot; + DateTime.Now.ToString();
+                    File.Move(path, path + bak);
+                }
+
+                try
+                {
+                    using (FileStream writeStream = File.Create(path))
+                    {
+                        Byte[] buffer = new Byte[2048];
+                        int bytesRead = responseStream.Read(buffer, 0, 2048);
+
+                        while (bytesRead &gt; 0)
+                        {
+                            writeStream.Write(buffer, 0, bytesRead);
+                            bytesRead = responseStream.Read(buffer, 0, 2048);
+                        }
+                    }
+                }
+                catch
+                {
+                    Notification n = new Notification(&quot;Error downloading &quot; + _product, true);
+                    returnCode = -1;
+                }
+                finally
+                {
+                    response.Close();
+                } 
+                
+                return returnCode;
+            }
+            else
+            {
+                req.KeepAlive = true;
+                req.Method = WebRequestMethods.Ftp.GetFileSize;
+                long fileSize = (long)req.GetResponse().ContentLength;
+
+                return fileSize;
+            }
+        }
+        /// &lt;summary&gt;
+        /// Strips illegal characters out of a filename.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;toClean&quot;&gt;String: The filename that requires cleaning.&lt;/param&gt;
+        /// &lt;returns&gt;String: A filename with no illegal characters.&lt;/returns&gt;
+        private string CleanFileName(string toClean)
+        {
+            string cleaned = toClean;
+            cleaned = String.Concat(toClean.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries));
+
+            if (cleaned.Length &gt; 150)
+            {
+                cleaned = cleaned.Substring(0, 150);
+            }
+
+            return cleaned;
+        }
+        /// &lt;summary&gt;
+        /// Checks the MD5 checksum of an input file against the stored (valid) checksum in the database.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;fileToCheck&quot;&gt;String: The location on disk of the file to checksum&lt;/param&gt;
+        /// &lt;param name=&quot;serverFile&quot;&gt;String: The product name of the database entry to check against&lt;/param&gt;
+        /// &lt;returns&gt;Boolean: True if the checksums match, false if they don't.&lt;/returns&gt;
+        private bool CheckMD5(string fileToCheck, string serverFile)
+        {
+            string serverHash = DbConnect.GetMD5Hash(serverFile);
+
+            FileStream fs = new FileStream(fileToCheck, FileMode.Open);
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte[] retVal = md5.ComputeHash(fs);
+            fs.Close();
+
+            string clientHash = Convert.ToBase64String(retVal);
+
+            if (clientHash != serverHash)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        #endregion
+    }
+}
+</pre><h3>Listener.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.ComponentModel;
+using System.Net;
+using System.Net.Sockets;
+using System.Windows.Forms;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// The class for the Listener form.
+    /// Contains methods for the management of this form and for listening for incoming TCP messages.
+    /// Inherits from System.Windows.Forms.Form.
+    /// &lt;/summary&gt;
+    public partial class Listener : Form
+    {
+        #region Attributes &amp; Constructor
+        TcpListener serverSocket = new TcpListener(IPAddress.Any, 31337);
+        TcpClient clientSocket = default(TcpClient);
+        /// &lt;summary&gt;
+        /// Constructor for this class.
+        /// Initialises an instance of this class.
+        /// Initialises and configures the notifyIcon and starts running a background thread.
+        /// &lt;/summary&gt;
+        public Listener()
+        {
+            InitializeComponent();
+
+            notifyIcon.Text = &quot;Donatello&quot;;
+            notifyIcon.ContextMenu = new ContextMenu();
+            notifyIcon.ContextMenu.MenuItems.Add(new MenuItem(&quot;Redownload Purchases&quot;, new EventHandler(notify_redownload)));
+            notifyIcon.ContextMenu.MenuItems.Add(new MenuItem(&quot;Logout&quot;, new EventHandler(notify_logout)));
+            notifyIcon.ContextMenu.MenuItems.Add(new MenuItem(&quot;Exit&quot;, new EventHandler(notify_exit)));
+
+            backgroundWorker.WorkerSupportsCancellation = true;
+            backgroundWorker.RunWorkerAsync();
+        }
+        #endregion
+        #region notifyIcon EventHandlers
+        /// &lt;summary&gt;
+        /// Called when the form is resized.
+        /// If the form is minimised, moves the form to the notification area rather than the taskbar.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void Listener_Resize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                notifyIcon.BalloonTipTitle = &quot;Donatello is still running&quot;;
+                notifyIcon.BalloonTipText = &quot;Right-click this icon for controls&quot;;
+                notifyIcon.ShowBalloonTip(2500);
+                // TODO: This is behaving weirdly.
+                // this.ShowInTaskbar = false;
+                // this.Hide(); 
+            }
+        }
+        /// &lt;summary&gt;
+        /// Called when the notifyIcon is double-clicked.
+        /// Shows the form again after it has been minimised to the taskbar.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void notifyIcon_DoubleClick(object sender, EventArgs e)
+        {
+            //this.ShowInTaskbar = true;
+            //this.ShowDialog();
+        }
+        /// &lt;summary&gt;
+        /// Called when the Exit button on the notifyIcon's right-click menu is clicked.
+        /// Exits the application.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void notify_exit(object sender, EventArgs e)
+        {
+            backgroundWorker.CancelAsync();
+            notifyIcon.Visible = false;
+            Application.Exit();
+        }
+        /// &lt;summary&gt;
+        /// Called when the Redownload button on the notifyIcon's right-click menu is clicked.
+        /// Opens an instance of the Redownload form.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void notify_redownload(object sender, EventArgs e)
+        {
+            Redownload r = new Redownload();
+            r.ShowDialog();
+        }
+        /// &lt;summary&gt;
+        /// Called when the Logout button on the notifyIcon's right-click menu is clicked.
+        /// Logs out the user, cancels the Listener and restarts the application, effectively returning the user to the login form.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void notify_logout(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.LastUsername = null;
+            Properties.Settings.Default.LastPassword = null;
+            Properties.Settings.Default.Save();
+            backgroundWorker.CancelAsync();
+            this.Hide();
+            this.Dispose();
+            Application.Restart();
+            // TODO: Restart application
+        }
+        #endregion
+        #region Delegate functions
+        /// &lt;summary&gt;
+        /// A delegate function to allow writing to the log textbox from other threads.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;add&quot;&gt;String: The text to write to the log&lt;/param&gt;
+        private delegate void WriteLogDelegate(string add);
+        private void WriteLog(string add)
+        {
+            if (this.txt_log.InvokeRequired)
+            {
+                this.txt_log.Invoke(new WriteLogDelegate(this.WriteLog), add);
+            }
+            else
+            {
+                this.txt_log.Text += add + Environment.NewLine;
+            }
+        }
+        /// &lt;summary&gt;
+        /// A delegate function to allow invocation of Notification objects from other threads.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;txt&quot;&gt;String: The text to display on the Notification.&lt;/param&gt;
+        private delegate void NotifyDelegate(string txt);
+        private void Notify(string txt)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new NotifyDelegate(this.Notify), txt);
+            }
+            else
+            {
+                Notification n = new Notification(txt, false);
+            }
+        }
+        /// &lt;summary&gt;
+        /// A delegate function to allow showing and hiding of this form from other threads.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;show&quot;&gt;Boolean: Whether to show or hide the form.&lt;/param&gt;
+        private delegate void AppearDelegate(bool show);
+        private void Appear(bool show)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new AppearDelegate(this.Appear), show);
+            }
+            else
+            {
+                if (show)
+                    this.Hide();
+                else
+                    this.Show();
+            }
+        }
+        #endregion
+        #region EventHandlers
+        /// &lt;summary&gt;
+        /// Called when the form is closed.
+        /// Stops the background thread and exits the application.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void Listener_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            backgroundWorker.CancelAsync();
+            Application.Exit();
+        }
+        /// &lt;summary&gt;
+        /// Main loop for the background worker.
+        /// Starts a TCP server and constantly attempts to accept connections from clients.
+        /// When a connection is made, spawns an instance of ClientHandler to deal with communication.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker bw = (BackgroundWorker)sender;
+
+            int counter = 0;
+            WriteLog(&quot;Starting server...&quot;);
+            serverSocket.Start();
+            System.Threading.Thread.Sleep(500);
+            WriteLog(&quot;Server started!&quot;);
+            Appear(false);
+            Notify(&quot;Server started!&quot;);
+
+            while (true)
+            {
+                counter++;
+                clientSocket = serverSocket.AcceptTcpClient();
+                WriteLog(&quot;Connection &quot; + counter.ToString() + &quot; made!&quot;);
+                Notify(&quot;Connection &quot; + counter.ToString() + &quot; made!&quot;);
+                ClientHandler ch = new ClientHandler(clientSocket);
+            }
+        }
+        #endregion
+    }
+}
+</pre><h3>Notification.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Windows.Forms;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// The class for the notification pop-up.
+    /// Contains methods for the management of this form.
+    /// Inherits from System.Windows.Forms.Form.
+    /// &lt;/summary&gt;
+    public partial class Notification : Form
+    {
+        #region Constructor
+        /// &lt;summary&gt;
+        /// Constructor for the class.
+        /// Initialises and displays the form. Implements the visual style.
+        /// Starts ticking the timer if the form is not to be permanent.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;txt&quot;&gt;String: The text to be displayed on the form.&lt;/param&gt;
+        /// &lt;param name=&quot;perma&quot;&gt;Boolean: true if the form is to be displayed permanently on the screen. False if the form is to dispose of itself.&lt;/param&gt;
+        public Notification(string txt, bool perma)
+        {
+            InitializeComponent();
+            this.Show();
+            lblNotification.Text = txt;
+            this.Left = Screen.PrimaryScreen.WorkingArea.Width - this.Width;
+            this.Top = Screen.PrimaryScreen.WorkingArea.Height - this.Height;
+            this.Opacity = 0.7;
+            if (!perma) timer.Start();
+        }
+        #endregion
+        #region EventHandlers
+        /// &lt;summary&gt;
+        /// Kills this instance of the class and instructs the garbage collector to remove it from memory.
+        /// Called when the timer ticks (2.5 second tick), or when the X button is clicked.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void Suicide(object sender, EventArgs e)
+        {
+            this.Dispose();
+        }
+        #endregion
+    }
+}
+</pre><h3>Program.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Windows.Forms;
+using System.Threading;
+
+namespace Donatello
+{
+    static class Program
+    {
+        /// &lt;summary&gt;
+        /// The main entry point for the application.
+        /// &lt;/summary&gt;
+        [STAThread]
+        static void Main()
+        {
+            // Ensure that only one instance of Donatello is running.
+            bool onlyInstance = false;
+            // Donatello has a unique hash, its program ID. Mutex checks this hash against other running processes.
+            // If a process with the same hash is running, Donatello must be already running.
+            Mutex mutex = new Mutex(true, &quot;ae6064c155ec836e32d39685169cd272&quot;, out onlyInstance);
+            if (!onlyInstance)
+            {
+                MessageBox.Show(&quot;An instance of Donatello is already running&quot;);
+                return;
+            }
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Dashboard());
+            GC.KeepAlive(mutex);
+        }
+    }
+}
+</pre><h3>Redownload.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Data;
+using System.Windows.Forms;
+using System.Collections.Generic;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// The class for the Redownload form
+    /// Contains methods for the management of this form.
+    /// Inherits from System.Windows.Forms.Form.
+    /// &lt;/summary&gt;
+    public partial class Redownload : Form
+    {
+        #region Attributes &amp; Constructor
+        Dictionary&lt;int, int&gt; lookup;
+        /// &lt;summary&gt;
+        /// Constructor for the class.
+        /// Initialises and displays the form. Runs the PopulateList() method.
+        /// &lt;/summary&gt;
+        public Redownload()
+        {
+            InitializeComponent();
+            PopulateList();
+        }
+        #endregion
+        #region Methods &amp; EventHandlers
+        /// &lt;summary&gt;
+        /// Populates the list of purchased items for this account from the database.
+        /// &lt;/summary&gt;
+        private void PopulateList()
+        {
+            DataTable dt = DbConnect.GetAuthorisedProducts(Properties.Settings.Default.LastUsername);
+            lookup = new Dictionary&lt;int, int&gt;();
+
+            if (dt.Rows.Count != 0)
+            {
+                for (int i = 0; i &lt; dt.Rows.Count; i++)
+                {
+                    // A dictionary containing product_id so we can find it by the index in the checkedlistbox
+                    lookup.Add(i, Convert.ToInt32(dt.Rows[i][0]));
+                    purchasedItems.Items.Add(dt.Rows[i][1].ToString());
+                }
+                purchasedItems.Enabled = true;
+                btn_Start.Enabled = true;
+            }
+            else
+            {
+                purchasedItems.Items.Add(&quot;You have not yet purchased any products!&quot;);
+                purchasedItems.Enabled = false;
+                btn_Start.Enabled = false;
+            }
+        }
+        /// &lt;summary&gt;
+        /// Called when the Start button is clicked.
+        /// Instantiates a Download class to get the selected product in the list.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_Start_Click(object sender, EventArgs e)
+        {
+            if (purchasedItems.SelectedIndices.Count == 0)
+            {
+                string location = DbConnect.GetLocationFromProductId(lookup[purchasedItems.SelectedIndex]);
+                if (!String.IsNullOrEmpty(location))
+                {
+                    Download d = new Download(location);
+                }
+            }
+        }
+        /// &lt;summary&gt;
+        /// Called when the cancel button is clicked.
+        /// Closes this form.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_cancel_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+        }
+        #endregion
+    }
+}
+</pre><h2>Appendix C - Web Service Code</h2><h2>Appendix D - Unit Tests</h2><h3>AccountTest.cs</h3><pre class="prettyprint linenums">﻿using Donatello;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+
+namespace UnitTests
+{
+    /// &lt;summary&gt;
+    ///This is a test class for AccountTest and is intended
+    ///to contain all AccountTest Unit Tests
+    ///&lt;/summary&gt;
+    [TestClass()]
+    public class AccountTest
+    {
+        private TestContext testContextInstance;
+
+        /// &lt;summary&gt;
+        ///Gets or sets the test context which provides
+        ///information about and functionality for the current test run.
+        ///&lt;/summary&gt;
+        public TestContext TestContext
+        {
+            get
+            {
+                return testContextInstance;
+            }
+            set
+            {
+                testContextInstance = value;
+            }
+        }
+        /// &lt;summary&gt;
+        ///A test for Account Constructor
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void AccountConstructorTest()
+        {
+            string email = &quot;email@address.com&quot;;
+            string name = &quot;bob&quot;;
+            string password = &quot;123&quot;;
+            string dob = &quot;11-10-1989&quot;;
+            Account target = new Account(email, name, password, dob);
+
+            Assert.AreEqual(email, target.Email);
+            Assert.AreEqual(name, target.Name);
+            Assert.AreEqual(password, target.Password);
+            Assert.AreEqual(dob, target.Dob);
+        }
+        /// &lt;summary&gt;
+        ///A test for ComputeHash
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void ComputeHashTest()
+        {
+            string pass = &quot;123&quot;;
+            string definedSalt = &quot;r2VICQ==&quot;;
+            
+            Dictionary&lt;string, string&gt; actual = Account.ComputeHash(pass, definedSalt);
+
+            Assert.AreEqual(definedSalt, actual[&quot;salt&quot;]);
+            Assert.AreEqual(DbConnect.GetPassHash(&quot;test@test.com&quot;), actual[&quot;hash&quot;]);
+        }
+        /// &lt;summary&gt;
+        ///A test for ComputeSalt
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void ComputeSaltTest()
+        {
+            byte[] salt1 = Account.ComputeSalt();
+            byte[] salt2 = Account.ComputeSalt();
+            Assert.AreNotEqual(salt1, salt2);
+        }
+    }
+}
+</pre><h3>DbConnectTest.cs</h3><pre class="prettyprint linenums">﻿using Donatello;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Data;
+
+namespace UnitTests
+{
+    /// &lt;summary&gt;
+    ///This is a test class for DbConnectTest and is intended
+    ///to contain all DbConnectTest Unit Tests
+    ///&lt;/summary&gt;
+    [TestClass()]
+    public class DbConnectTest
+    {
+        private TestContext testContextInstance;
+
+        /// &lt;summary&gt;
+        ///Gets or sets the test context which provides
+        ///information about and functionality for the current test run.
+        ///&lt;/summary&gt;
+        public TestContext TestContext
+        {
+            get
+            {
+                return testContextInstance;
+            }
+            set
+            {
+                testContextInstance = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///A test for AccountExists
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void AccountExistsTest()
+        {
+            string email = &quot;test@test.com&quot;;
+            string fake = &quot;no&quot;;
+            bool expected = true;
+            bool actual;
+
+            actual = DbConnect.AccountExists(email);
+            Assert.AreEqual(expected, actual);
+
+            actual = DbConnect.AccountExists(fake);
+            Assert.AreNotEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for CalculateMD5
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void CalculateMD5Test()
+        {
+            string input = &quot;1&quot;;
+            string expected = &quot;c4ca4238a0b923820dcc509a6f75849b&quot;;
+            string actual;
+
+            actual = DbConnect.CalculateMD5(input);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for CheckLogin
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void CheckLoginTest()
+        {
+            string email = &quot;test@test.com&quot;;
+            string hash = &quot;V6XG5WytBR8fb9txtcRWDAYKzHLC5pnN9oOXuPm05YKX9v6B2xa9/4RgSDDw0j/ICnqP3z+0hApjDm2iyclOla9lSAk=&quot;;
+            bool expected = true;
+            bool actual;
+
+            actual = DbConnect.CheckLogin(email, hash);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for CountLocations
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void CountLocationsTest()
+        {
+            int expected = -1;
+            int actual;
+            actual = DbConnect.CountLocations();
+
+            Assert.IsTrue(actual &gt; expected);
+        }
+        /// &lt;summary&gt;
+        ///A test for GetAccount
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void GetAccountTest()
+        {
+            string id = &quot;test@test.com&quot;;
+            Account expected = new Account(&quot;test@test.com&quot;, &quot;Mister Testy&quot;, &quot;V6XG5WytBR8fb9txtcRWDAYKzHLC5pnN9oOXuPm05YKX9v6B2xa9/4RgSDDw0j/ICnqP3z+0hApjDm2iyclOla9lSAk=&quot;, &quot;17-08-1964&quot;);
+            Account actual;
+            actual = DbConnect.GetAccount(id);
+
+            Assert.AreEqual(expected.Email, actual.Email);
+            Assert.AreEqual(expected.Name, actual.Name);
+            Assert.AreEqual(expected.Password, actual.Password);
+            Assert.AreEqual(expected.Dob, actual.Dob);
+        }
+        /// &lt;summary&gt;
+        ///A test for GetLocation
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void GetLocationTest()
+        {
+            string expected = &quot;c4ca4238a0b923820dcc509a6f75849b&quot;;
+            string actual;
+            actual = DbConnect.GetLocation(1);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for GetLocationFromProductId
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void GetLocationFromProductIdTest()
+        {
+            int pid = 1;
+            string expected = &quot;c4ca4238a0b923820dcc509a6f75849b&quot;;
+            string actual;
+            actual = DbConnect.GetLocationFromProductId(pid);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        /// A test for GetLocation
+        /// &lt;/summary&gt;
+        [TestMethod()]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void GetInvalidLocationTest()
+        {
+            int input = 0;
+            string actual;
+            actual = DbConnect.GetLocation(input);
+        }
+        /// &lt;summary&gt;
+        /// A test for GetLocationFromProductId
+        /// &lt;/summary&gt;
+        [TestMethod()]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void GetInvalidLocationFromProductIdTest()
+        {
+            int input = 0;
+            string actual;
+            actual = DbConnect.GetLocationFromProductId(input);
+        }
+        /// &lt;summary&gt;
+        ///A test for GetMD5Hash
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void GetMD5HashTest()
+        {
+            string product = &quot;Battlefield 3&quot;;
+            string expected = &quot;7033166343ae590e9114df94fe1e803b&quot;;
+            string actual;
+            actual = DbConnect.GetMD5Hash(product);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for GetPassHash
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void GetPassHashTest()
+        {
+            string email = &quot;test@test.com&quot;;
+            string expected = &quot;V6XG5WytBR8fb9txtcRWDAYKzHLC5pnN9oOXuPm05YKX9v6B2xa9/4RgSDDw0j/ICnqP3z+0hApjDm2iyclOla9lSAk=&quot;;
+            string actual;
+            actual = DbConnect.GetPassHash(email);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for GetProductNameFromLocationHash
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void GetProductNameFromLocationHashTest()
+        {
+            string location = &quot;c81e728d9d4c2f636f067f89cc14862c&quot;;
+            string expected = &quot;Battlefield 3&quot;;
+            string actual;
+            actual = DbConnect.GetProductNameFromLocationHash(location);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for Login
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void LoginTest()
+        {
+            string uid = &quot;test@test.com&quot;;
+            string pwd = &quot;123&quot;;
+            
+            Assert.IsTrue(DbConnect.Login(uid, pwd));
+        }
+        /// &lt;summary&gt;
+        ///A test for Login
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void WrongPassLoginTest()
+        {
+            string uid = &quot;test@test.com&quot;;
+            string pwd = &quot;abc&quot;;
+
+            Assert.IsFalse(DbConnect.Login(uid, pwd));
+        }
+        /// &lt;summary&gt;
+        ///A test for Login
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void WrongUserLoginTest()
+        {
+            string uid = &quot;email@address.com&quot;;
+            string pwd = &quot;123&quot;;
+
+            Assert.IsFalse(DbConnect.Login(uid, pwd));
+        }
+    }
+}
+</pre><h2>Appendix X - Bibliography</h2><h2>Appendix Y - References</h2>

@@ -4,7 +4,7 @@ As stated previously, the project will be completed using a bespoke software dev
 <div>
 <figure>
 <img src="img/sdlc.png">
-<figcaption>The custom SDLC this project will be developed to.</figcaption>
+<figcaption>The custom SDLC this project will adhere to.</figcaption>
 </figure>
 </div>
 
@@ -22,7 +22,8 @@ The four sprints, then, will be split in accordance with the functionality of th
 1.	Database design and creation  
 2.	GUI creation and account management tools
 3.	Web service creation
-4.	Download and file management feature implementation
+4.	Download feature
+5.	File management feature and refactor.
 
 Each sprint will take either one or two weeks depending on its complexity, and more specific objectives will be drawn up before each sprint commences. Each sprint will be designed to fulfil one or more high-priority requirements.
 
@@ -51,7 +52,8 @@ Non-functional:
 
 *	Lightweight
 *	Fast
-*	Attractive
+*	Attractive - Consistent User Experience (UX)
+*	Robust
 
 **Could-Have:**  
 Functional:  
@@ -96,9 +98,30 @@ The first version of the database design was drawn up on paper, and looked like 
 </figure>
 </div>
 
+###Interface Design
+A good user experience is not the same as an attractive user interface. The UX encompasses more; particularly things like usability and accessibility considerations. The user interface for the application was designed to be as simple as possible and to retain its flow. As for the aesthetic, this was intended to be similar to Microsoft's Metro aesthetic introduced in Windows Phone 7 and Windows 8. This look was accomplished by using the Segoe UI font, large interface elements, and plenty of blank space to achieve a very 'clean' look.
+
+<div>
+<figure>
+<img src="img/wireframes-noannotate.png">
+<figcaption>Some of the wireframes drawn up while designing the front-end.</figcaption>
+</figure>
+</div>
+
 
 ###Class Design
-
+*	Account.cs
+	*	Attributes
+		*	Email address (unique identifier)
+		*	Password
+		*	Date of birth
+		*	Name
+	*	Methods
+		*	Constructor
+		*	Password hasher
+		*	Salt generator
+		*	Date formatter
+		
 
 ##Tools Available
 
@@ -122,7 +145,7 @@ Firstly, a UNIX tool, <code>dd</code>, was used to create large files to upload 
 
 <div>
 <figure>
-<pre class="prettyprint lang-php">require_once('Database.class.php');
+<pre class="prettyprint linenums">require_once('Database.class.php');
 $db = new Database();
 
 $i = ; // Set the product's location_id here
@@ -152,6 +175,57 @@ Inputting variables into the above code and running it from the command line gen
 Once enough data was in the database, this sprint was complete.
 
 ###Sprint 2
-The second sprint could have been dedicated to writing either the web service or the client application; the option not picked for the second sprint would be the third sprint, so the only thing that mattered was the order in which these were done. Having programmed some PHP already, for variety's sake it was decided to work on the client for this sprint - the C#.
+The second sprint could have been dedicated to writing either the web service or a part of the client application; the option not picked for the second sprint would be the third sprint, so the only thing that mattered was the order in which these were done. Both sprints were scheduled to last 10 days, so they were interchangeable. Having programmed some PHP already, for variety's sake it was decided to work on the Windows program for this sprint - written in C#.
+
+The part of the application scheduled for this sprint was the login and account management feature. The design for this consisted of a series of dialogs to allow a user to login, or, if they had no account, to create one. However, rather than opening a new form each time and causing the application to disappear and reappear, potentially in a different location on-screen, the design was for a single form window with changing contents. Before creating the User Interface (UI), though, there was some back-end work to do, namely creating an Object to hold Accounts.
+
+<div>
+<figure>
+<pre class="prettyprint linenums">
+public class Account
+{
+	public string Email { get; set; }
+    public string Name { get; set; }
+    public string Password { get; set; }
+    public string Dob { get; set; }
+    public Account(string email, string name, string password, string dob)
+    {
+        Email = email;
+        Name = name;
+        Password = password;
+        Dob = dob;
+    }
+}
+</pre>
+<figcaption>The basic constructor for Accounts</figcaption>
+</figure>
+</div>
+
+This basic object was then expanded to do more than just hold data (see **APPENDIX SOMETHING**), including hashing and salting passwords and formatting dates. When creating a user account through the UI, an instance of this object is created to manipulate its details.
+
+An issue encountered here was when hashing passwords. It turns out that some of the hashes that had been created using PHP were incompatible with their C# counterparts. This is because, by default, PHP hashes in lowercase, whereas C# uses uppercase characters in its hashes. To resolve this an argument needed to be passed to the method that converts the hash bytes to a string to format it correctly: <code>.ToString("x2")</code>.
+
+The UI itself was easy to create using Visual Studio's built in WYSIWYG (What You See Is What You Get) editor. Following the design sensibilities that had been previously outlined, it turned out to look like the following:
+
+<div>
+<figure>
+<img src="img/scrn_Login.png">
+<figcaption>How the login screen turned out to look when implemented.</figcaption>
+</figure>
+</div>
+
+More screen captures of the implemented UI are available in **APPENDIX SOMETHING**.
+
+The final features to implement for the sprint were logging in and creating accounts. The hashing and salting algorithms were already written, so all that was needed to do was create a database class and hook everything up to the user interface. This went through with few problems and effectively passed black-box testing. The remaining feature was for auto-login: the application is designed to be started whenever Windows starts, so the user would not want to have to type a username and password every time they reboot. It was decided that the application should remember the last user to log in, and this user's information could be wiped with a logout button. Additionally, after creating a new account, the user would have to log in once more (for security purposes) before they would be remembered. This logic was fairly easy to implement, and so the sprint was completed without issue.
+
+###Sprint 3
+Web service
+
+###Sprint 4
+Downloading!
+
+###Sprint 5
+Redownload & refactor
 
 ##Testing
+In addition to going through all the program's and web service's features manually and checking the functionality was correct, basic unit tests were written which were intended to check that individual methods were working as expecting and giving valid results. For example, a unit test was written that checked what happened when various username and password examples were given to the 

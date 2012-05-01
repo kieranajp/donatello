@@ -2,16 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Remote Delivery of Large Media Files</title>
+    <title>Remote Downloading of Large Media Files</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="Kieran Patel (i7869019)">
     
-     <!--[if lt IE 9]>
-       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-     <![endif]-->
+
     <link href="prettify.css" type="text/css" rel="stylesheet" />
-    <link href="standard.css" rel="stylesheet">
+    <link href="standard.css" type="text/css" rel="stylesheet" />
     <style type="text/css">
       body {
         counter-reset: a;
@@ -22,6 +20,15 @@
       }
       @media print {
         .noprint { display: none; }
+        pre.prettyprint.linenums {
+          box-shadow: none;
+        }
+        pre.prettyprint.linenums li {
+          border-bottom: 1px dotted #EEE;
+        }
+        body {
+          margin-left: 2cm;
+        }
       }
       @media screen {
         body {
@@ -32,7 +39,7 @@
         #view {
           margin: 40px auto;
           width: 440pt;
-          padding: 40px 0 0 400px;
+          padding: 40px 0 20px 400px;
         }
         #view.print_view section {height: auto;}
       }
@@ -60,34 +67,34 @@
 
       /** toc **/
       .toc {
-        width: 480px;
-        margin: auto;
+        counter-reset: t_H1;
+        width: 90%;
         padding: 20px;
       }
-      .toc li {
-        position: relative;
+      .toc li, .tof li {
         list-style-type: none;
         height: 25px;
+        overflow: hidden;
+      }
+      .tof li {
       }
       .toc a, .toc span {
         background: #fff;
         text-decoration:none;
+        display: inline-block;
       }
       .toc a {
-        position: absolute;
-        border-bottom: dotted 1px #AAA;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
+        width: 100%;
       }
-      .toc span {
-        position: absolute;
+      .tof span.title {
+        padding-right: 25px;
+      }
+      .toc span, .tof span {
         padding: 0 4px;
-        bottom: -1px;
+        page-break-inside: avoid;
       }
-      .toc span.page {
-        right: 0;
+      li span.page {
+        float: right;
       }
       .toc .H2 span.title {
         padding-left: 40px;
@@ -128,18 +135,27 @@
         display: none;
       }
 
+      #section {
+        page-break-before: always;
+      }
+
+      #Appendices h1, #Appendices h2, #Appendices h3 {
+        page-break-before: always;
+      }
+
       /*figcaption:before {
         content: "Figure " counter(fig) ": ";
         counter-increment: fig;
       }*/
     </style>
   </head>
-  <body onload="prettyPrint()">
+  <body>
     <header class="noprint">
       <ul>
         <li class="active"><a href="#html">HTML5 view</a></li>
         <li><a href="#print">print view</a></li>
       </ul>
+      <span id="chapter"></span>
     </header>
     <nav class="noprint">
       <ul class="toc">
@@ -148,40 +164,58 @@
     <div id="view">
       <ul class="toc noscreen">
       </ul>
+      <div id="section" class="noscreen">
+        <ul class="tof">
+        </ul>
+      </div>
 <?php
+$start_time = microtime(true);
 if ($handle = opendir('../src')) {
-    require_once '../markdown.php';    
-    while (false !== ($entry = readdir($handle))) {
-        if ($entry != "." && $entry != "..") {
-            $info = pathinfo('../src/'.$entry);
-            if ($info['extension'] == "md" || $info['extension'] == "markdown") {
-                $name = mb_substr($info['filename'], 3);
-                $contents = file_get_contents('../src/'.$entry);
-                //if bibliography, sort
-                if (strpos($name,'Bibliography') !== false) {
-                  $sorted = explode("\n- ", substr($contents, 2));
-                  sort($sorted, SORT_STRING);
-                  $contents = "- ". implode("\n- ", $sorted);
-                }
-                //if abstract then append .heading not h1 (no numbering)
-                //$src = (($name == "Abstract") ? "<div class=\"heading\">$name</div>" : "# $name") . "\r\n$contents";
-                $src = "# $name\r\n$contents";
-                echo '<section id="' . str_replace(" ", "", $name) . '">'. Markdown($src) . '</section>';
-            }
+  require_once '../markdown.php';    
+  while (false !== ($entry = readdir($handle))) {
+    if ($entry != "." && $entry != ".." && $entry != ".DS_Store" && !is_dir($file = '../src/'.$entry)) {
+      $info = pathinfo($file);
+      $name = $src = "";
+      $name = mb_substr($info['filename'], 3);
+      $contents = file_get_contents($file);
+      if ($info['extension'] == "md" || $info['extension'] == "markdown") {
+        //if References, sort
+        if (strpos($name,'References') !== false) {
+          $sorted = explode("\n- ", substr($contents, 2));
+          sort($sorted, SORT_STRING);
+          $contents = "- ". implode("\n- ", $sorted);
         }
+        $src = Markdown($contents);
+      }
+      else if ($info['extension'] == "html") $src = "$contents";
+      echo '<section id="' . str_replace(" ", "", $name) . '"><h1>'. $name ,'</h1>'. $src . '</section>';
     }
-    closedir($handle);
+  }
+  closedir($handle);
 }
 ?>
+      <div id="word_count" class="noscreen">
+        <h1>Word Counts</h1>
+        <table class="table-striped">
+          <tr>
+            <th>Chapter</th>
+            <th>Total Words</th>
+            <th>Body Count</th>
+          </tr>
+        </table>
+      </div>
     </div>
-    <footer>
-      <a id="prev" href="#prev">&lt;&lt; Previous Chapter</a>
-      <a id="next" href="#next">Next Chapter &gt;&gt;</a>
+    <footer class="noprint">
+      <div>
+        <a id="prev" href="#prev">&lt;&lt; Previous Chapter</a>
+        <a id="next" href="#next">Next Chapter &gt;&gt;</a>
+      </div>
     </footer>
     <script type="text/javascript" src="prettify.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.min.js"></script>
     <script>
     var toc;
+    console.log("compile time: <?php echo round(microtime(true) - $start_time, 2) ?> seconds");
     $(function() {
       //load toc
       $.getJSON("../toc.json", function(data) {
@@ -203,12 +237,26 @@ if ($handle = opendir('../src')) {
           }
         });
 
+        //list of figures
+        $.getJSON("../tof.json", function(data) {
+          tof = data;
+          for(var i = 0; i < data.length; ++i) $('.tof').append('<li><span class="title">' + data[i][0] + '</span><span class="page">' + data[i][1] + '</span></li>');
+        });
+
+        //word count
+        $.getJSON("../words.json", function(data) {
+          words = data;
+          for(var chapter in data.chapters) $('#word_count table').append('<tr><td>' + chapter + '</td><td>' + data.chapters[chapter][0] + '</td><td>+' + data.chapters[chapter][1] + '</td></tr>');
+          $('#word_count table').append('<tr><th>Total:</th><td>' + data['total'] + '</td><td>' + data['body'] + '</td></tr>');
+        });
+
         //header events
         $('header li a').click(function() {
           if (!$(this).parent().hasClass("active")) {    
             $('header li').removeClass("active");
             $(this).parent().addClass("active");
             $("#view").toggleClass("print_view");
+            $('#chapter, .noscreen').toggle();
           }
         });
 
@@ -219,6 +267,7 @@ if ($handle = opendir('../src')) {
           if (!$(section).hasClass("active")) {
             $('section').removeClass("active");
             $(section).addClass("active");
+            $('#chapter').text($(section + ' h1').first().text());
           }
         });
 
@@ -229,6 +278,7 @@ if ($handle = opendir('../src')) {
             $('section').removeClass("active");
             prev.addClass("active");
             setTimeout("$('body').scrollTop(0)");
+            $('#chapter').text(prev.children('h1').first().text());
           }
         });
         $('#next').click(function() {
@@ -237,10 +287,22 @@ if ($handle = opendir('../src')) {
             $('section').removeClass("active");
             next.addClass("active");
             setTimeout("$('body').scrollTop(0)");
+            $('#chapter').text(next.children('h1').first().text());
           }
         });
 
-        $('section').first().addClass("active");
+        //figure numbers & refs
+        $('figure').each(function(i) {
+          var figure = 'Figure ' + (i + 1);
+          $(this).children('figcaption').prepend(figure + ': ');
+          $('a.figref[href="#' + this.id + '"]').text(figure);
+        });
+
+        //show first chapter
+        $('#chapter').text($('section').first().addClass("active").text());
+
+        //prettify code
+        prettyPrint();
       });
     });
     </script>

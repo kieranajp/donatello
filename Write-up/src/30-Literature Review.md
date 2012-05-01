@@ -111,7 +111,7 @@ Every project has its risks. <a class="figref" href="#risk">Figure</a> shows som
 
 <div>
 <figure id="risk">
-<img src="img/systemrisks.tiff">
+<img src="img/systemrisks.png">
 <figcaption>Risks within a System Context (Higuera, R.P., and Haimes, Y.Y., 1996)</figcaption>
 </figure>
 </div>
@@ -163,7 +163,7 @@ Performing preliminary work before artefact production is a useful means of eval
 
 <div>
 <figure>
-<pre class="prettyprint">class ListenerServerTest
+<pre class="prettyprint linenums">class ListenerServerTest
 {
   static void Main(string[] args)
   {

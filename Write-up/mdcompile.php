@@ -32,7 +32,7 @@ if ($handle = opendir('src')) {
       }
       else if ($info['extension'] == "html") $html = file_get_contents($file);
 			//dont include invalid sections in body count
-			$body_count = (!in_array($name, array("Abstract", "Bibliography", "Appendices"))) ? word_count($html, true) : 0;
+			$body_count = (!in_array($name, array("Abstract", "References", "Appendices"))) ? word_count($html, true) : 0;
 			$words[$name] = array(word_count($html), $body_count);
 			if ($do_toc || $do_tof) {
 				$dom = new DOMDocument();
@@ -120,15 +120,15 @@ function get_dir($dir, $level = 2) {
   if ($handle = opendir($dir)) {  
     while (false !== ($entry = readdir($handle))) {
       if ($entry != "." && $entry != ".." && $entry != ".DS_Store") {
-        if (is_dir("$dir/$entry")) {
-          get_dir("$dir/$entry", ++$level);
+        if (is_dir("$dir/$entry")) {          
+          $html .= "<h$level>$entry</h$level>" . get_dir("$dir/$entry", $level + 1);
         }
         else {
           $info = pathinfo($dir.$entry);
           $name = $info['filename'];
           $contents = htmlspecialchars(file_get_contents("$dir/$entry"));
           //if code put in pre block
-          $contents = (in_array($info['extension'], array("php", "json", "css", "html", "js"))) ? "<pre class=\"prettyprint linenums\">". $contents ."</pre>" : "<pre>$contents</pre>";
+          $contents = (in_array($info['extension'], array("php", "json", "css", "html", "js", "cs"))) ? "<pre class=\"prettyprint linenums\">". $contents ."</pre>" : "<pre>$contents</pre>";
           $html .= "<h$level>$entry</h$level>$contents";
         }
       }
