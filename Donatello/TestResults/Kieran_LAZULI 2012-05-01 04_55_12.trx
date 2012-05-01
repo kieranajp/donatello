@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="c8651c55-e57c-419c-9f7c-20e24a4b932a" name="Kieran@LAZULI 2012-05-01 04:55:12" runUser="Lazuli\Kieran" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="Local" id="f5e64e3e-c56f-4939-9908-e5450b15daae">
+    <Description>These are default test settings for a local test run.</Description>
+    <Deployment enabled="false" runDeploymentRoot="Kieran_LAZULI 2012-05-01 04_55_12">
+      <DeploymentItem filename="C:\Users\Kieran\Dropbox\BU_Work\Dissertation\GitHub\Donatello\Donatello\bin\Debug\Donatello.exe" />
+      <DeploymentItem filename="C:\Program Files (x86)\NUnit 2.6\bin\framework\nunit.framework.dll" />
+    </Deployment>
+    <Execution>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2012-05-01T04:55:12.7050260+01:00" queuing="2012-05-01T04:55:13.6180782+01:00" start="2012-05-01T04:55:13.6820819+01:00" finish="2012-05-01T04:55:44.0048163+01:00" />
+  <ResultSummary outcome="Error">
+    <Counters total="19" executed="7" passed="6" error="0" failed="0" timeout="0" aborted="1" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="12" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <RunInfos>
+      <RunInfo computerName="LAZULI" outcome="Error" timestamp="2012-05-01T04:55:43.9988159+01:00">
+        <Text>Test host process exited unexpectedly.</Text>
+      </RunInfo>
+    </RunInfos>
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="GetMD5HashTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="a0720584-8c2c-483b-a3d9-ff5a659d5a0a">
+      <Execution id="ca5c8419-a6ff-4abe-ac3e-9eeb773786e3" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="GetMD5HashTest" />
+    </UnitTest>
+    <UnitTest name="CalculateMD5Test" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="2ed6a6b1-df87-210d-51fa-92b2236e30b3">
+      <Execution id="590202a7-9839-4f3a-ad77-e64ae03175b1" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="CalculateMD5Test" />
+    </UnitTest>
+    <UnitTest name="ComputeSaltTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="fe6fee5e-1f9e-e53d-0b4a-6659982d1faf">
+      <Execution id="5fa0f330-2bf8-43cc-b8bf-b2b9121c069f" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.AccountTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ComputeSaltTest" />
+    </UnitTest>
+    <UnitTest name="WrongUserLoginTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="33cd5822-8ae4-cb7f-92ad-bdcb3a9e41f2">
+      <Execution id="d04b00af-7757-4500-ad76-5e8de0c172ad" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="WrongUserLoginTest" />
+    </UnitTest>
+    <UnitTest name="GetInvalidLocationTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="64a7a431-d288-add2-aece-625f9b7f2037">
+      <Execution id="ecc66e1b-987c-4d74-803b-fa7c6d75e4b2" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="GetInvalidLocationTest" />
+    </UnitTest>
+    <UnitTest name="GetPassHashTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="573f435a-e23b-52d0-3a46-7f4c1ffad568">
+      <Execution id="a36d4c60-0e6b-4ee5-932c-32b4dbf1c556" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="GetPassHashTest" />
+    </UnitTest>
+    <UnitTest name="NullMD5Test" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="f9bd603f-fdfe-4639-20cc-7fa856dd3d75">
+      <Execution id="b2ddca0b-65a0-46e4-b369-d86f344e120c" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="NullMD5Test" />
+    </UnitTest>
+    <UnitTest name="GetAccountTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="a3231915-af11-7b41-ca6d-ca533f0ea6f6">
+      <Execution id="8a09b8ce-d3ce-47a2-8660-1e8a36ff2866" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="GetAccountTest" />
+    </UnitTest>
+    <UnitTest name="LoginTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="a57098c3-02fa-454d-a5e4-6a783305bc50">
+      <Execution id="8971c1a1-de84-4b2d-b285-4ce548ec941f" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="LoginTest" />
+    </UnitTest>
+    <UnitTest name="CountLocationsTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="eede26b8-9354-779e-5d22-f06a09ac568c">
+      <Execution id="09bb0561-de99-4c49-b791-1fe53f02a6fa" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="CountLocationsTest" />
+    </UnitTest>
+    <UnitTest name="AccountConstructorTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="2e73691e-478f-8eae-8aa8-f24ae79c0f17">
+      <Execution id="89bd2fdc-553b-45e7-971d-1ab225da01b4" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.AccountTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="AccountConstructorTest" />
+    </UnitTest>
+    <UnitTest name="GetInvalidLocationFromProductIdTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="e716c7c9-7aba-bef7-98aa-6b50cbbeaa0b">
+      <Execution id="0f68fef7-66a4-4a17-bbbe-2b955ccb1c8c" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="GetInvalidLocationFromProductIdTest" />
+    </UnitTest>
+    <UnitTest name="GetLocationTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="7513f8ee-f6fe-80de-055b-68324cd87bf9">
+      <Execution id="78e2bfd4-ae8b-4646-ae57-77574a27cb70" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="GetLocationTest" />
+    </UnitTest>
+    <UnitTest name="ComputeHashTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="20bc22b9-3c67-c11a-76e0-76bf954769b8">
+      <Execution id="42788f80-cbd4-4824-ab93-1d32d9360257" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.AccountTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ComputeHashTest" />
+    </UnitTest>
+    <UnitTest name="CheckLoginTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="c8b22416-a405-6bde-1648-7df5cadd3149">
+      <Execution id="6bf76a5d-c6f7-40ab-946a-bf1ca5b7797f" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="CheckLoginTest" />
+    </UnitTest>
+    <UnitTest name="WrongPassLoginTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="710d2cda-029c-93e6-1bc0-0035ad662745">
+      <Execution id="42edb370-fc0a-493b-9ce5-6223c38d5c63" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="WrongPassLoginTest" />
+    </UnitTest>
+    <UnitTest name="AccountExistsTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="c354614c-ed47-9579-ccf7-957645aeb789">
+      <Execution id="e6cb15cc-df5c-4e0b-8ec7-384cf257dead" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="AccountExistsTest" />
+    </UnitTest>
+    <UnitTest name="GetLocationFromProductIdTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="158bd376-d913-d14d-5957-7cbd4c500e15">
+      <Execution id="063720ad-5e0d-4d81-9716-0376e0ebf403" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="GetLocationFromProductIdTest" />
+    </UnitTest>
+    <UnitTest name="GetProductNameFromLocationHashTest" storage="c:\users\kieran\dropbox\bu_work\dissertation\github\donatello\unittests\bin\debug\unittests.dll" id="7159d5aa-8fc5-2252-46f2-92ec0357814d">
+      <Execution id="89c445fb-0276-4b3e-9f94-e8d70f2a4980" />
+      <TestMethod codeBase="C:/Users/Kieran/Dropbox/BU_Work/Dissertation/GitHub/Donatello/UnitTests/bin/Debug/UnitTests.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="UnitTests.DbConnectTest, UnitTests, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="GetProductNameFromLocationHashTest" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="158bd376-d913-d14d-5957-7cbd4c500e15" executionId="063720ad-5e0d-4d81-9716-0376e0ebf403" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="20bc22b9-3c67-c11a-76e0-76bf954769b8" executionId="42788f80-cbd4-4824-ab93-1d32d9360257" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2e73691e-478f-8eae-8aa8-f24ae79c0f17" executionId="89bd2fdc-553b-45e7-971d-1ab225da01b4" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="2ed6a6b1-df87-210d-51fa-92b2236e30b3" executionId="590202a7-9839-4f3a-ad77-e64ae03175b1" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="33cd5822-8ae4-cb7f-92ad-bdcb3a9e41f2" executionId="d04b00af-7757-4500-ad76-5e8de0c172ad" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="573f435a-e23b-52d0-3a46-7f4c1ffad568" executionId="a36d4c60-0e6b-4ee5-932c-32b4dbf1c556" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="64a7a431-d288-add2-aece-625f9b7f2037" executionId="ecc66e1b-987c-4d74-803b-fa7c6d75e4b2" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="710d2cda-029c-93e6-1bc0-0035ad662745" executionId="42edb370-fc0a-493b-9ce5-6223c38d5c63" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7159d5aa-8fc5-2252-46f2-92ec0357814d" executionId="89c445fb-0276-4b3e-9f94-e8d70f2a4980" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="7513f8ee-f6fe-80de-055b-68324cd87bf9" executionId="78e2bfd4-ae8b-4646-ae57-77574a27cb70" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a0720584-8c2c-483b-a3d9-ff5a659d5a0a" executionId="ca5c8419-a6ff-4abe-ac3e-9eeb773786e3" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a3231915-af11-7b41-ca6d-ca533f0ea6f6" executionId="8a09b8ce-d3ce-47a2-8660-1e8a36ff2866" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="a57098c3-02fa-454d-a5e4-6a783305bc50" executionId="8971c1a1-de84-4b2d-b285-4ce548ec941f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c354614c-ed47-9579-ccf7-957645aeb789" executionId="e6cb15cc-df5c-4e0b-8ec7-384cf257dead" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="c8b22416-a405-6bde-1648-7df5cadd3149" executionId="6bf76a5d-c6f7-40ab-946a-bf1ca5b7797f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="e716c7c9-7aba-bef7-98aa-6b50cbbeaa0b" executionId="0f68fef7-66a4-4a17-bbbe-2b955ccb1c8c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="eede26b8-9354-779e-5d22-f06a09ac568c" executionId="09bb0561-de99-4c49-b791-1fe53f02a6fa" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="f9bd603f-fdfe-4639-20cc-7fa856dd3d75" executionId="b2ddca0b-65a0-46e4-b369-d86f344e120c" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestEntry testId="fe6fee5e-1f9e-e53d-0b4a-6659982d1faf" executionId="5fa0f330-2bf8-43cc-b8bf-b2b9121c069f" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="063720ad-5e0d-4d81-9716-0376e0ebf403" testId="158bd376-d913-d14d-5957-7cbd4c500e15" testName="GetLocationFromProductIdTest" computerName="LAZULI" duration="00:00:00.1662512" startTime="2012-05-01T04:55:13.7070833+01:00" endTime="2012-05-01T04:55:14.7871451+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="063720ad-5e0d-4d81-9716-0376e0ebf403">
+    </UnitTestResult>
+    <UnitTestResult executionId="42788f80-cbd4-4824-ab93-1d32d9360257" testId="20bc22b9-3c67-c11a-76e0-76bf954769b8" testName="ComputeHashTest" computerName="LAZULI" duration="00:00:00.0018962" startTime="2012-05-01T04:55:14.7971457+01:00" endTime="2012-05-01T04:55:14.8021460+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="42788f80-cbd4-4824-ab93-1d32d9360257">
+    </UnitTestResult>
+    <UnitTestResult executionId="89bd2fdc-553b-45e7-971d-1ab225da01b4" testId="2e73691e-478f-8eae-8aa8-f24ae79c0f17" testName="AccountConstructorTest" computerName="LAZULI" duration="00:00:00.0007184" startTime="2012-05-01T04:55:14.8041461+01:00" endTime="2012-05-01T04:55:14.8291475+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="89bd2fdc-553b-45e7-971d-1ab225da01b4">
+    </UnitTestResult>
+    <UnitTestResult executionId="590202a7-9839-4f3a-ad77-e64ae03175b1" testId="2ed6a6b1-df87-210d-51fa-92b2236e30b3" testName="CalculateMD5Test" computerName="LAZULI" duration="00:00:00.0001934" startTime="2012-05-01T04:55:14.8341478+01:00" endTime="2012-05-01T04:55:14.8371480+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="590202a7-9839-4f3a-ad77-e64ae03175b1">
+    </UnitTestResult>
+    <UnitTestResult executionId="d04b00af-7757-4500-ad76-5e8de0c172ad" testId="33cd5822-8ae4-cb7f-92ad-bdcb3a9e41f2" testName="WrongUserLoginTest" computerName="LAZULI" duration="00:00:00.0013444" startTime="2012-05-01T04:55:14.8451484+01:00" endTime="2012-05-01T04:55:14.8491486+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="d04b00af-7757-4500-ad76-5e8de0c172ad">
+    </UnitTestResult>
+    <UnitTestResult executionId="a36d4c60-0e6b-4ee5-932c-32b4dbf1c556" testId="573f435a-e23b-52d0-3a46-7f4c1ffad568" testName="GetPassHashTest" computerName="LAZULI" duration="00:00:00.0011932" startTime="2012-05-01T04:55:14.8521488+01:00" endTime="2012-05-01T04:55:14.8571491+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="a36d4c60-0e6b-4ee5-932c-32b4dbf1c556">
+    </UnitTestResult>
+    <UnitTestResult executionId="ecc66e1b-987c-4d74-803b-fa7c6d75e4b2" testId="64a7a431-d288-add2-aece-625f9b7f2037" testName="GetInvalidLocationTest" computerName="LAZULI" duration="00:00:29.1396667" startTime="2012-05-01T04:55:14.8601493+01:00" endTime="2012-05-01T04:55:43.9998160+01:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Aborted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ecc66e1b-987c-4d74-803b-fa7c6d75e4b2">
+    </UnitTestResult>
+    <UnitTestResult executionId="42edb370-fc0a-493b-9ce5-6223c38d5c63" testId="710d2cda-029c-93e6-1bc0-0035ad662745" testName="WrongPassLoginTest" computerName="LAZULI" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="42edb370-fc0a-493b-9ce5-6223c38d5c63">
+    </UnitTestResult>
+    <UnitTestResult executionId="89c445fb-0276-4b3e-9f94-e8d70f2a4980" testId="7159d5aa-8fc5-2252-46f2-92ec0357814d" testName="GetProductNameFromLocationHashTest" computerName="LAZULI" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="89c445fb-0276-4b3e-9f94-e8d70f2a4980">
+    </UnitTestResult>
+    <UnitTestResult executionId="78e2bfd4-ae8b-4646-ae57-77574a27cb70" testId="7513f8ee-f6fe-80de-055b-68324cd87bf9" testName="GetLocationTest" computerName="LAZULI" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="78e2bfd4-ae8b-4646-ae57-77574a27cb70">
+    </UnitTestResult>
+    <UnitTestResult executionId="ca5c8419-a6ff-4abe-ac3e-9eeb773786e3" testId="a0720584-8c2c-483b-a3d9-ff5a659d5a0a" testName="GetMD5HashTest" computerName="LAZULI" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ca5c8419-a6ff-4abe-ac3e-9eeb773786e3">
+    </UnitTestResult>
+    <UnitTestResult executionId="8a09b8ce-d3ce-47a2-8660-1e8a36ff2866" testId="a3231915-af11-7b41-ca6d-ca533f0ea6f6" testName="GetAccountTest" computerName="LAZULI" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8a09b8ce-d3ce-47a2-8660-1e8a36ff2866">
+    </UnitTestResult>
+    <UnitTestResult executionId="8971c1a1-de84-4b2d-b285-4ce548ec941f" testId="a57098c3-02fa-454d-a5e4-6a783305bc50" testName="LoginTest" computerName="LAZULI" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="8971c1a1-de84-4b2d-b285-4ce548ec941f">
+    </UnitTestResult>
+    <UnitTestResult executionId="e6cb15cc-df5c-4e0b-8ec7-384cf257dead" testId="c354614c-ed47-9579-ccf7-957645aeb789" testName="AccountExistsTest" computerName="LAZULI" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="e6cb15cc-df5c-4e0b-8ec7-384cf257dead">
+    </UnitTestResult>
+    <UnitTestResult executionId="6bf76a5d-c6f7-40ab-946a-bf1ca5b7797f" testId="c8b22416-a405-6bde-1648-7df5cadd3149" testName="CheckLoginTest" computerName="LAZULI" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="6bf76a5d-c6f7-40ab-946a-bf1ca5b7797f">
+    </UnitTestResult>
+    <UnitTestResult executionId="0f68fef7-66a4-4a17-bbbe-2b955ccb1c8c" testId="e716c7c9-7aba-bef7-98aa-6b50cbbeaa0b" testName="GetInvalidLocationFromProductIdTest" computerName="LAZULI" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="0f68fef7-66a4-4a17-bbbe-2b955ccb1c8c">
+    </UnitTestResult>
+    <UnitTestResult executionId="09bb0561-de99-4c49-b791-1fe53f02a6fa" testId="eede26b8-9354-779e-5d22-f06a09ac568c" testName="CountLocationsTest" computerName="LAZULI" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="09bb0561-de99-4c49-b791-1fe53f02a6fa">
+    </UnitTestResult>
+    <UnitTestResult executionId="b2ddca0b-65a0-46e4-b369-d86f344e120c" testId="f9bd603f-fdfe-4639-20cc-7fa856dd3d75" testName="NullMD5Test" computerName="LAZULI" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="b2ddca0b-65a0-46e4-b369-d86f344e120c">
+    </UnitTestResult>
+    <UnitTestResult executionId="5fa0f330-2bf8-43cc-b8bf-b2b9121c069f" testId="fe6fee5e-1f9e-e53d-0b4a-6659982d1faf" testName="ComputeSaltTest" computerName="LAZULI" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="NotExecuted" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="5fa0f330-2bf8-43cc-b8bf-b2b9121c069f">
+    </UnitTestResult>
+  </Results>
+</TestRun>

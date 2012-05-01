@@ -3,7 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Donatello", "Donatello\Donatello.csproj", "{C3A2AEF9-22CC-4766-AB71-F13FA92F184F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{CDE77EE8-0E5C-4443-9A02-2B558BDD76FF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1F089C78-3642-42F0-ACE3-8F591AF3930D}"
+	ProjectSection(SolutionItems) = preProject
+		Donatello.vsmdi = Donatello.vsmdi
+		Local.testsettings = Local.testsettings
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Donatello.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -23,6 +35,16 @@ Global
 		{C3A2AEF9-22CC-4766-AB71-F13FA92F184F}.Release|Mixed Platforms.Build.0 = Release|x86
 		{C3A2AEF9-22CC-4766-AB71-F13FA92F184F}.Release|x86.ActiveCfg = Release|x86
 		{C3A2AEF9-22CC-4766-AB71-F13FA92F184F}.Release|x86.Build.0 = Release|x86
+		{CDE77EE8-0E5C-4443-9A02-2B558BDD76FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDE77EE8-0E5C-4443-9A02-2B558BDD76FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDE77EE8-0E5C-4443-9A02-2B558BDD76FF}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{CDE77EE8-0E5C-4443-9A02-2B558BDD76FF}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{CDE77EE8-0E5C-4443-9A02-2B558BDD76FF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CDE77EE8-0E5C-4443-9A02-2B558BDD76FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDE77EE8-0E5C-4443-9A02-2B558BDD76FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDE77EE8-0E5C-4443-9A02-2B558BDD76FF}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{CDE77EE8-0E5C-4443-9A02-2B558BDD76FF}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{CDE77EE8-0E5C-4443-9A02-2B558BDD76FF}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

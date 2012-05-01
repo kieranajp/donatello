@@ -65,7 +65,7 @@ namespace Donatello
             // Pass the location_id to the database to get the actual location of the file we're after.
             string secretLoc = DbConnect.GetLocation(decodedLocation);
 
-            _location = new Uri(@"ftp://kieranajp.co.uk/donatello/" + secretLoc + @"/" + secretLoc + ".file"); // TODO: Dynamic file types
+            _location = new Uri(@"ftp://kieranajp.co.uk/donatello/" + secretLoc + @"/" + secretLoc + ".file"); // Could-Have: Dynamic file types
 
             // We're going to need to multithread this now.
             _bw = new BackgroundWorker { WorkerReportsProgress = true };
@@ -116,20 +116,19 @@ namespace Donatello
         {
             if (e.Error != null)
             {
-                // TODO: Why could there be an error?
+                // Why could there be an error? Probably wouldn't be.
+            }
+
+            if (!CheckMD5(Path.Combine(_target, String.Concat(CleanFileName(_product), ".file")), _product))
+            {
+                Notification n = new Notification("Error: Checksum of " + _product + " failed :(", true);
+                // Could-Have: More graceful dealing with this (redownloading that product perhaps)
+                // Problem is, trying to do that simply could end up with a huge memory leak (millions of recursive threads, sort of fork bomb)
             }
             else
             {
-                if (!CheckMD5(Path.Combine(_target, String.Concat(CleanFileName(_product), ".file")), _product))
-                {
-                    Notification n = new Notification("Error: Checksum of " + _product + " failed :(", true);
-                    // TODO: Work out how to deal with this
-                }
-                else
-                {
-                    Notification n = new Notification("Download complete!", false);
-                    // The downlad's complete!
-                }
+                Notification n = new Notification("Download complete!", false);
+                // The downlad's complete!
             }
         }
         #endregion

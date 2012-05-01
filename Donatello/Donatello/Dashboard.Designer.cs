@@ -44,6 +44,7 @@ namespace Donatello
             this.new_emailBox = new Donatello.FocusTextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.pnl_AccountDetails = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
             this.new_dobBox = new System.Windows.Forms.DateTimePicker();
             this.btn_Start = new System.Windows.Forms.Button();
             this.new_nameBox = new Donatello.FocusTextBox();
@@ -199,6 +200,7 @@ namespace Donatello
             // pnl_AccountDetails
             // 
             this.pnl_AccountDetails.Controls.Add(this.new_dobBox);
+            this.pnl_AccountDetails.Controls.Add(this.label4);
             this.pnl_AccountDetails.Controls.Add(this.btn_Start);
             this.pnl_AccountDetails.Controls.Add(this.new_nameBox);
             this.pnl_AccountDetails.Controls.Add(this.label3);
@@ -208,10 +210,21 @@ namespace Donatello
             this.pnl_AccountDetails.TabIndex = 5;
             this.pnl_AccountDetails.Visible = false;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label4.Location = new System.Drawing.Point(69, 125);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(50, 25);
+            this.label4.TabIndex = 7;
+            this.label4.Text = "DOB";
+            // 
             // new_dobBox
             // 
             this.new_dobBox.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.new_dobBox.Location = new System.Drawing.Point(31, 134);
+            this.new_dobBox.Location = new System.Drawing.Point(31, 152);
             this.new_dobBox.Name = "new_dobBox";
             this.new_dobBox.Size = new System.Drawing.Size(255, 35);
             this.new_dobBox.TabIndex = 6;
@@ -223,7 +236,7 @@ namespace Donatello
             this.btn_Start.Name = "btn_Start";
             this.btn_Start.Size = new System.Drawing.Size(94, 58);
             this.btn_Start.TabIndex = 5;
-            this.btn_Start.Text = "Start Listener";
+            this.btn_Start.Text = "Sign Up";
             this.btn_Start.UseVisualStyleBackColor = true;
             this.btn_Start.Click += new System.EventHandler(this.btn_Start_Click);
             // 
@@ -290,6 +303,7 @@ namespace Donatello
         private FocusTextBox new_nameBox;
         private Label label3;
         private DateTimePicker new_dobBox;
+        private Label label4;
     }
 
     /// <summary>

@@ -24,3 +24,5 @@ C:\Users\Kieran\Dropbox\BU_Work\Dissertation\GitHub\Donatello\Donatello\obj\x86\
 C:\Users\Kieran\Dropbox\BU_Work\Dissertation\GitHub\Donatello\Donatello\obj\x86\Debug\Donatello.Properties.Resources.resources
 C:\Users\Kieran\Dropbox\BU_Work\Dissertation\GitHub\Donatello\Donatello\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\Users\Kieran\Dropbox\BU_Work\Dissertation\GitHub\Donatello\Donatello\obj\x86\Debug\GenerateResource.write.1.tlog
+C:\Users\Kieran\Dropbox\BU_Work\Dissertation\GitHub\Donatello\Donatello\bin\Debug\nunit.framework.dll
+C:\Users\Kieran\Dropbox\BU_Work\Dissertation\GitHub\Donatello\Donatello\bin\Debug\nunit.framework.xml

@@ -20,7 +20,7 @@ namespace Donatello
         /// </summary>
         /// <param name="email">String: Account email address. Also functions as unique identifier.</param>
         /// <param name="name">String: User's name.</param>
-        /// <param name="password">String: User's password. Only briefly stored in memory - very quickly hashed.</param>
+        /// <param name="password">String: User's password or hash of password.</param>
         /// <param name="dob">String: User's date of birth. Used for age verification when purchasing.</param>
         public Account(string email, string name, string password, string dob)
         {

@@ -103,7 +103,6 @@ namespace Donatello
             this.Hide();
             this.Dispose();
             Application.Restart();
-            // TODO: Restart application
         }
         #endregion
         #region Delegate functions
@@ -188,7 +187,6 @@ namespace Donatello
             System.Threading.Thread.Sleep(500);
             WriteLog("Server started!");
             Appear(false);
-            Notify("Server started!");
 
             while (true)
             {

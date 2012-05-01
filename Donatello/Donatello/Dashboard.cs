@@ -27,9 +27,11 @@ namespace Donatello
             InitializeComponent();
             this.Visible = false;
 
-            if (DbConnect.CheckLogin(Properties.Settings.Default.LastUsername, Properties.Settings.Default.LastPassword))
-            // if (1 == 2) // For testing purposes
+            if (Properties.Settings.Default.LastUsername != "email@address.com" && DbConnect.CheckLogin(Properties.Settings.Default.LastUsername, Properties.Settings.Default.LastPassword))
             {
+                Account acc = DbConnect.GetAccount(Properties.Settings.Default.LastUsername);
+                Notification n = new Notification("Welcome, " + acc.Name + "!", false);
+
                 this.Hide();
                 DbConnect.SetClient(Properties.Settings.Default.LastUsername);
                 Listener li = new Listener();
@@ -71,10 +73,10 @@ namespace Donatello
 
                 Properties.Settings.Default.LastUsername = emailBox.Text;
                 Properties.Settings.Default.LastPassword = DbConnect.GetPassHash(emailBox.Text);
-
                 Properties.Settings.Default.Save();
 
-                Notification n = new Notification("Welcome to Donatello, ", false);
+                Account acc = DbConnect.GetAccount(emailBox.Text);
+                Notification n = new Notification("Welcome, " + acc.Name + "!", false);
 
                 Listener li = new Listener();
                 li.Show();
@@ -173,8 +175,8 @@ namespace Donatello
 
             mail.From = new MailAddress("donatello@kajp.im");
             mail.To.Add(newUsername);
-            mail.Subject = "Welcome to Donatello!";
-            mail.Body = "Thanks for joining Donatello";
+            mail.Subject = newAccount.Name + ", welcome to Donatello!";
+            mail.Body = "Thanks for joining Donatello, " + newAccount.Name + "!";
 
             try
             {
@@ -182,7 +184,7 @@ namespace Donatello
             }
             catch (SmtpException) 
             { 
-                // Oh well, not the end of the world if the email doesn't send.
+                // In case the SMTP server is down. In which case, it's not the end of the world if the email doesn't send.
             }
 
             Properties.Settings.Default.LastUsername = newUsername;

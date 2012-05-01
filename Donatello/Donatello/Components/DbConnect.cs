@@ -34,9 +34,46 @@ namespace Donatello
             using (MySqlCommand cmd = mcon.CreateCommand())
             {
                 mcon.Open();
-                // TODO: The DOB isn't saving properly.
-                cmd.CommandText = "INSERT INTO accounts (account_id, pass_hash, pass_salt, account_nm, account_dob) VALUES ('" + acc.Email + "', '" + hashAndSalt["hash"] + "', '" + hashAndSalt["salt"] + "', '" + acc.Name + "', " + acc.Dob + ");";
+                cmd.CommandText = "INSERT INTO accounts (account_id, pass_hash, pass_salt, account_nm, account_dob) VALUES ('" + acc.Email + "', '" + hashAndSalt["hash"] + "', '" + hashAndSalt["salt"] + "', '" + acc.Name + "', '" + acc.Dob + "');";
                 cmd.ExecuteNonQuery();
+            }
+        }
+        /// <summary>
+        /// Retrieves an Account object by account_id
+        /// </summary>
+        /// <param name="id">String: The account_id to look up</param>
+        /// <returns>Account: The full account details</returns>
+        public static Account GetAccount(string id)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = "SELECT account_id, account_nm, pass_hash, DATE_FORMAT(account_dob, '%d-%m-%Y') AS account_dob FROM accounts WHERE account_id = '" + id + "';";
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+
+                List<string> list = new List<string>();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(reader.GetString("account_id"));
+                        list.Add(reader.GetString("account_nm"));
+                        list.Add(reader.GetString("pass_hash"));
+                        list.Add(reader.GetString("account_dob"));
+                    }
+                }
+                Account acc;
+                try 
+                { 
+                    acc = new Account(list[0], list[1], list[2], list[3]); 
+                }
+                catch 
+                { 
+                    throw new FormatException(); 
+                }
+                
+                return acc;
             }
         }
         /// <summary>
@@ -45,13 +82,12 @@ namespace Donatello
         /// <param name="account">String: The account_id to lock to this IP address.</param>
         public static void SetClient(string account)
         {
-            // TODO: This method doesn't seem right.
             IPAddress[] IP = Dns.GetHostAddresses(Dns.GetHostName());
             using (MySqlConnection mcon = new MySqlConnection(connString))
             using (MySqlCommand cmd = mcon.CreateCommand())
             {
                 mcon.Open();
-                //cmd.CommandText = "SELECT COUNT(*) FROM clients WHERE account_id = '" + account + "';";
+                cmd.CommandText = "SELECT COUNT(*) FROM clients WHERE account_id = '" + account + "';";
 
                 // Find out the IP address. Here we are doing local addresses; if this were more than a proof-of-concept we'd be using full external addresses.
                 IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
@@ -166,21 +202,6 @@ namespace Donatello
             return false;
         }
         /// <summary>
-        /// Gets the user's name from the account_id.
-        /// </summary>
-        /// <param name="email">String: The account_id to look up.</param>
-        /// <returns>String: The user's name</returns>
-        public static string GetUsersName(string email)
-        {
-            using (MySqlConnection mcon = new MySqlConnection(connString))
-            using (MySqlCommand cmd = mcon.CreateCommand())
-            {
-                mcon.Open();
-                cmd.CommandText = "SELECT account_nm FROM accounts WHERE account_id = '" + email + "';";
-                return cmd.ExecuteScalar().ToString();
-            }
-        }
-        /// <summary>
         /// Gets the stored MD5 hash of the supplied product, for checksumming.
         /// </summary>
         /// <param name="product">String: The product_id to get the hash of.</param>
@@ -281,6 +302,10 @@ namespace Donatello
         /// <returns>String: The encrypted location of the file.</returns>
         public static string GetLocation(int location)
         {
+            if (location < 1)
+            {
+                throw new NullReferenceException();
+            }
             using (MySqlConnection mcon = new MySqlConnection(connString))
             using (MySqlCommand cmd = mcon.CreateCommand())
             {
@@ -316,6 +341,10 @@ namespace Donatello
         ///     The hashed location (found by running the GetLocation method) if a location was found.</returns>
         public static string GetLocationFromProductId(int pid)
         {
+            if (pid < 1)
+            {
+                throw new NullReferenceException();
+            }
             using (MySqlConnection mcon = new MySqlConnection(connString))
             using (MySqlCommand cmd = mcon.CreateCommand())
             {
