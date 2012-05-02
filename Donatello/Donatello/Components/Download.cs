@@ -67,6 +67,9 @@ namespace Donatello
 
             _location = new Uri(@"ftp://kieranajp.co.uk/donatello/" + secretLoc + @"/" + secretLoc + ".file"); // Could-Have: Dynamic file types
 
+
+            Notification n = new Notification("Download started!", false);
+
             // We're going to need to multithread this now.
             _bw = new BackgroundWorker { WorkerReportsProgress = true };
             _bw.DoWork += GetFile;
@@ -127,7 +130,7 @@ namespace Donatello
             }
             else
             {
-                Notification n = new Notification("Download complete!", false);
+                Notification n = new Notification("Download complete!", true);
                 // The downlad's complete!
             }
         }
@@ -161,7 +164,11 @@ namespace Donatello
 
                 if (File.Exists(path))
                 {
-                    string bak = "_backup" + DateTime.Now.ToString();
+                    string bak = "_backup";
+                    if (File.Exists(path + bak))
+                    {
+                        File.Delete(path + bak);
+                    }
                     File.Move(path, path + bak);
                 }
 
@@ -232,9 +239,14 @@ namespace Donatello
             byte[] retVal = md5.ComputeHash(fs);
             fs.Close();
 
-            string clientHash = Convert.ToBase64String(retVal);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < retVal.Length; i++)
+            {
+                // Converting to hexadecimal lower-case representation (to match hashes generated in PHP where this is SO MUCH EASIER jeez.)
+                sb.Append(retVal[i].ToString("x2"));
+            }
 
-            if (clientHash != serverHash)
+            if (sb.ToString() != serverHash)
             {
                 return false;
             }

@@ -59,13 +59,19 @@ namespace Donatello
         /// <param name="e"></param>
         private void btn_Start_Click(object sender, EventArgs e)
         {
-            if (purchasedItems.SelectedIndices.Count == 0)
+            if (purchasedItems.SelectedIndices.Count > 0)
             {
+                
                 string location = DbConnect.GetLocationFromProductId(lookup[purchasedItems.SelectedIndex]);
                 if (!String.IsNullOrEmpty(location))
                 {
                     Download d = new Download(location);
+                    this.Hide();
                 }
+            }
+            else
+            {
+                MessageBox.Show("Please select a product to download.");
             }
         }
         /// <summary>

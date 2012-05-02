@@ -31,6 +31,8 @@ Each sprint will take either one or two weeks depending on its complexity, and m
 ###Requirements
 One of the first, most important stages of a project's design comes in defining the project's requirements. Using the MoSCoW methodology along with some tips from Volere, identifying and prioritising requirements was performed in the initial planning phase of the SDLC. For each category in MoSCoW, functional and non-functional requirements were thought up; Volere was instrumental in instructing about the importance of non-functional requirements in software engineering. In this project, every attempt will be made to meet all the Must-Have and Should-Have requirements, and Could-Haves will be dealt with opportunistically, if there is time towards the end of a sprint when all more essential functionality has been created (and non-functional Must-Have and Should-Have requirements have been met, too). Indeed, the project will only be considered a success if all the Must- and Should-Have requirements have been met. Won't-Have requirements, for the purposes of this project at least, are being defined as requirements that will not make it into the dissertation, but would be nice-to-haves if the project were to be extended in future. They are mostly noted down here with some forethought to the evaluation phase.
 
+<div>
+<figure>
 **Must-Have:**  
 Functional:  
 
@@ -80,6 +82,9 @@ Non-functional:
 *	OAuth (or similar token-based) security
 *	Secure file transfers (using SSL / TLS / SFTP)
 *	Payment information
+<figcaption>The MoSCoW functional and non-functional requirements of the project</figcaption>
+</figure>
+</div>
 
 While the features in the Could-Have and Won't-Have requirements are very desirable and would almost certainly have a higher, if not the highest, priority if this project were being developed for use in the real world, note that this software is meant as a proof-of-concept for remote media delivery, and as such features such as dealing with payment information are unnecessary to deem this project a success.
 
@@ -89,14 +94,16 @@ In the process of design, the main use-cases were identified and written out. So
 ###Database Design
 The information gleaned from creating use-cases and from defining requirements turned out to be invaluable for deciding on a database structure. Optimistically, the decision was made to include provision in the database structure for not only the Must- and Should-Have requirements, but also all the Could-Haves where possible. This way, time permitting, implementing these nice-to-have features should be far easier down the road when the majority of the product has been put together than it would be if the database structure required modifying and test data required repopulating down the line. If the features turn out not to be implemented, having the extra fields in the database will still cause no problems, so seeing as it is minimal effort to add these columns and there is no risk involved, there seems to be no reason not to.
 
-The first version of the database design was drawn up on paper, and looked like this:
+The database design was drawn up on paper, and looked like this:
 
 <div>
 <figure>
-<img src="img/moleskine-3.png">
+<img src="img/ERD_drawing.png">
 <figcaption>First draft of the database's entity-relationship diagram.</figcaption>
 </figure>
 </div>
+
+This was very close to how the final product turned out, as no further drafts seemed necessary.
 
 ###Interface Design
 A good user experience is not the same as an attractive user interface. The UX encompasses more; particularly things like usability and accessibility considerations. The user interface for the application was designed to be as simple as possible and to retain its flow. As for the aesthetic, this was intended to be similar to Microsoft's Metro aesthetic introduced in Windows Phone 7 and Windows 8. This look was accomplished by using the Segoe UI font, large interface elements, and plenty of blank space to achieve a very 'clean' look.
@@ -108,22 +115,19 @@ A good user experience is not the same as an attractive user interface. The UX e
 </figure>
 </div>
 
-
 ###Class Design
-*	Account.cs
-	*	Attributes
-		*	Email address (unique identifier)
-		*	Password
-		*	Date of birth
-		*	Name
-	*	Methods
-		*	Constructor
-		*	Password hasher
-		*	Salt generator
-		*	Date formatter
-		
+Another thing drawn up in the planning phase was a class diagram. Having an idea of what class structure to create and where methods should be located is a really good insight to have ahead of time. This was again drawn up on paper, and can be seen in <a href="#class" class="figref">figure</a>.
+
+<div>
+<figure id="class">
+<img src="img/class_drawing.png">
+<figcaption>The preliminary class diagram.</figcaption>
+</figure>
+</div>
 
 ##Tools Available
+
+Available for use on this project are two computers - a MacBook Pro running OS X 10.7 and a desktop PC running Windows 7 Professional 64-bit. The software tools that will be used are as follows:
 
 *	Visual Studio 2010 Ultimate
 *	C# .NET 4.0
@@ -131,10 +135,10 @@ A good user experience is not the same as an attractive user interface. The UX e
 *	MySQL 5.5.15
 *	e-TextEditor 2.0.1
 *	TextMate 1.6
-*	Markdown 1.0.1o and PHP Markdown
+*	Markdown 1.0 and a PHP Markdown compiler, for this longform writing and formatting.
 
 ##The Build
-###Sprint 1
+###Sprint 1 - Database
 The first sprint of the build process consisted of creating the database that would be used by both software components - the web service and the client application. This sprint was slated to last five working days. It was very important to get the database design correct from the start, as a change to the database structure later on would mean several code changes, as the code that manipulated or pulled from the database could well be different.
 
 A lot of the time allocated to this sprint was right away taken up with configuration of the DBMS and of Apache: for security reasons, it is often impossible to connect to a database remotely without a large amount of tweaking. The first task was writing a test connection script in PHP: a simple job of a few minutes' work. This was then run on various computers until access to the database was granted. However, getting this working required much more time than anticipated, and so creating the database had to happen in a couple of days. Luckily, the plans and ERDs drawn up during the design phase were detailed enough that database creation was simple.
@@ -174,7 +178,7 @@ Inputting variables into the above code and running it from the command line gen
 
 Once enough data was in the database, this sprint was complete.
 
-###Sprint 2
+###Sprint 2 - Account Management
 The second sprint could have been dedicated to writing either the web service or a part of the client application; the option not picked for the second sprint would be the third sprint, so the only thing that mattered was the order in which these were done. Both sprints were scheduled to last 10 days, so they were interchangeable. Having programmed some PHP already, for variety's sake it was decided to work on the Windows program for this sprint - written in C#.
 
 The part of the application scheduled for this sprint was the login and account management feature. The design for this consisted of a series of dialogs to allow a user to login, or, if they had no account, to create one. However, rather than opening a new form each time and causing the application to disappear and reappear, potentially in a different location on-screen, the design was for a single form window with changing contents. Before creating the User Interface (UI), though, there was some back-end work to do, namely creating an Object to hold Accounts.
@@ -201,7 +205,7 @@ public class Account
 </figure>
 </div>
 
-This basic object was then expanded to do more than just hold data (see **APPENDIX SOMETHING**), including hashing and salting passwords and formatting dates. When creating a user account through the UI, an instance of this object is created to manipulate its details.
+This basic object was then expanded to do more than just hold data (see [Appendix J](#Appendices-2-10)), including hashing and salting passwords and formatting dates. When creating a user account through the UI, an instance of this object is created to manipulate its details.
 
 An issue encountered here was when hashing passwords. It turns out that some of the hashes that had been created using PHP were incompatible with their C# counterparts. This is because, by default, PHP hashes in lowercase, whereas C# uses uppercase characters in its hashes. To resolve this an argument needed to be passed to the method that converts the hash bytes to a string to format it correctly: <code>.ToString("x2")</code>.
 
@@ -209,23 +213,40 @@ The UI itself was easy to create using Visual Studio's built in WYSIWYG (What Yo
 
 <div>
 <figure>
-<img src="img/scrn_Login.png">
+<img src="img/Screenshot_1_-_Login.png">
 <figcaption>How the login screen turned out to look when implemented.</figcaption>
 </figure>
 </div>
 
-More screen captures of the implemented UI are available in **APPENDIX SOMETHING**.
+More screen captures of the implemented UI are available in [Appendix M](#Appendices-2-13).
 
 The final features to implement for the sprint were logging in and creating accounts. The hashing and salting algorithms were already written, so all that was needed to do was create a database class and hook everything up to the user interface. This went through with few problems and effectively passed black-box testing. The remaining feature was for auto-login: the application is designed to be started whenever Windows starts, so the user would not want to have to type a username and password every time they reboot. It was decided that the application should remember the last user to log in, and this user's information could be wiped with a logout button. Additionally, after creating a new account, the user would have to log in once more (for security purposes) before they would be remembered. This logic was fairly easy to implement, and so the sprint was completed without issue.
 
-###Sprint 3
-Web service
+###Sprint 3 - Web Service
+Slated for this sprint was the web service and its methods. Once again, 10 days were allocated to this sprint. However, this sprint was not as without incident as the previous one.
 
-###Sprint 4
-Downloading!
+The work on the database was being done mostly locally - due to some travelling when the work was started, a consistent internet connection was not always available. Therefore, running an Apache server on a MacBook Pro to serve up PHP and MySQL was far more productive than trying to access a remote server to run PHP and test SQL on. However, a few days into the sprint, the hard disk on the Macbook gave up and the device would no longer boot. While this was something planned for in the risk assessment, it was still a blow. Luckily the operating system is configured to back up to a wireless external drive several times a day, so a minimal amount of work was lost (although it had not been able to back up in over 24 hours at this point due to having no connectivity). Ordering a replacement hard disk to install into the laptop took more time, however, and once that arrived reinstalling the operating system and restoring everything from backup took several hours.
+
+During the couple of days when the MacBook was not available, work continued as best possible on another computer. A temporary database in SQLite was created to work on, and PHP scripts hastily modified to temporarily make use of that so queries in the web service could still be authored. When the laptop was repaired and restored and the database back online, only some quick conversions were required before the PHP that had been written during this period was fully functional. The majority of the rest of the work that had been lost was test data, so some more time was spent putting that in.
+
+Because of these four days or so of setback and minimal work being possible, the sprint not only took two days longer than expected, but some of the functionality that would have been desirable but not necessary in the web service didn't make it in. For example, age verifications on purchases and the ability to upload files via the API were all planned for, however since the sprint was already past its due date it was time to move on. Before ending the sprint, a quick 'dashboard' was created with links to pages making calls to the web service. This was for a mix of demonstration and testing purposes. This dashboard and the operations it can perform makes for a great example of the various calls web stores could make to the web service.
+
+###Sprint 4 - Downloading
+The work scheduled for this sprint was the 'meat' of the project: receiving an instruction to download a file and running the download. Fifteen days were allocated for this sprint.
+
+
 
 ###Sprint 5
 Redownload & refactor
 
 ##Testing
-In addition to going through all the program's and web service's features manually and checking the functionality was correct, basic unit tests were written which were intended to check that individual methods were working as expecting and giving valid results. For example, a unit test was written that checked what happened when various username and password examples were given to the 
+In addition to going through all the program's and web service's features manually and checking the functionality was correct, basic unit tests were written which were intended to check that individual methods were working as expecting and giving valid results. These unit tests were written in the test franework built into the IDE: Visual Studio Test System (VSTS). This was chosen because, while not as feature-complete as the most popular .NET unit testing framework, NUnit, no additional software was required to create and run these tests, and besides it turned out the more complex features were not required in this instance anyway.
+
+Unit tests were written for the most complex methods with outputs that would be readable by the framework. These turned out to be in the Account and Database classes. For example, a unit test was written that checked what happened when various username and password strings were fed to the login method to ensure that the login system was as secure as possible. It would have been very difficult if not impossible to run unit tests to check the downloading feature (particularly as the methods returned void), so these features were left to black-box testing. Running all the unit tests resulted in a couple of fails, but after investigating it turned out the error was in the tests, not in the code. The tests that failed were when hashing, and comparing an expected hash to a method's output. The issue though was in a malformed 'expected' hash - the hash from the database which was pasted into the test case had not copied correctly and become truncated. After identifying and fixing both instances of this, all the test cases ran successfully.
+
+<div>
+<figure>
+<img src="img/unittests.png">
+<figcaption>All the unit tests for Account and DbConnect classes running successfully (full unit test code can be found in **APPENDIX**))</figcaption>
+</figure>
+</div>

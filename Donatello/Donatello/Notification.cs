@@ -38,7 +38,7 @@ namespace Donatello
         /// <param name="e"></param>
         private void Suicide(object sender, EventArgs e)
         {
-            this.Dispose();
+            this.Hide();
         }
         #endregion
     }

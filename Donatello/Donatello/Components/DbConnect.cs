@@ -28,7 +28,7 @@ namespace Donatello
             // Salt and hash acc.Password
             Dictionary<string, string> hashAndSalt = Account.ComputeHash(acc.Password, null);
             
-            // TODO: Escape account name and email
+            // TODO: Parametise account name and email
 
             using (MySqlConnection mcon = new MySqlConnection(connString))
             using (MySqlCommand cmd = mcon.CreateCommand())
@@ -351,26 +351,7 @@ namespace Donatello
                 mcon.Open();
                 cmd.CommandText = "SELECT location_hash FROM products WHERE product_id = " + pid + ";";
 
-                string location_hash = cmd.ExecuteScalar().ToString();
-                int locs = DbConnect.CountLocations();
-                int decodedLocation = -1;
-
-                for (int i = 1; i < locs + 1; i++)
-                {
-                    if (DbConnect.CalculateMD5(i.ToString()) == location_hash)
-                    {
-                        decodedLocation = i;
-                    }
-                }
-
-                if (decodedLocation != -1)
-                {
-                    return DbConnect.GetLocation(decodedLocation);
-                }
-                else
-                {
-                    return string.Empty;
-                }
+                return cmd.ExecuteScalar().ToString();
             }
         }
         #endregion

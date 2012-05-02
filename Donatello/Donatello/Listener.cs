@@ -24,18 +24,20 @@ namespace Donatello
         public Listener()
         {
             InitializeComponent();
-
+            this.ShowInTaskbar = false;
             notifyIcon.Text = "Donatello";
             notifyIcon.ContextMenu = new ContextMenu();
+            notifyIcon.ContextMenu.MenuItems.Add(new MenuItem("Show Donatello", new EventHandler(notifyIcon_DoubleClick)));
             notifyIcon.ContextMenu.MenuItems.Add(new MenuItem("Redownload Purchases", new EventHandler(notify_redownload)));
             notifyIcon.ContextMenu.MenuItems.Add(new MenuItem("Logout", new EventHandler(notify_logout)));
             notifyIcon.ContextMenu.MenuItems.Add(new MenuItem("Exit", new EventHandler(notify_exit)));
 
-            backgroundWorker.WorkerSupportsCancellation = true;
+            notifyIcon.DoubleClick += new EventHandler(notifyIcon_DoubleClick);
+
             backgroundWorker.RunWorkerAsync();
         }
         #endregion
-        #region notifyIcon EventHandlers
+        #region EventHandlers
         /// <summary>
         /// Called when the form is resized.
         /// If the form is minimised, moves the form to the notification area rather than the taskbar.
@@ -49,9 +51,7 @@ namespace Donatello
                 notifyIcon.BalloonTipTitle = "Donatello is still running";
                 notifyIcon.BalloonTipText = "Right-click this icon for controls";
                 notifyIcon.ShowBalloonTip(2500);
-                // TODO: This is behaving weirdly.
-                // this.ShowInTaskbar = false;
-                // this.Hide(); 
+                this.ShowInTaskbar = false;
             }
         }
         /// <summary>
@@ -62,8 +62,7 @@ namespace Donatello
         /// <param name="e"></param>
         private void notifyIcon_DoubleClick(object sender, EventArgs e)
         {
-            //this.ShowInTaskbar = true;
-            //this.ShowDialog();
+            WindowState = FormWindowState.Normal;
         }
         /// <summary>
         /// Called when the Exit button on the notifyIcon's right-click menu is clicked.
@@ -73,7 +72,6 @@ namespace Donatello
         /// <param name="e"></param>
         private void notify_exit(object sender, EventArgs e)
         {
-            backgroundWorker.CancelAsync();
             notifyIcon.Visible = false;
             Application.Exit();
         }
@@ -99,7 +97,6 @@ namespace Donatello
             Properties.Settings.Default.LastUsername = null;
             Properties.Settings.Default.LastPassword = null;
             Properties.Settings.Default.Save();
-            backgroundWorker.CancelAsync();
             this.Hide();
             this.Dispose();
             Application.Restart();
@@ -119,7 +116,7 @@ namespace Donatello
             }
             else
             {
-                this.txt_log.Text += add + Environment.NewLine;
+                this.txt_log.Text += System.DateTime.Now.ToString() + " " + add + Environment.NewLine;
             }
         }
         /// <summary>
@@ -142,21 +139,6 @@ namespace Donatello
         /// A delegate function to allow showing and hiding of this form from other threads.
         /// </summary>
         /// <param name="show">Boolean: Whether to show or hide the form.</param>
-        private delegate void AppearDelegate(bool show);
-        private void Appear(bool show)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new AppearDelegate(this.Appear), show);
-            }
-            else
-            {
-                if (show)
-                    this.Hide();
-                else
-                    this.Show();
-            }
-        }
         #endregion
         #region EventHandlers
         /// <summary>
@@ -167,7 +149,6 @@ namespace Donatello
         /// <param name="e"></param>
         private void Listener_FormClosing(object sender, FormClosingEventArgs e)
         {
-            backgroundWorker.CancelAsync();
             Application.Exit();
         }
         /// <summary>
@@ -186,7 +167,6 @@ namespace Donatello
             serverSocket.Start();
             System.Threading.Thread.Sleep(500);
             WriteLog("Server started!");
-            Appear(false);
 
             while (true)
             {

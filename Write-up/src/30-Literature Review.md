@@ -10,7 +10,7 @@ As technology in content distribution hurtles further and further towards stream
 In the United Kingdom, a recent study found that over a third of the country are suffering with these sub-par broadband speeds - this being defined by "under 5Mb/s" (BBC News, 2012). Assuming someone has a connection speed of 5Mb/s, we can work out how long it would take them to download, say, *Portal 2* (which when downloaded from Steam is 11.3GB).
 <div>
 <figure>
-<img src="img/equation.png"> = 18080 seconds = 5 hours 1 minute
+<img style="width: 30%" src="img/equation.png"> = 18080 seconds = 5 hours 1 minute
 <figcaption>Downloading *Portal 2* on a slow connection</figcaption>
 </figure>
 </div>
@@ -116,7 +116,7 @@ Every project has its risks. <a class="figref" href="#risk">Figure</a> shows som
 </figure>
 </div>
 
-Different software development projects open up different categories which could be affected by risk: the project's schedule could be delayed, cost could be increased, quality could be decreased, performance hindered. While not all of these are relevant to this project (cost in particular doesn't come into it), a generic risk management process will be followed, so that a plan of action is in place in the event that significant areas of it come into jeopardy. Various techniques including brainstorming and incident investigation will be used to identify possible risks. From this, analysis on the likelihood of the risk occurring, alongside each risk's possible impact will allow for risks to be prioritised. From here, each risk can be monitored according to their priority (those which are highly likely or would cause the most damage will naturally be given the highest priorities during analysis) will be performed from the onset of this project. The risk management register can be seen in **APPENDIX (INSERT NO. HERE)**
+Different software development projects open up different categories which could be affected by risk: the project's schedule could be delayed, cost could be increased, quality could be decreased, performance hindered. While not all of these are relevant to this project (cost in particular doesn't come into it), a generic risk management process will be followed, so that a plan of action is in place in the event that significant areas of it come into jeopardy. Various techniques including brainstorming and incident investigation will be used to identify possible risks. From this, analysis on the likelihood of the risk occurring, alongside each risk's possible impact will allow for risks to be prioritised. From here, each risk can be monitored according to their priority (those which are highly likely or would cause the most damage will naturally be given the highest priorities during analysis) will be performed from the onset of this project. The risk management register can be seen in [Appendix E](#Appendices-2-5)
 
 ###Testing Methods
 Software testing is a means of ensuring that a software product works as intended for the targeted userbase and purposes. Bugs in code are inevitable, and even if every use case possible is tested it is likely some will remain; there are far too many variables to quash them all. However, without testing many bugs the software will probably not be user-friendly, with bugs, crashes and memory leaks all possible. Unless testing is carried out to find and fix these issues, a user's perception of software will generally be bad, since bugs ruin the user experience. 

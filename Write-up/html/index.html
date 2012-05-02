@@ -1,0 +1,2439 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Remote Downloading of Large Media Files</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="Kieran Patel (i7869019)">
+    
+
+    <link href="prettify.css" type="text/css" rel="stylesheet" />
+    <link href="standard.css" type="text/css" rel="stylesheet" />
+    <style type="text/css">
+      body {
+        counter-reset: a;
+        counter-reset: t_H1;
+      }
+      @page {
+        margin: 2cm 2cm;
+      }
+      @media print {
+        .noprint { display: none; }
+        pre.prettyprint.linenums {
+          box-shadow: none;
+        }
+        pre.prettyprint.linenums li {
+          border-bottom: 1px dotted #EEE;
+        }
+        body {
+          margin-left: 2cm;
+        }
+      }
+      @media screen {
+        body {
+        }
+        section { height: 0; overflow: hidden; }
+        section.active { height: auto; }
+        .noscreen { display: none; }
+        #view {
+          margin: 40px auto;
+          width: 440pt;
+          padding: 40px 0 20px 400px;
+        }
+        #view.print_view section {height: auto;}
+      }
+      section {
+        counter-increment: a;
+      }
+      h1 {
+        page-break-before: always;
+        counter-reset: b;
+      }
+      h1:before {
+        content: counter(a) ". ";
+      }
+      h2 {
+        counter-reset: c;
+      }
+      h2:before {
+        content: counter(a) "." counter(b) " ";
+        counter-increment: b;
+      }
+      h3:before {
+        content: counter(a) "." counter(b) "." counter(c) " ";
+        counter-increment: c;
+      }
+
+      /** toc **/
+      .toc {
+        counter-reset: t_H1;
+        width: 90%;
+        padding: 20px;
+      }
+      .toc li, .tof li {
+        list-style-type: none;
+        height: 25px;
+        overflow: hidden;
+      }
+      .tof li {
+      }
+      .toc a, .toc span {
+        background: #fff;
+        text-decoration:none;
+        display: inline-block;
+      }
+      .toc a {
+        width: 100%;
+      }
+      .tof span.title {
+        padding-right: 25px;
+      }
+      .toc span, .tof span {
+        padding: 0 4px;
+        page-break-inside: avoid;
+      }
+      li span.page {
+        float: right;
+      }
+      .toc .H2 span.title {
+        padding-left: 40px;
+      }
+      .toc .H3 span.title {
+        padding-left: 80px;
+      }      
+      .toc .H1 {
+        counter-reset: t_H2;
+      }
+      .toc .H1 span.title:before {
+        content: counter(t_H1) ". ";
+        counter-increment: t_H1;
+      }
+      .toc .H2 {
+        counter-reset: t_H3;
+      }
+      .toc .H2 span.title:before {
+        content: counter(t_H1) "." counter(t_H2) "  ";
+        counter-increment: t_H2;
+      }
+      .toc .H3 span.title:before {
+        content: counter(t_H1) "." counter(t_H2) "." counter(t_H3) "  ";
+        counter-increment: t_H3;
+      }     
+      
+      nav .toc {
+        width: auto;
+      }
+      nav .toc a {
+        border: none;
+      }
+      nav .toc span {
+        padding: inherit;
+        bottom: inherit;
+      }
+      nav .toc span.page {
+        display: none;
+      }
+
+      #section {
+        page-break-before: always;
+      }
+
+      #Appendices h1, #Appendices h2, #Appendices h3 {
+        page-break-before: always;
+      }
+
+      /*figcaption:before {
+        content: "Figure " counter(fig) ": ";
+        counter-increment: fig;
+      }*/
+    </style>
+  </head>
+  <body>
+    <header class="noprint">
+      <ul>
+        <li class="active"><a href="#html">HTML5 view</a></li>
+        <li><a href="#print">print view</a></li>
+      </ul>
+      <span id="chapter"></span>
+    </header>
+    <nav class="noprint">
+      <ul class="toc">
+      </ul>
+    </nav>
+    <div id="view">
+      <ul class="toc noscreen">
+      </ul>
+      <div id="section" class="noscreen">
+        <ul class="tof">
+        </ul>
+      </div>
+<section id="Abstract"><h1>Abstract</h1><blockquote>
+  <p>This project proposes a new way of delivering digital content, specifically large files such as video games and high-definition </p>
+</blockquote>
+</section><section id="Introduction"><h1>Introduction</h1><h2>Introduction</h2>
+
+<p>There is a problem with the current systems of content delivery. The current methods fail to work for people and their hectic lifestyles. As physical media's scarcity increases and more and more rental stores shut down - even large chains such as Blockbuster have been shutting several retail outlets - the world seems to be moving steadily towards digital content distribution. However, many current use cases for these services are flawed.</p>
+
+<p>The purchase of 1080p movies or modern PC games - both files which would likely exceed 10GB in size - over the internet, is common. However, the issue is that these files can often take a large amount of time to download, particularly on connections with lower bandwidth. And on these connections, streaming of movies becomes almost impossible too - a stream with too-low bandwidth will often stutter, providing a poor viewing experience. This project proposes a solution to this problem, not by decreasing download times but by taking an alternative approach to this whole workflow of content delivery. The solution will be in the form of a software product which will allow files to be downloaded without any user intervention required at the PC the downloading occurs on. Downloads could instead be instantiated remotely, through a web interface or even mobile app.</p>
+
+<h3>Objectives</h3>
+</section><section id="LiteratureReview"><h1>Literature Review</h1><h2>Review of Trusted Sources</h2>
+
+<p>The speed, and the convenience, of networks in recent years - the prevalence of wireless networking and the omnipresence of the Internet - has lent itself to the way people obtain and subsequently consume their content. Major news corporations - the BBC, Sky, CNN, and so on - have been widespread across the Web for many years, and many Web users prefer to get their news through these sources rather than through traditional means such as television channels or newspapers. In the same way, people frequent record stores less and less. The early 21st century brought around Peer-to-Peer (P2P) networks for downloading files such as Napster and Kazaa, and shortly thereafter came the iTunes Store (Alves K. and Michael, K. 2005). Likewise for movies and TV shows - high street store chains selling such media have been dwindling in recent years as more and more people turn to purchasing content online, or using streaming services. And similarly once more for games.</p>
+
+<p>Games-on-demand have actually been around for longer than their Video (VOD) counterparts - indeed the first games available for digital distribution came about in 1983 with the GameLine rental service for the Atari 2600 (Skelton, D. (n.d.)). In contrast, the first VOD service didn't come about until late 1994 (Rajapakshe, H. and Quec, D.P., 1995). While today, most of the kinks in the modern variants of these services (Steam, the Xbox Live Marketplace or Netflix to name a few) have been worked out, allowing these services to provide a clean, easy and fast user experience (UX), the services have yet to take on fully widespread adoption in the same way as, say, the iTunes Music Store has (which became the largest music retailer in the United States in 2008) (Apple Inc., 2008). A factor of this problem may in fact have something to do with one of the causes of services' prevalence: the recent boom in the speed of the Internet.</p>
+
+<p>Or, more precisely, the boom in the speed of the Internet <em>in most areas</em>. To use an example, while devices sporting 3G or 4G radios are easily capable of downloading data at incredibly high speeds even over the air, this is on the proviso that the radio is in an area with good signal coverage. Similarly with home broadband connections - while connection speeds are in many areas fast enough to, say, download a HD movie in a reasonable amount of time, or stream it with any level of quality of service, in other households with lesser connections downloading can become an overnight affair, and streaming can be completely out of the question. Obtaining our media through the Internet, and not in physical form, is undoubtedly the future. Just in some places, infrastructures aren't ready for the future yet.</p>
+
+<p>As technology in content distribution hurtles further and further towards streaming services the quality and bandwidth of the internet connection in question becomes more and more important. Even streaming services for gaming have made an appearance recently - OnLive is a service allowing 'cloud gaming', streaming the output and input in realtime to and from a thin client, that became available to the public in 2010 (OnLive, Inc., 2010). Once again, perfectly brilliant with any reasonable amount of connectivity and wholly unusable on lower-end connections. </p>
+
+<p>In the United Kingdom, a recent study found that over a third of the country are suffering with these sub-par broadband speeds - this being defined by "under 5Mb/s" (BBC News, 2012). Assuming someone has a connection speed of 5Mb/s, we can work out how long it would take them to download, say, <em>Portal 2</em> (which when downloaded from Steam is 11.3GB).
+<div>
+<figure>
+<img src="img/equation.png"> = 18080 seconds = 5 hours 1 minute
+<figcaption>Downloading <em>Portal 2</em> on a slow connection</figcaption>
+</figure>
+</div>
+5 hours is a best-case scenario, too, since a whole third of UK postcodes have significantly slower connections than even this. On this connection or even on speedy connections, though, other issues such as packet loss can prevent quality service; if packets are not received they must be requested and sent again, which significantly increases the amount of time a resource can take to download. Waiting for this long for entertainment is something consumers have not had to do in the past, and currently it is the trade-off made for the convenience of digital media over its yesteryear physical formats.</p>
+
+<p>And indeed there really is no time for consumers to wait for these things. The average age of a video game player, for example, is 37 - the stereotype of teenage boy gamers is a misconception: they only make up 13% of the population of gamers compared to 37% for females above the age of 18 (ESA, 2011). The 'average' gamer is likely to be an adult with a job, gaming for some escapism, who importantly does not have five hours spare after his working day to wait for a game to download.</p>
+
+<h2>Review of Research and Development methods</h2>
+
+<h3>Development Methodologies</h3>
+
+<p>During the development phase of the project, the design decisions and the plans drawn up will be used to produce an actual working artefact. However, it is always a good idea to, before diving into coding a program, work out a methodology to help the project's structure and to help control the creation process, from gathering of requirements right through to the final QA phase of development before project completion. This structure can be the difference between a project's success or failure, primarily by improving a team's productivity and focus - since everybody is working in the same method, and following the same contingency plans - and as such there are many methodologies to choose from, each with their own characteristics. No one methodology can therefore be applied to a particular project, particularly when projects' scales and goals can be so different. While development methodologies were first created for working with large-scale projects, as more and more come into existence, and as older, robust methodologies are adapted, they can often work with small, or in this case one-man projects as well to an extent, perhaps with some adaptation.</p>
+
+<h4>Pure Waterfall</h4>
+
+<p>The waterfall methodology was developed in 1970 by Winston. W. Royce, as a sequential process to follow throughout the development process. It consists of several clearly-defined phases, each of which must be completed before the next can start. These are:</p>
+
+<ol>
+<li>Requirements Specification</li>
+<li>Design</li>
+<li>Construction (i.e. implementation)</li>
+<li>Integration</li>
+<li>Testing and debugging</li>
+<li>Installation</li>
+<li>Maintenance</li>
+</ol>
+
+<p>The waterfall model was used as a base in developing the structure of other methodologies, particularly those that also permit a similar sequential flow of phases (Royce, W.W., 1970). The rigid structure of the waterfall is useful for producing a product of high quality, as each phase of development must be entirely complete and without problems before moving onto the next phase. It also works well when the development team are technically weak, allowing them to concentrate on one thing at a time, and the structure lends itself well when the team is spread overseas - although not relevant in this instance. However, this rigid progression has some shortfalls also, most obviously in its inflexibility if the requirements change. In fact, seeing as the requirements must be set in stone before even moving forward on to the next step, they must all be defined at the outset. This can often be difficult, to say the least - requirements often change as work progresses and more information on its scope becomes apparent. Additionally, as the integration and testing phases are towards the end of the lifecycle, often it's not possible to 'see' the program in action until then. It's possible that, by this point, any changes a customer desires are impossible, or at the least extremely costly, to commit to (McConnell, S., 1996). </p>
+
+<p>However, there are as previously mentioned many development methodologies, many of which are not as strictly iterative as 'pure' waterfall. Other Software Development Lifecycles (SDLCs) can take radically different approaches and thus can be extremely more adaptable for use projects where waterfall is simply unsuitable. The phases of these different lifecycles, while getting the same job done as in waterfall, can vary vastly in how much focus is put on them, the order in which they occur, and most importantly how they can be adapted as development goes on.</p>
+
+<h4>Agile &amp; Scrum</h4>
+
+<p>Agile methodology is becoming extremely popular in businesses worldwide. It is a model in which the end users and developers are in close and regular communication, making it very good for gathering and adapting to customer feedback. Because this rapport needs to be built up, it works best with small teams of developers. Testing is carried out throughout the development process, as opposed to in a lump after the main development has been completed. This testing can be split into two different kinds: user acceptance testing as well as unit testing for the developers' benefit. Various forms of and variations upon Agile development have been proposed, the emergent variant being Scrum methodology (Cockburn, A., 2006).</p>
+
+<p>Scrum methodology involves assigning certain roles to individuals and splitting the workload in a certain way. One developer is assigned the title of the 'Scrum Master', who has the job of ensuring that the process is followed correctly, and a customer is assigned as the product owner, or primary stakeholder: the point of contact between the development team and the user base - the customers' spokesman. The work is split into 'sprints' - a unit of development with a specific objective, which should last a few weeks. Before each sprint, a meeting is held to determine what should be completed by its end. During a sprint, the requirements are not allowed to change, so if they have changed the issue must be raised in this meeting. Every day or few days during the sprint a short meeting, or scrum, is held, in which any customer is welcome, not just the product owner. During this, the development team members give progress updates on what they have achieved since the last scrum and what they intend to do next. After a sprint another meeting is held to review what was accomplished and demonstrate any new working features to the product owner (Schwaber, K., 1995).</p>
+
+<p>Agile's incremental structure, alongside its provision for changes in requirements at certain points, is a very desirable thing to have. However, pulling this off requires very close monitoring by project managers and (if using Scrum) the Scrum Master, and often requires better quality developers than other, simpler methodologies. Given the correct resources, though, Agile is very usable in the real world, as evidenced by its widespread adoption.</p>
+
+<h4>Making a Choice</h4>
+
+<p>Adopting a methodology for this project is no easy choice. While Agile is usually the better choice, in this case there is no customer - so some of the disadvantages of waterfall don't apply: for example, the requirements are likely to be set from the beginning with no chance of change, and having meetings becomes rather moot. Taking cues from various techniques seems to be the optimal approach. A rigid and iterative approach would be useful to help avoid trying to concentrate on too many things at once, however the idea of a sprint approach, with designated reflection periods upon completion of tasks, would be beneficial for refinement and refactoring not only of code but of the ideas and user experience concepts behind the artefact. As such, since neither approach as a whole is entirely appropriate to the project in question, a loose, one-person adaptation of some of the best features from both will be used in progressing this project.</p>
+
+<h3>Project Management Methodologies</h3>
+
+<h4>PRINCE2</h4>
+
+<p>PRINCE, or PRojects IN Controlled Environments, is a structured approach to managing projects used in the UK, Western Europe and Australia. Originally evolved from PROMPT2 (Project Resource Organisation Management and PLanning Technique), a methodology developed in 1975, the first iteration of PRINCE was used from 1989. In this early stage it was only really suited to IT projects, and a revision in 1996 - PRINCE2 - widened its application for use in non-IT projects as well. The methodology was again revised in 1999 to make it smaller and more lightweight.</p>
+
+<p>PRINCE2 is now the de-facto standard for project management in many countries - including being widely used by the UK government and in the private sector - for a few reasons. Firstly, it does not require any license to use, making it appealing solely based on not having to pay any licensing fees, and secondly because of the substantial benefits of using such a widely-recognised methodology so commonly-understood. PRINCE2 is a very comprehensive approach, and covers the management of many aspects of a project, including definitions of roles and tasks for key team members, guidelines for risk management and the actual provision of outlines for reports and documents. It also covers when such reports should be written, and outlines a procedure for product development from conception through to completion (Bentley, C., 2002). However, because it is so comprehensive, PRINCE2 can be somewhat bureaucratic and full of red tape, and as such is best suited to larger projects.</p>
+
+<h4>PMBOK</h4>
+
+<p>In contrast to the red tape of PRINCE2, PMBOK (the Project Management Book of Knowledge, the project management methodology prevalent in the United States) is more casual and more of a set of guidelines for managing projects rather than a structure to adhere to. First published as a white paper in 1987, and revised several times (the last major revision being in 2008), PMBOK's 'slogan', so to speak, is 'guidelines for managing most projects most of the time'. PMBOK is aware that it is not a one-size-fits-all solution and is thus more flexible and open to adaptation than the rigid PRINCE2. PMBOK's aim is to standardise project management techniques in five basic process groups: Initiation, Planning, Execution, Monitoring and Controlling, and Closure. It provides a best-fit approach to all of these areas, offering guidelines and over 40 processes that can be used or adapted for 'most' projects, and is designed to compliment other approaches to project work - for example the Capability Maturity Model (Integrated), or CMMI, a means of measuring the capability and maturity of a team to perform a specific task (PMI Standards Committee, 2004).</p>
+
+<h4>Adapting a Methodology</h4>
+
+<p>Similar to with development techniques, unfortunately adapting a project management technique to cover a one-person outfit is not easy. While in a more traditional business project a methodology could be used, rigorously or otherwise, in this case the best approach is to simply take ideas and good practices from various sources and keep them in mind. Following a management technique strictly is next-to impossible - simply assigning the various outlined roles cannot be done without a workforce. However, using ideas from both PRINCE2 and PMBOK it is possible to come up with ideas of what needs to be considered when embarking on a project, of any scale, particularly during the planning stage. However, something that neither methodology covers in any great detail is risk management. This is something that will be important to cover in greater detail.</p>
+
+<h3>Requirements Engineering</h3>
+
+<p>Requirements analysis and engineering can be critical to the success of a project. Being able to define the goals of a project, what it needs to fulfil, and being able to keep these in mind during the development process allows developers to focus on adhering to exactly what needs to be done during the creation process, ensuring that no essential features are missed out and that no time is wasted in designing and coding something that is not needed and perhaps not even wanted. The means in which requirements are gathered from an end-user base can vary greatly.</p>
+
+<h4>Methods of Data Collection</h4>
+
+<p>All the many means of gathering data from users can fall under one of three categories: qualitative, quantitative and social. Quantitative data are data that can be expressed numerically, and as such is often shown in graphs and charts. The main method of collecting quantitative data is through questionnaires - the statistics retrieved through this means can be tallied up and put into visual formats. Qualitative data can be used to back this up: gathered via means such as direct observation or interviews, for example, it is possible to find out requirements in far more detail by using these methods, but it is far more time-consuming to accomplish. Finally, social data can be from a variety of sources - research findings, information from the media, or simply from use of logic. When beginning a project, depending on its scale and criticality, it may be desirable to use one or all of these sources to define its requirements (Palgrave.com,2011).</p>
+
+<h4>Volere</h4>
+
+<p>The Volere template is a requirements specification and analysis template available for commercial use. It was first drafted in 1995, and published in 1999, to provide a structure and common language to the process of gathering requirements from various sources. Volere consists of three interconnected components: the Requirements Knowledge Structure, which deals with how different requirements relate to each other; the Requirements Stakeholders, concerning the priority of the work and the appropriate level of detail in accordance with the stakeholders' needs; and the Requirements Process, or the procedures for discovering requirements. While a commercial product, and thus mainly reserved for use by businesses with the resources to justify the monetary cost (and has been used in thousands of projects across the globe by such customers), the creators of Volere, James and Suzanne Robinson, have made it available to students for free, making it well worth taking a look at even if it is more suited to larger products with vested stakeholders.</p>
+
+<p>Volere encourages one to consider the purpose of a project, as well as the motivations for creating a product and the intended final users of it. While it is very easy to get caught up in certain development habits, different products often require wholly different approaches. By having this template to fill in when planning a project, the development team (or business analysts under certain cases) can focus much better on what is needed of them, and thus potentially produce a better product and increase customer satisfaction. Additionally, Volere asks questions that may not often be thought of, such as defining maintenance requirements and specifying naming conventions to use during development (Robertson S. and Robertson J., 2008).</p>
+
+<p>Being a modular process means that Volere is very flexible: it is possible to have a bespoke, 'bare-bones' version of the template which is simply used to gather the requirements of the project based on its budget, scope and time constraints, or the team can add more scope to the requirements gathering process. Volere is also designed to go hand-in-hand with processes such as use-case definitions, which will allow a greater extent of requirements to be defined based on the use-cases that have been envisioned.</p>
+
+<h4>MoSCoW</h4>
+
+<p>The MoSCoW method is a prioritisation technique that comes into play during or after the gathering of requirements - meaning that the primary function of MoSCoW is not to be a means of gathering requirements, rather a means of defining their priorities in a very simple, self-explanatory and quick way. Developed by Dai Clegg of Oracle UK in 1994, MoSCoW is actually an acronym, standing for the four states of requirement (priorities) it encompasses. These are:  </p>
+
+<ul>
+<li>Must Have</li>
+<li>Should Have</li>
+<li>Could Have</li>
+<li>Won't Have</li>
+</ul>
+
+<p>The simplicity and 'plain English' of these requirement prioritisations is incredibly useful when working with customers - simply handing a product owner a sheet containing these four headings and asking them to fill in their requirements is often viable, since the priorities' titles say everything necessary. <em>Must Have</em> defines the absolute necessities of the project - the outcomes that it must fulfil to be considered a success. If any of the Must requirements are not delivered, the project will have been a failure. <em>Should Have</em> requirements are critical to the project's success also, but are not essential to be included in the initial release. <em>Should</em> requirements often have workarounds, meaning that they can be semi-satisfied in some other way at least as a stopgap until their implementation.</p>
+
+<p>The other two categories list requirements that are not essential for the deliverable to be considered 'complete'. <em>Could Have</em> requirements are 'nice-to-have'; things that would add to the value of a product and potentially the customer's satisfaction, but are only to be implemented if they are either judged simple enough to, or if there is time left over after the Must and Should Haves are finished. <em>Won't Have</em> requirements are those that the customer would like, but are the least critical items to be worked on. Sometimes referred to as <em>Would Haves</em>, these requirements are those that are not to be included in the current timescale of the project, but would definitely be up for contention in future revisions of the deliverable (Haughey, D., (n.d.)).</p>
+
+<h4>Functional and Non-Functional Requirements</h4>
+
+<p>When gathering and prioritising requirements, no matter what method is used, it is useful to bear in mind that they fall into two distinct categories: functional and non-functional. To quote the Volere template, which is very clear on the definitions of the two:</p>
+
+<blockquote>
+  <p>Functional requirements are the fundamental or essential subject matter of the product. They describe what the product has to do or what processing actions it must take.</p>
+  
+  <p>Non-functional requirements are the properties that the functions must have, such as performance and usability. Do not be deterred by the unfortunate name for this kind of requirements, they are as important as the functional requirements for the product’s success (Requirementsauthority.com, (n.d.)). </p>
+</blockquote>
+
+<p>Both types of requirement are essential to gather before beginning implementation, both types of requirement should be properly prioritised (using MoSCoW or otherwise), and both types of requirement count towards determining the level of success of a project upon its completion. In short, functional and non-functional requirements are equally important to the project's outcome.</p>
+
+<h4>Evaluation of Methods</h4>
+
+<p>Gathering requirements for this project is going to be difficult without a customer or other user base to question. Observing and using applications that perform similar functions such as Steam or the iTunes Store will likely help in understanding what must be accomplished, and using some of the techniques outlined in Volere will be useful when considering, for example, the deployment requirements, or how use-cases and use-case diagrams (UCD's) can be used to add to the data already acquired. When it comes to prioritising the requirements once gathering is complete, MoSCoW is really the only suitable method. Many believe that other methods of requirements prioritisation are far inferior - its simplicity and comprehensiveness is a great combination, and other prioritisation techniques fall flat mostly by including numerical prioritisation rather than the far easier-to-understand worded method. Defining those Must/Should/Could requirements, however will likely be accomplished by observation of real-world applications and then prioritisation of their features. Obviously due to time and resource constraints the finished artefact will not have all the features of an application such as Steam, made over a period of years with the resources available to a company like Valve, and the Won't Have requirement category will likely be populated by very desirable features that must be dropped from this release of the application due to the constraints in time, budget and resources.</p>
+
+<h3>Risk Management</h3>
+
+<p>In software development, a risk is an event that could potentially cause the project to fail to meet requirements. The level of a risk is an abstract, defined by its probability and the impact it will have. When planning a project, effective risk management is important to define and identify possible risks, and, through a process of analysis, prioritisation and careful planning, controlled. One of several approaches to risk management is the Software Engineering Institute's (SEI) Risk Management Programme.</p>
+
+<h4>SEI Programme</h4>
+
+<p>This is a series of events to follow when performing risk management and planning. The first step consists of identifying as many risks as possible within the project's scope. With each risk that has been defined, there are five steps to go through to effectively plan for and manage each one.</p>
+
+<ol>
+<li>Analyse</li>
+<li>Plan</li>
+<li>Track</li>
+<li>Control</li>
+<li>Communicate</li>
+</ol>
+
+<p>Every project has its risks. <a class="figref" href="#risk">Figure</a> shows some examples of potential risks to certain projects.</p>
+
+<div>
+<figure id="risk">
+<img src="img/systemrisks.png">
+<figcaption>Risks within a System Context (Higuera, R.P., and Haimes, Y.Y., 1996)</figcaption>
+</figure>
+</div>
+
+<p>Different software development projects open up different categories which could be affected by risk: the project's schedule could be delayed, cost could be increased, quality could be decreased, performance hindered. While not all of these are relevant to this project (cost in particular doesn't come into it), a generic risk management process will be followed, so that a plan of action is in place in the event that significant areas of it come into jeopardy. Various techniques including brainstorming and incident investigation will be used to identify possible risks. From this, analysis on the likelihood of the risk occurring, alongside each risk's possible impact will allow for risks to be prioritised. From here, each risk can be monitored according to their priority (those which are highly likely or would cause the most damage will naturally be given the highest priorities during analysis) will be performed from the onset of this project. The risk management register can be seen in <strong>APPENDIX (INSERT NO. HERE)</strong></p>
+
+<h3>Testing Methods</h3>
+
+<p>Software testing is a means of ensuring that a software product works as intended for the targeted userbase and purposes. Bugs in code are inevitable, and even if every use case possible is tested it is likely some will remain; there are far too many variables to quash them all. However, without testing many bugs the software will probably not be user-friendly, with bugs, crashes and memory leaks all possible. Unless testing is carried out to find and fix these issues, a user's perception of software will generally be bad, since bugs ruin the user experience. </p>
+
+<p>Since testing is such an important part of the software life cycle, many methods of testing exist to make it as convenient to integrate into software development as thorough at discovering bugs and unwanted features as it can be. Besides simply going through a program and manipulating every control, comparing the result to what was expected (a technique known as black-box testing), there are other methods which test the internal workings of the code itself to ensure that, logically, everything is happening as it should - known as white-box testing. While black-box testing is performed on a finished software product, testing can be performed during development as well. For example, a technique known as unit testing is commonly used to test individual functions or classes to ensure they can handle all possible inputs, and will output the correct results. Unit testing involves writing additional code to serve as 'test cases', which <em>assert</em> that functions exist and that their output when given certain parameters is as expected - even if the expected result is an error (Luo, L., 2001).</p>
+
+<h4>Test-Driven Development</h4>
+
+<p>While commonly tests are written once software has been created and run on the code that has been written, a technique known as regression testing that has been around as long as software has, a method of software development - which actually in itself could be considered an iterative, Agile-based SDLC - known as Test-Driven Development (TDD) involves writing the unit tests first, before any code is written. TDD has become increasingly popular since its relatively recent invention in the early 2000s, and is used by large companies such as Microsoft and IBM. Its workflow, Red-Green-Refactor (Beck, K., 2003), is the best way to describe how it works.</p>
+
+<ol>
+<li>Red: Write a test that describes how a code unit should work. It should FAIL when run, as the code it's attempting to test has not yet been written.</li>
+<li>Green: Write code to make the test pass.</li>
+<li>Refactor: When the test case passes, neaten up and reorganise the (potentially messy) code.</li>
+<li>Repeat for another function</li>
+</ol>
+
+<p>Test-Driven Development, then, changes the whole process of software testing to be proactive, rather than reacting to bugs. It can also serve as a means of defining low-level software requirements. However, a downside of using TDD is that it can take much longer to get started with a project, since a lot of time is spent writing tests. Given the time constraints on this project, and the planned very-iterative nature of development (which will be developed piece by piece, in order of priority, with additional features being added if there is time), testing (which will still remain of key importance) will not be given such a focus. Instead, a compromise will be made by performing a certain amount of regression testing coupled with extensive black-box testing, some of which will be carried out by third parties.</p>
+
+<h2>Technologies</h2>
+
+<h3>Possible Technologies</h3>
+
+<p>Creating a client application, especially one that will be designed to run as a service, means several things. Firstly, performance must be considered - this application will be running constantly in the background of a system, and so its resource usage must be kept to a minimum. This straight away rules out interpreted languages such as Java, which in particular is often criticised for using up a large amount of RAM. Secondly, the choice of technology can limit which operating system(s) the program can run on. While various programming languages are universal, notably Java, and while methods of running technologies on alternative operating systems exist (for example, Mono allows .NET applications to run on Linux and Mac operating systems), to some extent choosing a programming language can choose the target operating system by default. Similarly, choosing an operating system to target can limit the available choice of technology. Making an informed decision of either operating system or technology to develop with is important from early on.</p>
+
+<p>This project has been inspired by and likened to Steam, and other services that allow the downloading and purchase of games. While Steam is available on various platforms, most of its deliverables are restricted to the Windows operating system - most games are made on Windows - and as such it makes sense to follow suit and go where the market lies. Developing a Windows application also narrows down, as outlined above, the list of technologies that can be used somewhat - and additionally opens some doors.</p>
+
+<p>The solution also involves a web service, which is for web stores to plug into to make purchases and communicate with the database. This brings into focus two more choices for technology: the language in which the web service will be written, and the DBMS (Database Management System) that will be used for the solution's persistent storage. One of the resources already available for this project was an Apache web server, which had MySQL and PostgreSQL installed, as well as PHP 5.3 and Ruby on Rails 2.3 - two great choices for a DBMS and two great choices of programming language for the web service.</p>
+
+<h4>Decisions</h4>
+
+<p>Taking into account the above restrictions on choice of technologies and making an educated choice, the project will be developed using the following technologies.</p>
+
+<p>Firstly, the native Windows application will be developed using the .NET framework. This is a powerful application development, deployment and runtime framework created by Microsoft, first released in late 2000, with the current version being .NET 4. Not only does .NET contain a huge amount of useful code libraries to develop against, it executes code in a software environment known as the Common Language Runtime (CLR). This wrapper performs tasks such as memory management and exception handling so the developer does not have to. Given the aforementioned necessity for minimal consumption of system resources coupled with the time constraints on this project, using this framework would prevent development becoming bogged down in optimisation and dealing with mundanities such as garbage disposal, and additionally the libraries available when using the .NET framework are invaluable.</p>
+
+<p>Using this framework still offers a choice of programming language. There are a myriad of languages that can be compiled down to the CLR. However, the most popular of these is C# - and as such, C# .NET is the technology that will be used for creating this application. Additionally, the Integrated Development Environment (IDE) that will be used to develop in this language and framework is traditionally Microsoft Visual Studio - and available for this project is Visual Studio 2010 Ultimate Edition.</p>
+
+<p>The choice of language for the web service is a much easier decision. Since the version of Ruby on Rails running on the web server available for this project is outdated (at time of writing, the current version is RoR 3.2), and seeing as there are several machines with XAMPP (Apache, MySQL, PHP and Perl) installed available for the purposes of this project, it makes sense for the web service to be developed using PHP. For the same reasons, the database will be created using MySQL. As far as development environment for PHP goes, many developers find that they don't require the power of a full IDE, instead using a powerful text editor with some IDE-like features. There are a selection of these available for this project: TextMate 1.6 for Mac, e-TextEditor for Windows, and Sublime Text 2, which is cross-platform. Due to personal preference, TextMate and e will be used for the development of the web service; which one will depend upon which operating system is being used at the time.</p>
+
+<p>Finally, also available for the purposes of this project is a GitHub 'Micro' account, that allows private Git repositories to be created. Git is a very fast and lightweight source code management (SCM) and version control system, something that is incredibly useful for creating backups of files and for managing different versions of code using an intuitive 'branch' system, and GitHub is a web application that allows hosting and management of Git repositories. Because the Micro account allows creation of private repositories, there will be no issues with public leaks of confidential code. Therefore, Git and GitHub will be used for version control of this project.</p>
+
+<h3>Deployment Technologies</h3>
+
+<p>An astute developer will be thinking about means of deploying his applications long before it reaches that time. Deployment techniques vary depending on the system: the web service being created for this project can be deployed by simply putting the program onto a compatible server - they will be accessed by making HTTP requests to the correct URI. Deploying a client application is a different matter. The program must somehow get onto the user's computer before it can be run. These days this is again commonly and easily achieved using the internet, although it's also (somewhat archaically now) possible to distribute on physical media (the irony of this given the whole concept of this project notwithstanding).</p>
+
+<p>Applications for Windows are often distributed using installers. An installer allows the program to be added to the Start menu for easy access, allows all required libraries and other files to be placed in the correct locations, and any registry values to be created. However, since the application does not use the Windows registry, it would be feasible to distribute this application in a 'portable' format; simply it and all its required libraries in a zip archive. Often when this is done it is as an option to download a portable format instead of the installer. It makes sense to offer the user the choice of whether to download an installer or a portable archive, as the choice of which to download usually comes down to the user's preference.</p>
+
+<p>When it comes to creating the installer, Visual Studio offers several options (MSDN, 2010). Built into the IDE is a tool called Setup and Deployment, which creates <code>.msi</code> installers. While this does not offer much customisation, it is very lightweight. If more features are needed, Microsoft provide the Windows Installer XML toolset (WIX), which uses XML to create a very powerful, very customisable <code>.msi</code> installer, amongst other things. However, WIX is very difficult to use, and as such has a very steep learning curve. Alternatively, there is a third-party plugin that has been incredibly successful even compared to the first-party tool, and as such has a somewhat large degree of brand awareness: InstallShield, by Flexera Software. This is a very easy-to-use installer creation process that creates a Setup.exe file. InstallShield has many strengths and tends to be more full-featured than the Visual Studio installer, but ultimately does the same job in a more bloated way. Although the Visual Studio Setup and Deployment process has its shortcomings, this project does not require a personalised installer or some of the features found in InstallShield or WIX.</p>
+
+<h3>Pilot Study</h3>
+
+<p>Performing preliminary work before artefact production is a useful means of evaluating the feasibility of certain methods. One of the key parts of the solution is the communication between the two software components. To study this and its feasibility, two classes (in C#) were created well in advance of the actual implementation, as a pilot study. ListenerServer.cs was a simple application that ran an instance of TCPListener, listening for any IP address on port 31337, and upon receiving a message, displayed it on the console and sent back the current date and time. ListenerServerTest.cs was the other half of this application, which sent the message, and received and displayed the response.</p>
+
+<div>
+<figure>
+<pre class="prettyprint linenums">class ListenerServerTest
+{
+  static void Main(string[] args)
+  {
+    int port = 31337;
+    string ip = "127.0.0.1";
+    TcpClient tcpclient = new TcpClient(ip, port);
+    Byte[] request = Encoding.ASCII.GetBytes("request");
+    
+    Console.WriteLine("Sending...");
+    
+    tcpclient.GetStream().Write(request, 0, request.Length);
+    Byte[] response = new Byte[10];
+    int bytesRead = tcpclient.GetStream().Read(response, 0, 10);
+    
+    Console.WriteLine("Response:   " + Encoding.ASCII.GetString(response));
+    Console.ReadLine();
+    tcpclient.Close();
+  }
+}</pre>
+<figcaption>The preliminary code that was used to test ListenerServer.cs</figcaption>
+</figure>
+</div>
+</section><section id="Construction"><h1>Construction</h1><h2>Development Plan</h2>
+
+<p>As stated previously, the project will be completed using a bespoke software development lifecycle adapted to bet fit a one-person development team. As far as implementation is concerned, the project will be divided into four sections to work on as sprints, similar to the agile Scrum methodology, however the overall process going from design to testing will be more linear and reminiscent of Waterfall.</p>
+
+<div>
+<figure>
+<img src="img/sdlc.png">
+<figcaption>The custom SDLC this project will adhere to.</figcaption>
+</figure>
+</div>
+
+<p>The idea of this SDLC is to break everything down into manageable chunks and deal with it one piece at a time. By dealing with all major design work before beginning implementation, the project will have a clear direction before any code is written, and since the requirements are very unlikely to change (there is no client setting them), the rigid structure of Waterfall is not really a drawback. However, using the Scrum tactic of splitting the work up into sprints, at least for the software implementation, allows each work unit to be worked and concentrated on fully, and will hopefully prove this SDLC experiment of sorts a success.</p>
+
+<p>The Scrum part of the SDLC will work as follows:</p>
+
+<ul>
+<li>Sprint design: Objectives for the sprint will be laid out - i.e. which features will be implemented, and how long the sprint will take.</li>
+<li>Sprint implementation: Spend the amount of time that was defined creating the features that were designated for this sprint.</li>
+</ul>
+
+<p>Testing during a sprint will be limited to basic identification and fixing of major bugs; that is, unit testing and extensive black-box testing will be saved until after implementation is wholly complete (in accordance with the Waterfall methodology), but any major issues that arise during a sprint should be dealt with there and then.</p>
+
+<p>The four sprints, then, will be split in accordance with the functionality of the application. Each sprint will complete another major feature of the application, until a complete product has been created ready for testing and integration. The sprints will be as follows:</p>
+
+<ol>
+<li>Database design and creation  </li>
+<li>GUI creation and account management tools</li>
+<li>Web service creation</li>
+<li>Download feature</li>
+<li>File management feature and refactor.</li>
+</ol>
+
+<p>Each sprint will take either one or two weeks depending on its complexity, and more specific objectives will be drawn up before each sprint commences. Each sprint will be designed to fulfil one or more high-priority requirements.</p>
+
+<h2>Design</h2>
+
+<h3>Requirements</h3>
+
+<p>One of the first, most important stages of a project's design comes in defining the project's requirements. Using the MoSCoW methodology along with some tips from Volere, identifying and prioritising requirements was performed in the initial planning phase of the SDLC. For each category in MoSCoW, functional and non-functional requirements were thought up; Volere was instrumental in instructing about the importance of non-functional requirements in software engineering. In this project, every attempt will be made to meet all the Must-Have and Should-Have requirements, and Could-Haves will be dealt with opportunistically, if there is time towards the end of a sprint when all more essential functionality has been created (and non-functional Must-Have and Should-Have requirements have been met, too). Indeed, the project will only be considered a success if all the Must- and Should-Have requirements have been met. Won't-Have requirements, for the purposes of this project at least, are being defined as requirements that will not make it into the dissertation, but would be nice-to-haves if the project were to be extended in future. They are mostly noted down here with some forethought to the evaluation phase.</p>
+
+<p><strong>Must-Have:</strong><br />
+Functional:  </p>
+
+<ul>
+<li>Account creation, login and management</li>
+<li>Ability to select and download products remotely</li>
+</ul>
+
+<p>Non-functional:  </p>
+
+<ul>
+<li>Account security</li>
+</ul>
+
+<p><strong>Should-Have:</strong><br />
+Functional:  </p>
+
+<ul>
+<li>Web service to allow web stores to plug into and utilise the functionality</li>
+<li>Ability to re-download products that have been purchased previously</li>
+<li>Runs in the system tray (as a Windows service)</li>
+</ul>
+
+<p>Non-functional:  </p>
+
+<ul>
+<li>Lightweight</li>
+<li>Fast</li>
+<li>Attractive - Consistent User Experience (UX)</li>
+<li>Robust</li>
+</ul>
+
+<p><strong>Could-Have:</strong><br />
+Functional:  </p>
+
+<ul>
+<li>Ability to choose where files download to</li>
+<li>Checksumming of files</li>
+<li>Graceful error handling (picking up dropped downloads where they left off)</li>
+<li>Age ratings and user DOBs to prevent minors buying age-restricted content</li>
+<li>Provision in the web service for easy database manipulation by web store owners / API users</li>
+</ul>
+
+<p>Non-functional:  </p>
+
+<ul>
+<li>Extensive RESTful API with token authentication</li>
+<li>Compiled for multiple platforms (using Mono .NET or similar)</li>
+<li>Provision for multiple concurrent asynchronous downloads</li>
+</ul>
+
+<p><strong>Won't-Have:</strong><br />
+Functional:  </p>
+
+<ul>
+<li>First-party web store plugging into the web service / API</li>
+</ul>
+
+<p>Non-functional:  </p>
+
+<ul>
+<li>OAuth (or similar token-based) security</li>
+<li>Secure file transfers (using SSL / TLS / SFTP)</li>
+<li>Payment information</li>
+</ul>
+
+<p>While the features in the Could-Have and Won't-Have requirements are very desirable and would almost certainly have a higher, if not the highest, priority if this project were being developed for use in the real world, note that this software is meant as a proof-of-concept for remote media delivery, and as such features such as dealing with payment information are unnecessary to deem this project a success.</p>
+
+<h3>Use-Cases</h3>
+
+<p>In the process of design, the main use-cases were identified and written out. Some use-case diagrams were also created to help understand the product's eventual workflow. While it is possible that not all use-cases were considered, identifying these main features' workflows was crucial to understanding the features and functionalities that needed creating.</p>
+
+<h3>Database Design</h3>
+
+<p>The information gleaned from creating use-cases and from defining requirements turned out to be invaluable for deciding on a database structure. Optimistically, the decision was made to include provision in the database structure for not only the Must- and Should-Have requirements, but also all the Could-Haves where possible. This way, time permitting, implementing these nice-to-have features should be far easier down the road when the majority of the product has been put together than it would be if the database structure required modifying and test data required repopulating down the line. If the features turn out not to be implemented, having the extra fields in the database will still cause no problems, so seeing as it is minimal effort to add these columns and there is no risk involved, there seems to be no reason not to.</p>
+
+<p>The first version of the database design was drawn up on paper, and looked like this:</p>
+
+<div>
+<figure>
+<img src="img/moleskine-3.png">
+<figcaption>First draft of the database's entity-relationship diagram.</figcaption>
+</figure>
+</div>
+
+<h3>Interface Design</h3>
+
+<p>A good user experience is not the same as an attractive user interface. The UX encompasses more; particularly things like usability and accessibility considerations. The user interface for the application was designed to be as simple as possible and to retain its flow. As for the aesthetic, this was intended to be similar to Microsoft's Metro aesthetic introduced in Windows Phone 7 and Windows 8. This look was accomplished by using the Segoe UI font, large interface elements, and plenty of blank space to achieve a very 'clean' look.</p>
+
+<div>
+<figure>
+<img src="img/wireframes-noannotate.png">
+<figcaption>Some of the wireframes drawn up while designing the front-end.</figcaption>
+</figure>
+</div>
+
+<h3>Class Design</h3>
+
+<ul>
+<li>Account.cs
+
+<ul>
+<li>Attributes
+
+<ul>
+<li>Email address (unique identifier)</li>
+<li>Password</li>
+<li>Date of birth</li>
+<li>Name</li>
+</ul></li>
+<li>Methods
+
+<ul>
+<li>Constructor</li>
+<li>Password hasher</li>
+<li>Salt generator</li>
+<li>Date formatter</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h2>Tools Available</h2>
+
+<ul>
+<li>Visual Studio 2010 Ultimate</li>
+<li>C# .NET 4.0</li>
+<li>PHP 5.3.8</li>
+<li>MySQL 5.5.15</li>
+<li>e-TextEditor 2.0.1</li>
+<li>TextMate 1.6</li>
+<li>Markdown 1.0.1o and PHP Markdown</li>
+</ul>
+
+<h2>The Build</h2>
+
+<h3>Sprint 1</h3>
+
+<p>The first sprint of the build process consisted of creating the database that would be used by both software components - the web service and the client application. This sprint was slated to last five working days. It was very important to get the database design correct from the start, as a change to the database structure later on would mean several code changes, as the code that manipulated or pulled from the database could well be different.</p>
+
+<p>A lot of the time allocated to this sprint was right away taken up with configuration of the DBMS and of Apache: for security reasons, it is often impossible to connect to a database remotely without a large amount of tweaking. The first task was writing a test connection script in PHP: a simple job of a few minutes' work. This was then run on various computers until access to the database was granted. However, getting this working required much more time than anticipated, and so creating the database had to happen in a couple of days. Luckily, the plans and ERDs drawn up during the design phase were detailed enough that database creation was simple.</p>
+
+<p>Here it was necessary to add test data to the database. For some data this was easy - adding the product names and descriptions, for example - and the account details were not relevant for now (since all account management was to be in the client application anyway). However, uploading product files and adding their MD5 hashes and encrypted locations to the database was deemed part of this sprint, and so a little programming was required to create this data.</p>
+
+<p>Firstly, a UNIX tool, <code>dd</code>, was used to create large files to upload to the server. Files of a variety of sizes were created: 500MB files to serve as tests for download speed and for how well the eventual software will deal with files that take time to obtain, and files of 30 or so megabytes that will be for quick testing of downloads, so no long waits are encountered while debugging. Hashes of these files were created in PHP; using PHP's interactive mode (invoked with <code>php -a</code>) the <code>md5()</code> and <code>md5_file()</code> functions could be quickly used for hash generation. Full utilities for generating hashes for long-term and mass database input are slated for a later sprint, however one quick and small utility (only suited for developer use) was created here to facilitate uploading these files' details to the database.</p>
+
+<div>
+<figure>
+<pre class="prettyprint linenums">require_once('Database.class.php');
+$db = new Database();
+
+$i = ; // Set the product's location_id here
+
+$type = ""; // Define a Type string here
+$name = ""; // Define the product's name here
+$dtl = ""; // Product's details
+$price = ; // Define the price here, as an integer (e.g. £34.99 -> 3499)
+$rating = ; // Define the product's age rating here
+$hash = md5_file(''); // Point this at the file to upload
+$location_hash = md5((string)$i);
+
+$name = mysql_real_escape_string($name);
+$dtl = mysql_real_escape_string($dtl);
+
+$query = "INSERT INTO products (product_type, product_nm, product_dtl, product_price, product_rating, product_hash, location_hash) VALUES ('$type', '$name', '$dtl', $price, $rating, '$hash', '$location_hash')";
+
+echo $query."\r\n\r\n";
+$result = mysql_query($query) or die('Error in query');
+</pre>
+<figcaption>A small PHP utility used to facilitate database inputs.</figcaption>
+</figure>
+</div>
+
+<p>Inputting variables into the above code and running it from the command line generated the required hashes much quicker than could be one manually, and put them into the database without any second step required.</p>
+
+<p>Once enough data was in the database, this sprint was complete.</p>
+
+<h3>Sprint 2</h3>
+
+<p>The second sprint could have been dedicated to writing either the web service or a part of the client application; the option not picked for the second sprint would be the third sprint, so the only thing that mattered was the order in which these were done. Both sprints were scheduled to last 10 days, so they were interchangeable. Having programmed some PHP already, for variety's sake it was decided to work on the Windows program for this sprint - written in C#.</p>
+
+<p>The part of the application scheduled for this sprint was the login and account management feature. The design for this consisted of a series of dialogs to allow a user to login, or, if they had no account, to create one. However, rather than opening a new form each time and causing the application to disappear and reappear, potentially in a different location on-screen, the design was for a single form window with changing contents. Before creating the User Interface (UI), though, there was some back-end work to do, namely creating an Object to hold Accounts.</p>
+
+<div>
+<figure>
+<pre class="prettyprint linenums">
+public class Account
+{
+    public string Email { get; set; }
+    public string Name { get; set; }
+    public string Password { get; set; }
+    public string Dob { get; set; }
+    public Account(string email, string name, string password, string dob)
+    {
+        Email = email;
+        Name = name;
+        Password = password;
+        Dob = dob;
+    }
+}
+</pre>
+<figcaption>The basic constructor for Accounts</figcaption>
+</figure>
+</div>
+
+<p>This basic object was then expanded to do more than just hold data (see <strong>APPENDIX SOMETHING</strong>), including hashing and salting passwords and formatting dates. When creating a user account through the UI, an instance of this object is created to manipulate its details.</p>
+
+<p>An issue encountered here was when hashing passwords. It turns out that some of the hashes that had been created using PHP were incompatible with their C# counterparts. This is because, by default, PHP hashes in lowercase, whereas C# uses uppercase characters in its hashes. To resolve this an argument needed to be passed to the method that converts the hash bytes to a string to format it correctly: <code>.ToString("x2")</code>.</p>
+
+<p>The UI itself was easy to create using Visual Studio's built in WYSIWYG (What You See Is What You Get) editor. Following the design sensibilities that had been previously outlined, it turned out to look like the following:</p>
+
+<div>
+<figure>
+<img src="img/scrn_Login.png">
+<figcaption>How the login screen turned out to look when implemented.</figcaption>
+</figure>
+</div>
+
+<p>More screen captures of the implemented UI are available in <strong>APPENDIX SOMETHING</strong>.</p>
+
+<p>The final features to implement for the sprint were logging in and creating accounts. The hashing and salting algorithms were already written, so all that was needed to do was create a database class and hook everything up to the user interface. This went through with few problems and effectively passed black-box testing. The remaining feature was for auto-login: the application is designed to be started whenever Windows starts, so the user would not want to have to type a username and password every time they reboot. It was decided that the application should remember the last user to log in, and this user's information could be wiped with a logout button. Additionally, after creating a new account, the user would have to log in once more (for security purposes) before they would be remembered. This logic was fairly easy to implement, and so the sprint was completed without issue.</p>
+
+<h3>Sprint 3</h3>
+
+<p>Web service</p>
+
+<h3>Sprint 4</h3>
+
+<p>Downloading!</p>
+
+<h3>Sprint 5</h3>
+
+<p>Redownload &amp; refactor</p>
+
+<h2>Testing</h2>
+
+<p>In addition to going through all the program's and web service's features manually and checking the functionality was correct, basic unit tests were written which were intended to check that individual methods were working as expecting and giving valid results. These unit tests were written in the test franework built into the IDE: Visual Studio Test System (VSTS). This was chosen because, while not as feature-complete as the most popular .NET unit testing framework, NUnit, no additional software was required to create and run these tests, and besides it turned out the more complex features were not required in this instance anyway.</p>
+
+<p>Unit tests were written for the most complex methods with outputs that would be readable by the framework. These turned out to be in the Account and Database classes. For example, a unit test was written that checked what happened when various username and password strings were fed to the login method to ensure that the login system was as secure as possible. It would have been very difficult if not impossible to run unit tests to check the downloading feature (particularly as the methods returned void), so these features were left to black-box testing. Running all the unit tests resulted in a couple of fails, but after investigating it turned out the error was in the tests, not in the code. The tests that failed were when hashing, and comparing an expected hash to a method's output. The issue though was in a malformed 'expected' hash - the hash from the database which was pasted into the test case had not copied correctly and become truncated. After identifying and fixing both instances of this, all the test cases ran successfully.</p>
+
+<div>
+<figure>
+<img src="img/unittests.png">
+<figcaption>All the unit tests for Account and DbConnect classes running successfully (full unit test code can be found in **APPENDIX**))</figcaption>
+</figure>
+</div>
+</section><section id="Analysis"><h1>Analysis</h1>
+</section><section id="Summary"><h1>Summary</h1>
+</section><section id="Bibliography"><h1>Bibliography</h1><ul>
+<li>AIRMIC, ALARM, IRM, 2002. <em>A Risk Management Standard.</em> [pdf] Available at: <a href="www.theirm.org/.../Risk_Management_Standard_030820.pdf">www.theirm.org/.../Risk<em>Management</em>Standard_030820.pdf</a>[Accessed 28 Apr 2012] </li>
+<li>Alves, K. and Michael, K., 2005. The Rise and Fall of Digital Music Distribution Services: a Cross-Case Comparison of MP3.com, Napster and Kazaa. In: <em>Proceedings of the Collaborative Electronic Commerce Technology and Research Conference LatAm</em>, University of Talea: Chile, 3-5 October 2005, pp. 1-22.</li>
+<li>Apple Inc., 2008. <em>iTunes Store Top Music Retailer in the US.</em> [online] Available at: <a href="http://www.apple.com/pr/library/2008/04/03iTunes-Store-Top-Music-Retailer-in-the-US.html">http://www.apple.com/pr/library/2008/04/03iTunes-Store-Top-Music-Retailer-in-the-US.html</a> [Accessed: 28 Apr 2012] </li>
+<li>BBC News, 2012. <em>'Third of UK postcodes' have slow broadband speeds'</em>. [online] Available at: <a href="http://www.bbc.co.uk/news/technology-17130367">http://www.bbc.co.uk/news/technology-17130367</a> [Accessed: 28 Apr 2012] </li>
+<li>Beck, K. 2003. <em>Test Driven Development: By Example</em>.  Boston.: Addision-Wesley Professional.</li>
+<li>Bentley, C., 2002. <em>Prince 2: A practical handbook</em>. 2nd ed. Oxford.: Butterworth-Heinemann, pp.1-18.</li>
+<li>Cockburn, A., 2006. <em>Agile Software Development: The Cooperative Game</em>. 2nd ed. Boston.: Addision-Wesley Professional, pp.147-220.</li>
+<li>Entertainment Software Association (ESA), 2011. <em>2011 Sales, Demographic and Usage Data - Essential Facts about the Computer and Video Game Industry</em>. Washington, D.C, USA: ESA. Available from: <a href="www.theesa.com/facts/pdfs/ESA_EF_2011.pdf">www.theesa.com/facts/pdfs/ESA<em>EF</em>2011.pdf</a> [Accessed: 28 Apr 2012] </li>
+<li>Flick, U., 2009. <em>An Introduction to Qualitative Research</em>. 4th ed. London: SAGE Publications Ltd, pp. 11-25, 89-131.</li>
+<li>Haughey, D., (n.d.). <em>MoSCoW Method.</em> [online] Available at: http://www.projectsmart.co.uk/moscow-method.html [Accessed 28 Apr 2012].</li>
+<li>Higuera, R.P., and Haimes, Y.Y., 1996. <em>Software Risk Management.</em> Technical Report C   Iversen, J. et al., 1998. Combining Quantitative and Qualitative Assessment Methods in Software Process Improvement. In: <em>Proceedings of the 6th European Conference on Information Systems (ECIS'98)</em>, Aix-En-Provence, France: 4-6 June 1998, pp. 451-166.</li>
+<li>Kandil, M. et al., 2012. Cross-View of Testing Techniques Toward Improving Web-Based Application Testing. In: <em>International Journal of Computer Science Issues (IJCSI)</em>, 9 (2), pp. 271-277.</li>
+<li>Luo, L., 2001. <em>Software Testing Techniques: Technology Maturation and Research Strategies Class Report.</em> Institute for Software Research International, Carnegie Mellon University, Pittsburgh, USA.</li>
+<li>McConnell, S., 1996. <em>Rapid Development: Taming Wild Software Schedules</em>. Redmond, Wa.: Microsoft Press. pp. 133-162</li>
+<li>MSDN, the Microsoft Developer Network, 2010. <em>Choosing a Windows Installer Deployment Tool.</em> [online] Available at: <a href="http://msdn.microsoft.com/en-us/library/ee721500.aspx">http://msdn.microsoft.com/en-us/library/ee721500.aspx</a> [Accessed: 30 Apr 2012]</li>
+<li>Neuman, W.L., 2006. <em>Social Research Methods: qualitative and quantitative approaches</em>. 6th ed., Boston.: Allyn and Bacon.</li>
+<li>OnLive, Inc., 2010. <em>OnLive to Launch Consumer Game Service on June 17, 2010</em>. [online] Available at: <a href="http://www.onlive.com/corporate/press_releases/442">http://www.onlive.com/corporate/press_releases/442</a> [Accessed: 28 Apr 2012] </li>
+<li>Palgrave.com, 2011. <em>Choosing appropriate research methodologies and methods</em>. [online] Available at: <a href="http://www.palgrave.com/skills4study/studentlife/postgraduate/choosing.asp">http://www.palgrave.com/skills4study/studentlife/postgraduate/choosing.asp</a> [Accessed 28 Apr 2012].</li>
+<li>PMI Standards Committee, 2004. <em>A Guide to the Project Management Body of Knowledge: PMBOK Guide.</em> Pennsylvania: Project Management Institute.</li>
+<li>Rajapakshe, H. and Quec, D.P., 1995. <em>Video on Demand</em>. [online] Available at: <a href="http://www.doc.ic.ac.uk/~nd/surprise_95/journal/vol4/shr/report.html#intro">http://www.doc.ic.ac.uk/~nd/surprise_95/journal/vol4/shr/report.html#intro</a>[Accessed 28 Apr 2012].</li>
+<li>Requirementsauthority.com, (n.d.). <em>Functional and Non-Functional Requirements.</em> [online] Available at: <a href="http://www.requirementsauthority.com/functional-and-non-functional.html">http://www.requirementsauthority.com/functional-and-non-functional.html</a> [Accessed 28 Apr 2012].</li>
+<li>Richardson, L. and Ruby, S., 2007 <em>RESTful Web Services.</em> Sebastopol, CA: O'Reilly Media, Inc.</li>
+<li>Robertson S. and Robertson J., 2008. <em>Volere Requirements Techniques: an Overview.</em>  [pdf] Available at: <a href="www.volere.co.uk/pdf%20files/01%20Volere%20Overview.pdf">www.volere.co.uk/pdf%20files/01%20Volere%20Overview.pdf</a> London: The Atlantic Systems Guild. [Accessed 28 Apr 2012].</li>
+<li>Royce, W.W., 1970. Managing the development of large software systems. In: <em>Proceedings of IEEE WESCON, 1970</em> pp. 1-9.</li>
+<li>Schwaber, K., 1995. SCRUM Development Process. In: <em>Proceedings of the 10th Annual ACM Conference on Object Oriented Programming Systems, Languages, and Applications (OOPSLA '95).</em> Austin, Texas: 15-19 October 1995.</li>
+<li>Silverman, D., 2010. <em>Doing Qualitative Research.</em> 3rd ed. London: SAGE Publications Ltd., p.122-125</li>
+<li>Skelton, D. (n.d.) <em>Remembering the Gameline</em>. [online] Available at: <a href="http://www.atariage.com/2600/archives/gameline.html?SystemID=2600">http://www.atariage.com/2600/archives/gameline.html?SystemID=2600</a>[Accessed: 28 Apr 2012].</li>
+<li>Staelens, N. et al., 2010. Assessing Quality of Experience of IPTV and Video on Demand Services in Real-life Environments. In: <em>IEEE Transactions on Broadcasting</em>, 56 (4), pp. 458-466.</li>
+<li>Van den Broeck, W. et al., 2008. Confronting video-on-demand with television viewing practices. In: <em>Innovating for and by users</em>, Pierson, J., Mante-Meijer, E., Loos, E., and Sapio, B., Eds. Opoce, 2008. </li>
+<li>Van Vliet, H., 2008. <em>Software Engineering: Principles and Practice</em>. 3rd ed. Chichester: Wiley &amp; Sons, pp.49-71.</li>
+</ul>
+</section><section id="Appendices"><h1>Appendices</h1><h2>Appendix A - Project Proposal</h2><h2>Appendix B - Initial Research Ethics Checklist</h2><h2>Appendix C - TurnItIn Report</h2><h2>Appendix D - Use Cases</h2><h2>Appendix E - Risk Management Register</h2><h2>Appendix F - Database Design</h2><h2>Appendix G - Class Design</h2><h2>Appendix H - Contents of CD</h2><h2>Appendix I - UI Design</h2><h2>Appendix J - Windows Application Code</h2><h3>Account.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// This class is an Account object, which is instantiated for account manipulation.
+    /// &lt;/summary&gt;
+    public class Account
+    {
+        #region Attributes and Constructor
+        public string Email { get; set; }
+        public string Name { get; set; }
+        public string Password { get; set; }
+        public string Dob { get; set; }
+        /// &lt;summary&gt;
+        /// The constructor for this class. Assigns parameters to variables.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;email&quot;&gt;String: Account email address. Also functions as unique identifier.&lt;/param&gt;
+        /// &lt;param name=&quot;name&quot;&gt;String: User's name.&lt;/param&gt;
+        /// &lt;param name=&quot;password&quot;&gt;String: User's password. Only briefly stored in memory - very quickly hashed.&lt;/param&gt;
+        /// &lt;param name=&quot;dob&quot;&gt;String: User's date of birth. Used for age verification when purchasing.&lt;/param&gt;
+        public Account(string email, string name, string password, string dob)
+        {
+            Email = email;
+            Name = name;
+            Password = password;
+            Dob = dob;
+        }
+        #endregion
+        #region Static Methods
+        /// &lt;summary&gt;
+        /// Computes a random salt of between 4 and 8 butes in size.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;Array of bytes: A small array of bytes to function as a salt.&lt;/returns&gt;
+        public static byte[] ComputeSalt()
+        {
+            Random random = new Random();
+            int saltSize = random.Next(4, 8);
+            byte[] saltBytes = new byte[saltSize];
+
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            rng.GetNonZeroBytes(saltBytes);
+
+            return saltBytes;
+        }
+        /// &lt;summary&gt;
+        /// Computes a hash from a password and optionally a salt. If no salt is specified, one is generated.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;pass&quot;&gt;String: Plain-text password to encrypt.&lt;/param&gt;
+        /// &lt;param name=&quot;definedSalt&quot;&gt;String: Optional: a salt, if one is being explicitly provided.&lt;/param&gt;
+        /// &lt;returns&gt;Dictionary of strings against strings: A dictionary containing the password and the salt.&lt;/returns&gt;
+        public static Dictionary&lt;string, string&gt; ComputeHash(string pass, string definedSalt)
+        {
+            byte[] salt;
+            if (String.IsNullOrEmpty(definedSalt))
+            {
+                salt = ComputeSalt();
+            }
+            else
+            {
+                salt = Convert.FromBase64String(definedSalt);
+            }
+            
+            byte[] passBytes = Encoding.UTF8.GetBytes(pass);
+            byte[] passAndSalt = new byte[passBytes.Length + salt.Length];
+
+            for (int i = 0; i &lt; passBytes.Length; i++)
+            {
+                passAndSalt[i] = passBytes[i];
+            }
+
+            for (int i = 0; i &lt; salt.Length; i++)
+            {
+                passAndSalt[passBytes.Length + i] = salt[i];
+            }
+
+            HashAlgorithm algo = new SHA512Managed();
+            byte[] byteHash = algo.ComputeHash(passAndSalt);
+
+            byte[] saltedHash = new byte[byteHash.Length + salt.Length];
+
+            for (int i = 0; i &lt; byteHash.Length; i++)
+            {
+                saltedHash[i] = byteHash[i];
+            }
+            for (int i = 0; i &lt; salt.Length; i++)
+            {
+                saltedHash[byteHash.Length + i] = salt[i];
+            }
+
+            Dictionary&lt;string, string&gt; hashAndSalt = new Dictionary&lt;string, string&gt;();
+            hashAndSalt.Add(&quot;hash&quot;, Convert.ToBase64String(saltedHash));
+            hashAndSalt.Add(&quot;salt&quot;, Convert.ToBase64String(salt));
+
+            return hashAndSalt;
+        }
+        #endregion
+    }
+}
+</pre><h3>ClientHandler.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Net.Sockets;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// ClientHandler object.
+    /// Contains methods handling communication between this application's TCP server and a connected client.
+    /// &lt;/summary&gt;
+    public class ClientHandler
+    {
+        #region Attributes &amp; Constructor
+        private TcpClient _Client;
+        private string receivedData;
+        /// &lt;summary&gt;
+        /// Constructor for this class. Initialises the class then calls a method to handle communication.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;client&quot;&gt;TcpClient: The socket connection that has been made.&lt;/param&gt;
+        public ClientHandler(TcpClient client)
+        {
+            _Client = client;
+            Communicate();
+        }
+        #endregion
+        #region Private Methods
+        /// &lt;summary&gt;
+        /// Method handling the network communication between client and server.
+        /// Receives a byte containing the location of a download to begin, then spawns an instance of the Download class to initiate the download process.
+        /// &lt;/summary&gt;
+        private void Communicate()
+        {
+            byte[] receivedBytes = new byte[65536];
+
+            NetworkStream ns = _Client.GetStream();
+            int size = (int)_Client.ReceiveBufferSize;
+            ns.Read(receivedBytes, 0, size);
+            receivedData = System.Text.Encoding.ASCII.GetString(receivedBytes).Substring(0, 32);
+
+            Download d = new Download(receivedData);
+        }
+        #endregion
+    }
+}
+</pre><h3>Dashboard.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Configuration;
+using System.Windows.Forms;
+using System.Collections.Generic;
+using System.Net.Mail;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// The class for the Dashboard form.
+    /// Contains methods for the management of this form.
+    /// Inherits from System.Windows.Forms.Form.
+    /// &lt;/summary&gt;
+    public partial class Dashboard : Form
+    {
+        #region Attributes &amp; Constructor
+        string newUsername;
+        string newPassword;
+        /// &lt;summary&gt;
+        /// Constructor for this class. 
+        /// Initialises and displays the form.
+        /// Checks if valid user credentials are stored for automatic login. If so, closes this form and opens an instance of Listener.
+        /// Else, shows the login panel.
+        /// &lt;/summary&gt;
+        public Dashboard()
+        {
+            InitializeComponent();
+            this.Visible = false;
+
+            if (DbConnect.CheckLogin(Properties.Settings.Default.LastUsername, Properties.Settings.Default.LastPassword))
+            // if (1 == 2) // For testing purposes
+            {
+                this.Hide();
+                DbConnect.SetClient(Properties.Settings.Default.LastUsername);
+                Listener li = new Listener();
+                li.ShowDialog();
+            }
+            else
+            {
+                this.Visible = true;
+                pnl_Login.Show();
+            }
+        }
+        #endregion
+        #region pnl_Login controls
+        /// &lt;summary&gt;
+        /// Hides the login panel and opens the Create Account panel.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_CreateAcc_Click(object sender, EventArgs e)
+        {
+            pnl_Login.Hide();
+            pnl_NewAccount.Show();
+        }
+        /// &lt;summary&gt;
+        /// Attempts to log in using the input credentials. If successful, hides this form and creates an instance of Listener.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_Login_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(emailBox.Text) || String.IsNullOrEmpty(passBox.Text) || emailBox.Text == &quot;email@address.com&quot;)
+            {
+                MessageBox.Show(&quot;You must fill in all fields!&quot;, &quot;Error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else if (DbConnect.Login(emailBox.Text, passBox.Text))
+            {
+                DbConnect.SetClient(emailBox.Text);
+                WindowState = FormWindowState.Minimized;
+
+                Properties.Settings.Default.LastUsername = emailBox.Text;
+                Properties.Settings.Default.LastPassword = DbConnect.GetPassHash(emailBox.Text);
+
+                Properties.Settings.Default.Save();
+
+                Notification n = new Notification(&quot;Welcome to Donatello, &quot;, false);
+
+                Listener li = new Listener();
+                li.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show(&quot;Incorrect username or password!&quot;);
+            }
+        }
+        #endregion
+        #region pnl_NewAccount controls
+        /// &lt;summary&gt;
+        /// Hides the New Account panel and opens the login panel
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_ExistingAccount_Click(object sender, EventArgs e)
+        {
+            pnl_NewAccount.Hide();
+            pnl_Login.Show();
+        }
+        /// &lt;summary&gt;
+        /// Checks the user's input and, if valid, hides this panel and shows the Account Details panel
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_NewAccount_Click(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(new_emailBox.Text) || String.IsNullOrEmpty(new_passwordBox.Text)
+                || new_emailBox.Text == &quot;email@address.com&quot; || new_repeatPasswordBox.Text == &quot;passward&quot;)
+            {
+                MessageBox.Show(&quot;You must fill in all fields!&quot;, &quot;Error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                // Check for valid email address
+                MailMessage mail = new MailMessage();
+                try
+                {
+                    mail.To.Add(new_emailBox.Text);
+                }
+                catch (FormatException)
+                {
+                    // If the email address is invalid this exception will be thrown.
+                    MessageBox.Show(&quot;You entered an invalid email address&quot;, &quot;Email address error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+                
+                // Check if email address exists
+                if (!DbConnect.AccountExists(new_emailBox.Text))
+                {
+                    // Validate password fields
+                    if (new_passwordBox.Text != new_repeatPasswordBox.Text)
+                    {
+                        MessageBox.Show(&quot;The two passwords are not identical!&quot;, &quot;Password error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    newUsername = new_emailBox.Text;
+                    newPassword = new_passwordBox.Text;
+
+                    pnl_NewAccount.Hide();
+                    pnl_AccountDetails.Show();
+                }
+                else
+                {
+                    MessageBox.Show(&quot;Sorry, an account with this email address already exists!&quot;, &quot;User error&quot;, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+        }
+        #endregion
+        #region pnl_AccountDetails controls
+        /// &lt;summary&gt;
+        /// Verifies the user's input and if valid closes this form and starts an instance of Listener.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_Start_Click(object sender, EventArgs e)
+        {
+            // Sort out dates
+            string newDate = new_dobBox.Value.Year + &quot;-&quot; + new_dobBox.Value.Month + &quot;-&quot; + new_dobBox.Value.Day;
+
+            // Create account object
+            Account newAccount = new Account(newUsername, new_nameBox.Text, newPassword, newDate);
+
+            // Get it into the database
+            DbConnect.CreateAccount(newAccount);
+
+            // Send a confirmation email message
+            MailMessage mail = new MailMessage();
+            SmtpClient smtp = new SmtpClient(&quot;mail.kajp.im&quot;);
+            smtp.Port = 25;
+            smtp.Credentials = new System.Net.NetworkCredential(&quot;donatello+kajp.im&quot;, &quot;eijonu&quot;);
+            smtp.EnableSsl = false;
+
+            mail.From = new MailAddress(&quot;donatello@kajp.im&quot;);
+            mail.To.Add(newUsername);
+            mail.Subject = &quot;Welcome to Donatello!&quot;;
+            mail.Body = &quot;Thanks for joining Donatello&quot;;
+
+            try
+            {
+                //smtp.Send(mail);
+            }
+            catch (SmtpException) 
+            { 
+                // Oh well, not the end of the world if the email doesn't send.
+            }
+
+            Properties.Settings.Default.LastUsername = newUsername;
+            Properties.Settings.Default.Save();
+            DbConnect.SetClient(newUsername);
+            Listener li = new Listener();
+            li.ShowDialog();
+            this.Hide();
+        }
+        #endregion
+    }
+}
+</pre><h3>DbConnect.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Net;
+using MySql.Data.MySqlClient;
+using System.Text;
+using System.Net.Sockets;
+using System.Security.Cryptography;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// This class contains methods handling all communication with and manipulation of the (MySQL) database.
+    /// &lt;/summary&gt;
+    public sealed class DbConnect
+    {
+        #region Attributes
+        // The connection string for the database.
+        static readonly string connString = &quot;Server=localhost;Database=fyp;Uid=root;Pwd=;&quot;;
+        #endregion
+        #region Static Methods
+        /// &lt;summary&gt;
+        /// Method to create an account in the database.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;acc&quot;&gt;Account: The account to create.&lt;/param&gt;
+        public static void CreateAccount(Account acc)
+        {
+            // Salt and hash acc.Password
+            Dictionary&lt;string, string&gt; hashAndSalt = Account.ComputeHash(acc.Password, null);
+            
+            // TODO: Escape account name and email
+
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                // TODO: The DOB isn't saving properly.
+                cmd.CommandText = &quot;INSERT INTO accounts (account_id, pass_hash, pass_salt, account_nm, account_dob) VALUES ('&quot; + acc.Email + &quot;', '&quot; + hashAndSalt[&quot;hash&quot;] + &quot;', '&quot; + hashAndSalt[&quot;salt&quot;] + &quot;', '&quot; + acc.Name + &quot;', &quot; + acc.Dob + &quot;);&quot;;
+                cmd.ExecuteNonQuery();
+            }
+        }
+        /// &lt;summary&gt;
+        /// Method to set the current machine as the unique client for the logged-in account.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;account&quot;&gt;String: The account_id to lock to this IP address.&lt;/param&gt;
+        public static void SetClient(string account)
+        {
+            // TODO: This method doesn't seem right.
+            IPAddress[] IP = Dns.GetHostAddresses(Dns.GetHostName());
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                //cmd.CommandText = &quot;SELECT COUNT(*) FROM clients WHERE account_id = '&quot; + account + &quot;';&quot;;
+
+                // Find out the IP address. Here we are doing local addresses; if this were more than a proof-of-concept we'd be using full external addresses.
+                IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
+                string localIP = &quot;127.0.0.1&quot;;
+
+                foreach (IPAddress ip in host.AddressList) 
+                {
+                    if (ip.AddressFamily == AddressFamily.InterNetwork) 
+                    {
+                        localIP = ip.ToString();
+                    }
+                }
+
+                if (Convert.ToInt32(cmd.ExecuteScalar()) == 0)
+                {
+                    cmd.CommandText = &quot;INSERT INTO clients (account_id, system_nm, client_ip) VALUES ('&quot; + account + &quot;', '&quot; + Environment.MachineName + &quot;', INET_ATON('&quot; + localIP + &quot;'));&quot;;
+                    cmd.ExecuteNonQuery();
+                }
+                else
+                {
+                    cmd.CommandText = &quot;UPDATE clients SET client_ip = INET_ATON('&quot; + localIP + &quot;') WHERE account_id = '&quot; + account + &quot;';&quot;;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+        /// &lt;summary&gt;
+        /// Checks if the specified account exists already in the database.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;email&quot;&gt;String: The account_id to check for.&lt;/param&gt;
+        /// &lt;returns&gt;Boolean: True if the account exists, false if not.&lt;/returns&gt;
+        public static bool AccountExists(string email)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT COUNT(*) FROM accounts WHERE account_id = '&quot; + email + &quot;';&quot;;
+                return Convert.ToInt32(cmd.ExecuteScalar()) == 0 ? false : true;
+            }
+        }
+        /// &lt;summary&gt;
+        /// Gets the stored secure hash of the specified account's password.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;email&quot;&gt;String: The account_id to retrieve the password of.&lt;/param&gt;
+        /// &lt;returns&gt;String: The securely-hashed password for this account.&lt;/returns&gt;
+        public static string GetPassHash(string email)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT pass_hash FROM accounts WHERE account_id = '&quot; + email + &quot;';&quot;;
+                return cmd.ExecuteScalar().ToString();
+            }
+        }
+        /// &lt;summary&gt;
+        /// Checks if the supplied login information is valid
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;email&quot;&gt;String: The account_id to attempt to login with.&lt;/param&gt;
+        /// &lt;param name=&quot;hash&quot;&gt;String: The securely-hashed password to try.&lt;/param&gt;
+        /// &lt;returns&gt;Boolean: True if the supplied login information is valid. False otherwise.&lt;/returns&gt;
+        public static bool CheckLogin(string email, string hash)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT COUNT(*) FROM accounts WHERE account_id = '&quot; + email + &quot;' AND pass_hash = '&quot; + hash + &quot;';&quot;;
+                return Convert.ToInt32(cmd.ExecuteScalar()) == 0 ? false : true;
+            }
+        }
+        /// &lt;summary&gt;
+        /// Checks if the supplied login information is valid, hashing and salting the supplied password first.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;uid&quot;&gt;String: The account_id to attempt to log in.&lt;/param&gt;
+        /// &lt;param name=&quot;pwd&quot;&gt;String: The supplied password.&lt;/param&gt;
+        /// &lt;returns&gt;Boolean: True if the login information is valid. False otherwise.&lt;/returns&gt;
+        public static bool Login(string uid, string pwd)
+        {
+            Dictionary&lt;string, string&gt; userDetails = new Dictionary&lt;string, string&gt;();
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT account_id, pass_hash, pass_salt FROM accounts WHERE account_id = '&quot; + uid + &quot;';&quot;;
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        userDetails.Add(&quot;uid&quot;, reader.GetString(&quot;account_id&quot;));
+                        userDetails.Add(&quot;hash&quot;, reader.GetString(&quot;pass_hash&quot;));
+                        userDetails.Add(&quot;salt&quot;, reader.GetString(&quot;pass_salt&quot;));
+                    }
+                }
+            }
+
+            if (userDetails.Count == 0)
+            {
+                // User doesn't exist
+                return false;
+            }
+
+            // Hash the input password using the salt retrieved from the database
+            Dictionary&lt;string, string&gt; hashAndSalt = Account.ComputeHash(pwd, userDetails[&quot;salt&quot;]);
+            if (hashAndSalt[&quot;hash&quot;] == userDetails[&quot;hash&quot;])
+            {
+                // Username and password are both correct - the hashes match
+                return true;
+            }
+
+            // If it gets this far, the password is incorrect.
+            return false;
+        }
+        /// &lt;summary&gt;
+        /// Gets the user's name from the account_id.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;email&quot;&gt;String: The account_id to look up.&lt;/param&gt;
+        /// &lt;returns&gt;String: The user's name&lt;/returns&gt;
+        public static string GetUsersName(string email)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT account_nm FROM accounts WHERE account_id = '&quot; + email + &quot;';&quot;;
+                return cmd.ExecuteScalar().ToString();
+            }
+        }
+        /// &lt;summary&gt;
+        /// Gets the stored MD5 hash of the supplied product, for checksumming.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;product&quot;&gt;String: The product_id to get the hash of.&lt;/param&gt;
+        /// &lt;returns&gt;String: The stored MD5 hash of the product.&lt;/returns&gt;
+        public static string GetMD5Hash(string product)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT product_hash FROM products WHERE product_nm = '&quot; + product + &quot;';&quot;;
+                return cmd.ExecuteScalar().ToString();
+            }
+        }
+        /// &lt;summary&gt;
+        /// Counts the number of rows in the locations table.
+        /// &lt;/summary&gt;
+        /// &lt;returns&gt;Integer: The number of rows present in the table.&lt;/returns&gt;
+        public static int CountLocations()
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT COUNT(*) FROM locations;&quot;;
+                return Convert.ToInt32(cmd.ExecuteScalar());
+            }
+        }
+        /// &lt;summary&gt;
+        /// Gets the products that have already been purchased by the specified account.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;account_id&quot;&gt;String: The account_id to get purchases of.&lt;/param&gt;
+        /// &lt;returns&gt;DataTable: Blank if nothing has been purchased on the account.
+        ///     Containing two columns if purchases have been made: the product_id and product name of each purchased product.&lt;/returns&gt;
+        public static DataTable GetAuthorisedProducts(string account_id)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT product_id FROM authentications WHERE account_id = '&quot; + account_id + &quot;';&quot;;
+                MySqlDataReader rdr = cmd.ExecuteReader();
+                List&lt;int&gt; ids = new List&lt;int&gt;();
+
+                while (rdr.Read())
+                {
+                    ids.Add(rdr.GetInt32(&quot;product_id&quot;));
+                }
+
+                rdr.Close();
+
+                if (ids.Count &lt; 1)
+                {
+                    // i.e. nothing has been purchased on this account yet
+                    return new DataTable();
+                }
+
+                StringBuilder sb = new StringBuilder(&quot;SELECT product_id, product_nm FROM products WHERE product_id IN (&quot;);
+
+                foreach (int id in ids)
+                {
+                    sb.Append(id.ToString());
+                    sb.Append(&quot;, &quot;);
+                }
+
+                sb.Remove(sb.Length - 2, 2);
+                sb.Append(&quot;);&quot;);
+
+                cmd.CommandText = sb.ToString();
+
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                return dt;
+            }
+        }
+        /// &lt;summary&gt;
+        /// Gets the name of the product by its hashed location_id.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;location&quot;&gt;String: The location_id to look up, hashed.&lt;/param&gt;
+        /// &lt;returns&gt;String: The product name.&lt;/returns&gt;
+        public static string GetProductNameFromLocationHash(string location)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT product_nm FROM products WHERE location_hash = '&quot; + location + &quot;';&quot;;
+                return cmd.ExecuteScalar().ToString();
+            }
+        }
+        /// &lt;summary&gt;
+        /// Gets the hashed location from the locations table by id.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;location&quot;&gt;Integer: The location_id to look up.&lt;/param&gt;
+        /// &lt;returns&gt;String: The encrypted location of the file.&lt;/returns&gt;
+        public static string GetLocation(int location)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT location FROM locations WHERE location_id = &quot; + location + &quot;;&quot;;
+                return cmd.ExecuteScalar().ToString();
+            }
+        }
+        /// &lt;summary&gt;
+        /// Calculates the MD5 hash of an input string.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;input&quot;&gt;String: The string to hash.&lt;/param&gt;
+        /// &lt;returns&gt;String: An MD5 hash&lt;/returns&gt;
+        public static string CalculateMD5(string input)
+        {
+            MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+            byte[] hash = md5.ComputeHash(inputBytes);
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i &lt; hash.Length; i++)
+            {
+                // Converting to hexadecimal lower-case representation (to match hashes generated in PHP where this is SO MUCH EASIER jeez.)
+                sb.Append(hash[i].ToString(&quot;x2&quot;));
+            }
+            return sb.ToString();
+        }
+        /// &lt;summary&gt;
+        /// Gets the hash of a product's location by its ID. 
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;pid&quot;&gt;Integer: The ID of the product to look up.&lt;/param&gt;
+        /// &lt;returns&gt;String: Empty if no location was found or if an error occurred.
+        ///     The hashed location (found by running the GetLocation method) if a location was found.&lt;/returns&gt;
+        public static string GetLocationFromProductId(int pid)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT location_hash FROM products WHERE product_id = &quot; + pid + &quot;;&quot;;
+
+                string location_hash = cmd.ExecuteScalar().ToString();
+                int locs = DbConnect.CountLocations();
+                int decodedLocation = -1;
+
+                for (int i = 1; i &lt; locs + 1; i++)
+                {
+                    if (DbConnect.CalculateMD5(i.ToString()) == location_hash)
+                    {
+                        decodedLocation = i;
+                    }
+                }
+
+                if (decodedLocation != -1)
+                {
+                    return DbConnect.GetLocation(decodedLocation);
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
+        #endregion
+    }
+}
+</pre><h3>Download.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.ComponentModel;
+using System.IO;
+using System.Net;
+using System.Security.Cryptography;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// This class handles downloading the files (over FTP) as well as checksumming them.
+    /// &lt;/summary&gt;
+    class Download
+    {
+        #region Attributes &amp; Constructor
+        private Uri _location;
+        private string _product;
+        private string _target;
+        private BackgroundWorker _bw;
+        /// &lt;summary&gt;
+        /// Constructor for the class. Instantiates the class and initialises its properties.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;location&quot;&gt;String: The location of the file to download.&lt;/param&gt;
+        public Download(string location)
+        {
+            // We know the hash of the location of the file we have to get.
+            // First step is to get the product name. We're also going to need the location we're downloading to.
+            _product = DbConnect.GetProductNameFromLocationHash(location);
+
+            // Could-Have: Let users choose download location
+            _target = Properties.Settings.Default.DownloadDirectory;
+
+            if (String.IsNullOrEmpty(_target))
+            {
+                string homePath = (Environment.OSVersion.Platform == PlatformID.Unix || Environment.OSVersion.Platform == PlatformID.MacOSX)
+                    ? Environment.GetEnvironmentVariable(&quot;HOME&quot;) : Environment.ExpandEnvironmentVariables(&quot;%HOMEDRIVE%%HOMEPATH%&quot;);
+                Properties.Settings.Default.DownloadDirectory = _target = Path.Combine(homePath, @&quot;\Downloads\Donatello\&quot;);
+                Properties.Settings.Default.Save();
+            }
+
+            // If the target directory doesn't exist, we should create it.
+            if (!Directory.Exists(_target))
+            {
+                Directory.CreateDirectory(_target);
+            }
+
+            // Finally we need to find out where we're downloading the file from, and get it.
+            int locs = DbConnect.CountLocations();
+            int decodedLocation = -1;
+
+            // Iterate through each location in the database until you find the location_id that matches the hash we've got.
+            // TODO: Isn't there a method in DBConnect that does the same thing?
+            for (int i = 1; i &lt; locs + 1; i++)
+            {
+                if (DbConnect.CalculateMD5(i.ToString()) == location)
+                {
+                    decodedLocation = i;
+                }
+            }
+
+            if (decodedLocation == -1) { throw new NullReferenceException(); }
+
+            // Pass the location_id to the database to get the actual location of the file we're after.
+            string secretLoc = DbConnect.GetLocation(decodedLocation);
+
+            _location = new Uri(@&quot;ftp://kieranajp.co.uk/donatello/&quot; + secretLoc + @&quot;/&quot; + secretLoc + &quot;.file&quot;); // TODO: Dynamic file types
+
+            // We're going to need to multithread this now.
+            _bw = new BackgroundWorker { WorkerReportsProgress = true };
+            _bw.DoWork += GetFile;
+            _bw.ProgressChanged += Progress;
+            _bw.RunWorkerCompleted += Complete;
+            
+            _bw.RunWorkerAsync();
+        }
+        #endregion
+        #region BackgroundWorker events
+        /// &lt;summary&gt;
+        /// The main loop of the BackgroundWorker thread (DoWork)
+        /// Gets the filesize of the file to download and then the file itself.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void GetFile(object sender, DoWorkEventArgs e)
+        {
+            long fileSize = FTPGet(false);
+            long returnCode = FTPGet(true);
+            if (returnCode == -1)
+            {
+                // Then an error has occurred.
+            }
+        }
+        /// &lt;summary&gt;
+        /// ProcessChanged event of the BackgroundWorker
+        /// Displays a notification every 10% of the download.
+        /// (Note user feedback is minimal since the program is designed to be used while the user is away from their computer).
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void Progress(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.ProgressPercentage % 10 == 0)
+            {
+                Notification n = new Notification(&quot;Download of &quot; + _product + &quot;: &quot; + e.ProgressPercentage + &quot;%&quot;, false);
+            }
+        }
+        /// &lt;summary&gt;
+        /// The RunWorkerCompleted event of the BackgroundWorker. Runs when the BackgroundWorker has finished.
+        /// MD5 checksums the download and proclaims it complete or displays an error as appropriate.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void Complete(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                // TODO: Why could there be an error?
+            }
+            else
+            {
+                if (!CheckMD5(Path.Combine(_target, String.Concat(CleanFileName(_product), &quot;.file&quot;)), _product))
+                {
+                    Notification n = new Notification(&quot;Error: Checksum of &quot; + _product + &quot; failed :(&quot;, true);
+                    // TODO: Work out how to deal with this
+                }
+                else
+                {
+                    Notification n = new Notification(&quot;Download complete!&quot;, false);
+                    // The downlad's complete!
+                }
+            }
+        }
+        #endregion
+        #region Private Methods
+        /// &lt;summary&gt;
+        /// Initialises and runs FTP to get a file or its size.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;download&quot;&gt;Boolean: True to download the file, false to merely get its size.&lt;/param&gt;
+        /// &lt;returns&gt;Long: If getting the filesize, the filesize in bytes.
+        ///     If downloading the file, a returncode signifying the download's success or failure.&lt;/returns&gt;
+        private long FTPGet(bool download)
+        {
+            FtpWebRequest req = (FtpWebRequest)WebRequest.Create(_location);
+
+            req.UsePassive = true;
+            req.UseBinary = true;
+            req.Credentials = new NetworkCredential(&quot;fyp@kieranajp.co.uk&quot;, &quot;eijonu&quot;);
+
+            if (download)
+            {
+                int returnCode = 0;
+                req.KeepAlive = false;
+                req.Method = WebRequestMethods.Ftp.DownloadFile;
+
+                FtpWebResponse response = (FtpWebResponse)req.GetResponse();
+                Stream responseStream = response.GetResponseStream();
+
+                string newFileName = CleanFileName(_product);
+                string path = Path.Combine(_target, String.Concat(newFileName, &quot;.file&quot;));
+
+                if (File.Exists(path))
+                {
+                    string bak = &quot;_backup&quot; + DateTime.Now.ToString();
+                    File.Move(path, path + bak);
+                }
+
+                try
+                {
+                    using (FileStream writeStream = File.Create(path))
+                    {
+                        Byte[] buffer = new Byte[2048];
+                        int bytesRead = responseStream.Read(buffer, 0, 2048);
+
+                        while (bytesRead &gt; 0)
+                        {
+                            writeStream.Write(buffer, 0, bytesRead);
+                            bytesRead = responseStream.Read(buffer, 0, 2048);
+                        }
+                    }
+                }
+                catch
+                {
+                    Notification n = new Notification(&quot;Error downloading &quot; + _product, true);
+                    returnCode = -1;
+                }
+                finally
+                {
+                    response.Close();
+                } 
+                
+                return returnCode;
+            }
+            else
+            {
+                req.KeepAlive = true;
+                req.Method = WebRequestMethods.Ftp.GetFileSize;
+                long fileSize = (long)req.GetResponse().ContentLength;
+
+                return fileSize;
+            }
+        }
+        /// &lt;summary&gt;
+        /// Strips illegal characters out of a filename.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;toClean&quot;&gt;String: The filename that requires cleaning.&lt;/param&gt;
+        /// &lt;returns&gt;String: A filename with no illegal characters.&lt;/returns&gt;
+        private string CleanFileName(string toClean)
+        {
+            string cleaned = toClean;
+            cleaned = String.Concat(toClean.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries));
+
+            if (cleaned.Length &gt; 150)
+            {
+                cleaned = cleaned.Substring(0, 150);
+            }
+
+            return cleaned;
+        }
+        /// &lt;summary&gt;
+        /// Checks the MD5 checksum of an input file against the stored (valid) checksum in the database.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;fileToCheck&quot;&gt;String: The location on disk of the file to checksum&lt;/param&gt;
+        /// &lt;param name=&quot;serverFile&quot;&gt;String: The product name of the database entry to check against&lt;/param&gt;
+        /// &lt;returns&gt;Boolean: True if the checksums match, false if they don't.&lt;/returns&gt;
+        private bool CheckMD5(string fileToCheck, string serverFile)
+        {
+            string serverHash = DbConnect.GetMD5Hash(serverFile);
+
+            FileStream fs = new FileStream(fileToCheck, FileMode.Open);
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte[] retVal = md5.ComputeHash(fs);
+            fs.Close();
+
+            string clientHash = Convert.ToBase64String(retVal);
+
+            if (clientHash != serverHash)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        #endregion
+    }
+}
+</pre><h3>Listener.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.ComponentModel;
+using System.Net;
+using System.Net.Sockets;
+using System.Windows.Forms;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// The class for the Listener form.
+    /// Contains methods for the management of this form and for listening for incoming TCP messages.
+    /// Inherits from System.Windows.Forms.Form.
+    /// &lt;/summary&gt;
+    public partial class Listener : Form
+    {
+        #region Attributes &amp; Constructor
+        TcpListener serverSocket = new TcpListener(IPAddress.Any, 31337);
+        TcpClient clientSocket = default(TcpClient);
+        /// &lt;summary&gt;
+        /// Constructor for this class.
+        /// Initialises an instance of this class.
+        /// Initialises and configures the notifyIcon and starts running a background thread.
+        /// &lt;/summary&gt;
+        public Listener()
+        {
+            InitializeComponent();
+
+            notifyIcon.Text = &quot;Donatello&quot;;
+            notifyIcon.ContextMenu = new ContextMenu();
+            notifyIcon.ContextMenu.MenuItems.Add(new MenuItem(&quot;Redownload Purchases&quot;, new EventHandler(notify_redownload)));
+            notifyIcon.ContextMenu.MenuItems.Add(new MenuItem(&quot;Logout&quot;, new EventHandler(notify_logout)));
+            notifyIcon.ContextMenu.MenuItems.Add(new MenuItem(&quot;Exit&quot;, new EventHandler(notify_exit)));
+
+            backgroundWorker.WorkerSupportsCancellation = true;
+            backgroundWorker.RunWorkerAsync();
+        }
+        #endregion
+        #region notifyIcon EventHandlers
+        /// &lt;summary&gt;
+        /// Called when the form is resized.
+        /// If the form is minimised, moves the form to the notification area rather than the taskbar.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void Listener_Resize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Minimized)
+            {
+                notifyIcon.BalloonTipTitle = &quot;Donatello is still running&quot;;
+                notifyIcon.BalloonTipText = &quot;Right-click this icon for controls&quot;;
+                notifyIcon.ShowBalloonTip(2500);
+                // TODO: This is behaving weirdly.
+                // this.ShowInTaskbar = false;
+                // this.Hide(); 
+            }
+        }
+        /// &lt;summary&gt;
+        /// Called when the notifyIcon is double-clicked.
+        /// Shows the form again after it has been minimised to the taskbar.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void notifyIcon_DoubleClick(object sender, EventArgs e)
+        {
+            //this.ShowInTaskbar = true;
+            //this.ShowDialog();
+        }
+        /// &lt;summary&gt;
+        /// Called when the Exit button on the notifyIcon's right-click menu is clicked.
+        /// Exits the application.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void notify_exit(object sender, EventArgs e)
+        {
+            backgroundWorker.CancelAsync();
+            notifyIcon.Visible = false;
+            Application.Exit();
+        }
+        /// &lt;summary&gt;
+        /// Called when the Redownload button on the notifyIcon's right-click menu is clicked.
+        /// Opens an instance of the Redownload form.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void notify_redownload(object sender, EventArgs e)
+        {
+            Redownload r = new Redownload();
+            r.ShowDialog();
+        }
+        /// &lt;summary&gt;
+        /// Called when the Logout button on the notifyIcon's right-click menu is clicked.
+        /// Logs out the user, cancels the Listener and restarts the application, effectively returning the user to the login form.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void notify_logout(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.LastUsername = null;
+            Properties.Settings.Default.LastPassword = null;
+            Properties.Settings.Default.Save();
+            backgroundWorker.CancelAsync();
+            this.Hide();
+            this.Dispose();
+            Application.Restart();
+            // TODO: Restart application
+        }
+        #endregion
+        #region Delegate functions
+        /// &lt;summary&gt;
+        /// A delegate function to allow writing to the log textbox from other threads.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;add&quot;&gt;String: The text to write to the log&lt;/param&gt;
+        private delegate void WriteLogDelegate(string add);
+        private void WriteLog(string add)
+        {
+            if (this.txt_log.InvokeRequired)
+            {
+                this.txt_log.Invoke(new WriteLogDelegate(this.WriteLog), add);
+            }
+            else
+            {
+                this.txt_log.Text += add + Environment.NewLine;
+            }
+        }
+        /// &lt;summary&gt;
+        /// A delegate function to allow invocation of Notification objects from other threads.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;txt&quot;&gt;String: The text to display on the Notification.&lt;/param&gt;
+        private delegate void NotifyDelegate(string txt);
+        private void Notify(string txt)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new NotifyDelegate(this.Notify), txt);
+            }
+            else
+            {
+                Notification n = new Notification(txt, false);
+            }
+        }
+        /// &lt;summary&gt;
+        /// A delegate function to allow showing and hiding of this form from other threads.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;show&quot;&gt;Boolean: Whether to show or hide the form.&lt;/param&gt;
+        private delegate void AppearDelegate(bool show);
+        private void Appear(bool show)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new AppearDelegate(this.Appear), show);
+            }
+            else
+            {
+                if (show)
+                    this.Hide();
+                else
+                    this.Show();
+            }
+        }
+        #endregion
+        #region EventHandlers
+        /// &lt;summary&gt;
+        /// Called when the form is closed.
+        /// Stops the background thread and exits the application.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void Listener_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            backgroundWorker.CancelAsync();
+            Application.Exit();
+        }
+        /// &lt;summary&gt;
+        /// Main loop for the background worker.
+        /// Starts a TCP server and constantly attempts to accept connections from clients.
+        /// When a connection is made, spawns an instance of ClientHandler to deal with communication.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker bw = (BackgroundWorker)sender;
+
+            int counter = 0;
+            WriteLog(&quot;Starting server...&quot;);
+            serverSocket.Start();
+            System.Threading.Thread.Sleep(500);
+            WriteLog(&quot;Server started!&quot;);
+            Appear(false);
+            Notify(&quot;Server started!&quot;);
+
+            while (true)
+            {
+                counter++;
+                clientSocket = serverSocket.AcceptTcpClient();
+                WriteLog(&quot;Connection &quot; + counter.ToString() + &quot; made!&quot;);
+                Notify(&quot;Connection &quot; + counter.ToString() + &quot; made!&quot;);
+                ClientHandler ch = new ClientHandler(clientSocket);
+            }
+        }
+        #endregion
+    }
+}
+</pre><h3>Notification.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Windows.Forms;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// The class for the notification pop-up.
+    /// Contains methods for the management of this form.
+    /// Inherits from System.Windows.Forms.Form.
+    /// &lt;/summary&gt;
+    public partial class Notification : Form
+    {
+        #region Constructor
+        /// &lt;summary&gt;
+        /// Constructor for the class.
+        /// Initialises and displays the form. Implements the visual style.
+        /// Starts ticking the timer if the form is not to be permanent.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;txt&quot;&gt;String: The text to be displayed on the form.&lt;/param&gt;
+        /// &lt;param name=&quot;perma&quot;&gt;Boolean: true if the form is to be displayed permanently on the screen. False if the form is to dispose of itself.&lt;/param&gt;
+        public Notification(string txt, bool perma)
+        {
+            InitializeComponent();
+            this.Show();
+            lblNotification.Text = txt;
+            this.Left = Screen.PrimaryScreen.WorkingArea.Width - this.Width;
+            this.Top = Screen.PrimaryScreen.WorkingArea.Height - this.Height;
+            this.Opacity = 0.7;
+            if (!perma) timer.Start();
+        }
+        #endregion
+        #region EventHandlers
+        /// &lt;summary&gt;
+        /// Kills this instance of the class and instructs the garbage collector to remove it from memory.
+        /// Called when the timer ticks (2.5 second tick), or when the X button is clicked.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void Suicide(object sender, EventArgs e)
+        {
+            this.Dispose();
+        }
+        #endregion
+    }
+}
+</pre><h3>Program.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Windows.Forms;
+using System.Threading;
+
+namespace Donatello
+{
+    static class Program
+    {
+        /// &lt;summary&gt;
+        /// The main entry point for the application.
+        /// &lt;/summary&gt;
+        [STAThread]
+        static void Main()
+        {
+            // Ensure that only one instance of Donatello is running.
+            bool onlyInstance = false;
+            // Donatello has a unique hash, its program ID. Mutex checks this hash against other running processes.
+            // If a process with the same hash is running, Donatello must be already running.
+            Mutex mutex = new Mutex(true, &quot;ae6064c155ec836e32d39685169cd272&quot;, out onlyInstance);
+            if (!onlyInstance)
+            {
+                MessageBox.Show(&quot;An instance of Donatello is already running&quot;);
+                return;
+            }
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Dashboard());
+            GC.KeepAlive(mutex);
+        }
+    }
+}
+</pre><h3>Redownload.cs</h3><pre class="prettyprint linenums">﻿using System;
+using System.Data;
+using System.Windows.Forms;
+using System.Collections.Generic;
+
+namespace Donatello
+{
+    /// &lt;summary&gt;
+    /// The class for the Redownload form
+    /// Contains methods for the management of this form.
+    /// Inherits from System.Windows.Forms.Form.
+    /// &lt;/summary&gt;
+    public partial class Redownload : Form
+    {
+        #region Attributes &amp; Constructor
+        Dictionary&lt;int, int&gt; lookup;
+        /// &lt;summary&gt;
+        /// Constructor for the class.
+        /// Initialises and displays the form. Runs the PopulateList() method.
+        /// &lt;/summary&gt;
+        public Redownload()
+        {
+            InitializeComponent();
+            PopulateList();
+        }
+        #endregion
+        #region Methods &amp; EventHandlers
+        /// &lt;summary&gt;
+        /// Populates the list of purchased items for this account from the database.
+        /// &lt;/summary&gt;
+        private void PopulateList()
+        {
+            DataTable dt = DbConnect.GetAuthorisedProducts(Properties.Settings.Default.LastUsername);
+            lookup = new Dictionary&lt;int, int&gt;();
+
+            if (dt.Rows.Count != 0)
+            {
+                for (int i = 0; i &lt; dt.Rows.Count; i++)
+                {
+                    // A dictionary containing product_id so we can find it by the index in the checkedlistbox
+                    lookup.Add(i, Convert.ToInt32(dt.Rows[i][0]));
+                    purchasedItems.Items.Add(dt.Rows[i][1].ToString());
+                }
+                purchasedItems.Enabled = true;
+                btn_Start.Enabled = true;
+            }
+            else
+            {
+                purchasedItems.Items.Add(&quot;You have not yet purchased any products!&quot;);
+                purchasedItems.Enabled = false;
+                btn_Start.Enabled = false;
+            }
+        }
+        /// &lt;summary&gt;
+        /// Called when the Start button is clicked.
+        /// Instantiates a Download class to get the selected product in the list.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_Start_Click(object sender, EventArgs e)
+        {
+            if (purchasedItems.SelectedIndices.Count == 0)
+            {
+                string location = DbConnect.GetLocationFromProductId(lookup[purchasedItems.SelectedIndex]);
+                if (!String.IsNullOrEmpty(location))
+                {
+                    Download d = new Download(location);
+                }
+            }
+        }
+        /// &lt;summary&gt;
+        /// Called when the cancel button is clicked.
+        /// Closes this form.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+        /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
+        private void btn_cancel_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+        }
+        #endregion
+    }
+}
+</pre><h2>Appendix K - Web Service Code</h2><h2>Appendix L - Unit Tests</h2><h3>AccountTest.cs</h3><pre class="prettyprint linenums">﻿using Donatello;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+
+namespace UnitTests
+{
+    /// &lt;summary&gt;
+    ///This is a test class for AccountTest and is intended
+    ///to contain all AccountTest Unit Tests
+    ///&lt;/summary&gt;
+    [TestClass()]
+    public class AccountTest
+    {
+        private TestContext testContextInstance;
+
+        /// &lt;summary&gt;
+        ///Gets or sets the test context which provides
+        ///information about and functionality for the current test run.
+        ///&lt;/summary&gt;
+        public TestContext TestContext
+        {
+            get
+            {
+                return testContextInstance;
+            }
+            set
+            {
+                testContextInstance = value;
+            }
+        }
+        /// &lt;summary&gt;
+        ///A test for Account Constructor
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void AccountConstructorTest()
+        {
+            string email = &quot;email@address.com&quot;;
+            string name = &quot;bob&quot;;
+            string password = &quot;123&quot;;
+            string dob = &quot;11-10-1989&quot;;
+            Account target = new Account(email, name, password, dob);
+
+            Assert.AreEqual(email, target.Email);
+            Assert.AreEqual(name, target.Name);
+            Assert.AreEqual(password, target.Password);
+            Assert.AreEqual(dob, target.Dob);
+        }
+        /// &lt;summary&gt;
+        ///A test for ComputeHash
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void ComputeHashTest()
+        {
+            string pass = &quot;123&quot;;
+            string definedSalt = &quot;r2VICQ==&quot;;
+            
+            Dictionary&lt;string, string&gt; actual = Account.ComputeHash(pass, definedSalt);
+
+            Assert.AreEqual(definedSalt, actual[&quot;salt&quot;]);
+            Assert.AreEqual(DbConnect.GetPassHash(&quot;test@test.com&quot;), actual[&quot;hash&quot;]);
+        }
+        /// &lt;summary&gt;
+        ///A test for ComputeSalt
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void ComputeSaltTest()
+        {
+            byte[] salt1 = Account.ComputeSalt();
+            byte[] salt2 = Account.ComputeSalt();
+            Assert.AreNotEqual(salt1, salt2);
+        }
+    }
+}
+</pre><h3>DbConnectTest.cs</h3><pre class="prettyprint linenums">﻿using Donatello;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Data;
+
+namespace UnitTests
+{
+    /// &lt;summary&gt;
+    ///This is a test class for DbConnectTest and is intended
+    ///to contain all DbConnectTest Unit Tests
+    ///&lt;/summary&gt;
+    [TestClass()]
+    public class DbConnectTest
+    {
+        private TestContext testContextInstance;
+
+        /// &lt;summary&gt;
+        ///Gets or sets the test context which provides
+        ///information about and functionality for the current test run.
+        ///&lt;/summary&gt;
+        public TestContext TestContext
+        {
+            get
+            {
+                return testContextInstance;
+            }
+            set
+            {
+                testContextInstance = value;
+            }
+        }
+
+        /// &lt;summary&gt;
+        ///A test for AccountExists
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void AccountExistsTest()
+        {
+            string email = &quot;test@test.com&quot;;
+            string fake = &quot;no&quot;;
+            bool expected = true;
+            bool actual;
+
+            actual = DbConnect.AccountExists(email);
+            Assert.AreEqual(expected, actual);
+
+            actual = DbConnect.AccountExists(fake);
+            Assert.AreNotEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for CalculateMD5
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void CalculateMD5Test()
+        {
+            string input = &quot;1&quot;;
+            string expected = &quot;c4ca4238a0b923820dcc509a6f75849b&quot;;
+            string actual;
+
+            actual = DbConnect.CalculateMD5(input);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for CheckLogin
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void CheckLoginTest()
+        {
+            string email = &quot;test@test.com&quot;;
+            string hash = &quot;V6XG5WytBR8fb9txtcRWDAYKzHLC5pnN9oOXuPm05YKX9v6B2xa9/4RgSDDw0j/ICnqP3z+0hApjDm2iyclOla9lSAk=&quot;;
+            bool expected = true;
+            bool actual;
+
+            actual = DbConnect.CheckLogin(email, hash);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for CountLocations
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void CountLocationsTest()
+        {
+            int expected = -1;
+            int actual;
+            actual = DbConnect.CountLocations();
+
+            Assert.IsTrue(actual &gt; expected);
+        }
+        /// &lt;summary&gt;
+        ///A test for GetAccount
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void GetAccountTest()
+        {
+            string id = &quot;test@test.com&quot;;
+            Account expected = new Account(&quot;test@test.com&quot;, &quot;Mister Testy&quot;, &quot;V6XG5WytBR8fb9txtcRWDAYKzHLC5pnN9oOXuPm05YKX9v6B2xa9/4RgSDDw0j/ICnqP3z+0hApjDm2iyclOla9lSAk=&quot;, &quot;17-08-1964&quot;);
+            Account actual;
+            actual = DbConnect.GetAccount(id);
+
+            Assert.AreEqual(expected.Email, actual.Email);
+            Assert.AreEqual(expected.Name, actual.Name);
+            Assert.AreEqual(expected.Password, actual.Password);
+            Assert.AreEqual(expected.Dob, actual.Dob);
+        }
+        /// &lt;summary&gt;
+        ///A test for GetLocation
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void GetLocationTest()
+        {
+            string expected = &quot;c4ca4238a0b923820dcc509a6f75849b&quot;;
+            string actual;
+            actual = DbConnect.GetLocation(1);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for GetLocationFromProductId
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void GetLocationFromProductIdTest()
+        {
+            int pid = 1;
+            string expected = &quot;c4ca4238a0b923820dcc509a6f75849b&quot;;
+            string actual;
+            actual = DbConnect.GetLocationFromProductId(pid);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        /// A test for GetLocation
+        /// &lt;/summary&gt;
+        [TestMethod()]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void GetInvalidLocationTest()
+        {
+            int input = 0;
+            string actual;
+            actual = DbConnect.GetLocation(input);
+        }
+        /// &lt;summary&gt;
+        /// A test for GetLocationFromProductId
+        /// &lt;/summary&gt;
+        [TestMethod()]
+        [ExpectedException(typeof(NullReferenceException))]
+        public void GetInvalidLocationFromProductIdTest()
+        {
+            int input = 0;
+            string actual;
+            actual = DbConnect.GetLocationFromProductId(input);
+        }
+        /// &lt;summary&gt;
+        ///A test for GetMD5Hash
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void GetMD5HashTest()
+        {
+            string product = &quot;Battlefield 3&quot;;
+            string expected = &quot;7033166343ae590e9114df94fe1e803b&quot;;
+            string actual;
+            actual = DbConnect.GetMD5Hash(product);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for GetPassHash
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void GetPassHashTest()
+        {
+            string email = &quot;test@test.com&quot;;
+            string expected = &quot;V6XG5WytBR8fb9txtcRWDAYKzHLC5pnN9oOXuPm05YKX9v6B2xa9/4RgSDDw0j/ICnqP3z+0hApjDm2iyclOla9lSAk=&quot;;
+            string actual;
+            actual = DbConnect.GetPassHash(email);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for GetProductNameFromLocationHash
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void GetProductNameFromLocationHashTest()
+        {
+            string location = &quot;c81e728d9d4c2f636f067f89cc14862c&quot;;
+            string expected = &quot;Battlefield 3&quot;;
+            string actual;
+            actual = DbConnect.GetProductNameFromLocationHash(location);
+            Assert.AreEqual(expected, actual);
+        }
+        /// &lt;summary&gt;
+        ///A test for Login
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void LoginTest()
+        {
+            string uid = &quot;test@test.com&quot;;
+            string pwd = &quot;123&quot;;
+            
+            Assert.IsTrue(DbConnect.Login(uid, pwd));
+        }
+        /// &lt;summary&gt;
+        ///A test for Login
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void WrongPassLoginTest()
+        {
+            string uid = &quot;test@test.com&quot;;
+            string pwd = &quot;abc&quot;;
+
+            Assert.IsFalse(DbConnect.Login(uid, pwd));
+        }
+        /// &lt;summary&gt;
+        ///A test for Login
+        ///&lt;/summary&gt;
+        [TestMethod()]
+        public void WrongUserLoginTest()
+        {
+            string uid = &quot;email@address.com&quot;;
+            string pwd = &quot;123&quot;;
+
+            Assert.IsFalse(DbConnect.Login(uid, pwd));
+        }
+    }
+}
+</pre></section>      <div id="word_count" class="noscreen">
+        <h1>Word Counts</h1>
+        <table class="table-striped">
+          <tr>
+            <th>Chapter</th>
+            <th>Total Words</th>
+            <th>Body Count</th>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <footer class="noprint">
+      <div>
+        <a id="prev" href="#prev">&lt;&lt; Previous Chapter</a>
+        <a id="next" href="#next">Next Chapter &gt;&gt;</a>
+      </div>
+    </footer>
+    <script type="text/javascript" src="prettify.js"></script>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script>
+    var toc;
+    console.log("compile time: 0.15 seconds");
+    $(function() {
+      //load toc
+      $.getJSON("../toc.json", function(data) {
+        toc = data;
+        $('section').each(function(i){
+          var section = this.id;
+          var section_name = $(this).children('h1').first().text();
+          //if no section name ignore (i.e. abstract)
+          if (section_name.length !== 0) {
+            $('.toc').append('<li class="H1"><a href="#' + section + '"><span class="title">' + section_name + '</span><span class="page">' + data[section]['page'] + '</span></a></li>');
+            $('#sections').append('<li><a href="#' + section + '">' + section_name + '</a></li>');
+            var counters = {"H2":0, "H3":0};
+            $('#' + section).children("h2, h3").each(function(){
+              var id = section + '-' + this.tagName.substr(1) + '-' + ++counters[this.tagName];
+              $(this).prop('id', id);
+              var li = '<li class="' + this.tagName + '"><a href="#' + id + '"><span class="title">' + $(this).text() + '</span><span class="page">' + data[section][id] + '</span></a></li>';
+              $('.toc').append(li);
+            });
+          }
+        });
+
+        //list of figures
+        $.getJSON("../tof.json", function(data) {
+          tof = data;
+          for(var i = 0; i < data.length; ++i) $('.tof').append('<li><span class="title">' + data[i][0] + '</span><span class="page">' + data[i][1] + '</span></li>');
+        });
+
+        //word count
+        $.getJSON("../words.json", function(data) {
+          words = data;
+          for(var chapter in data.chapters) $('#word_count table').append('<tr><td>' + chapter + '</td><td>' + data.chapters[chapter][0] + '</td><td>+' + data.chapters[chapter][1] + '</td></tr>');
+          $('#word_count table').append('<tr><th>Total:</th><td>' + data['total'] + '</td><td>' + data['body'] + '</td></tr>');
+        });
+
+        //header events
+        $('header li a').click(function() {
+          if (!$(this).parent().hasClass("active")) {    
+            $('header li').removeClass("active");
+            $(this).parent().addClass("active");
+            $("#view").toggleClass("print_view");
+            $('#chapter, .noscreen').toggle();
+          }
+        });
+
+        //navbar events
+        $('nav .toc a').click(function() {
+          var target = ($(this).parent().hasClass("H1")) ? this : $(this).parent().prevAll(".H1").first().children("a");
+          var section = $(target).attr('href');
+          if (!$(section).hasClass("active")) {
+            $('section').removeClass("active");
+            $(section).addClass("active");
+            $('#chapter').text($(section + ' h1').first().text());
+          }
+        });
+
+        //footer buttons
+        $('#prev').click(function() {
+          var prev = $('section.active').first().prevAll("section").first();
+          if (prev.length !== 0) {            
+            $('section').removeClass("active");
+            prev.addClass("active");
+            setTimeout("$('body').scrollTop(0)");
+            $('#chapter').text(prev.children('h1').first().text());
+          }
+        });
+        $('#next').click(function() {
+          var next = $('section.active').first().nextAll("section").first();
+          if (next.length !== 0) {            
+            $('section').removeClass("active");
+            next.addClass("active");
+            setTimeout("$('body').scrollTop(0)");
+            $('#chapter').text(next.children('h1').first().text());
+          }
+        });
+
+        //figure numbers & refs
+        $('figure').each(function(i) {
+          var figure = 'Figure ' + (i + 1);
+          $(this).children('figcaption').prepend(figure + ': ');
+          $('a.figref[href="#' + this.id + '"]').text(figure);
+        });
+
+        //show first chapter
+        $('#chapter').text($('section').first().addClass("active").text());
+
+        //prettify code
+        prettyPrint();
+      });
+    });
+    </script>
+</body>
+</html>
