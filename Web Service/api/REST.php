@@ -1,4 +1,9 @@
 <?php
+  /*
+   * One of this project's MoSCoW Could-Have requirements was a full RESTful API.
+   * This work is the beginnings of that API, however due to some setbacks detailed in the write-up, it never was finished.
+   * All other files in this folder are part of a functional web service. This one is however not ready for use.
+   */
   require_once('Database.class.php');
   switch ($_REQUEST['method']) {
     case 'purchase':

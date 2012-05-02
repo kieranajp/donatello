@@ -3,8 +3,8 @@
   
   $query = "";
   
-  if(isset($_GET['account']) && intval($_GET['account'])) {
-    $query = "SELECT * FROM authorisations WHERE account_id = ".$_GET['account'];
+  if(isset($_REQUEST['account'])) {
+    $query = "SELECT * FROM authentications WHERE account_id = '".$_REQUEST['account']."';";
   }
   else {
     return false;
@@ -15,9 +15,9 @@
 
   $auths = array();
   if(mysql_num_rows($result)) {
-    while ($auths = mysql_fetch_assoc($result)) {
+    while ($auth = mysql_fetch_assoc($result)) {
       $auths[] = array('auth'=>$auth);
     }
   }
-
+  header('Content-type: application/json');
   echo json_encode(array('authorisations'=>$auths));

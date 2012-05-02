@@ -1,10 +1,10 @@
 <?php
   require_once('Database.class.php');
   
-  if(isset($_GET['product']) && intval($_GET['product'])) {
-    $query = "SELECT * FROM products WHERE id = ".$_GET['product'];
-  } elseif(isset($_GET['type'])) {
-    $query = "SELECT * FROM products WHERE type = ".$_GET['type'];
+  if(isset($_REQUEST['product']) && intval($_REQUEST['product'])) {
+    $query = "SELECT * FROM products WHERE product_id = ".$_REQUEST['product'];
+  } elseif(isset($_REQUEST['type'])) {
+    $query = "SELECT * FROM products WHERE product_type = ".$_REQUEST['type'];
   } else {
     $query = "SELECT * FROM products;";
   }
@@ -18,6 +18,5 @@
       $products[] = array('product'=>$product);
     }
   }
-
-  //header('Content-type: application/json');
+  header('Content-type: application/json');
   echo json_encode(array('products'=>$products));
