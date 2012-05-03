@@ -31,7 +31,6 @@ Each sprint will take either one or two weeks depending on its complexity, and m
 ###Requirements
 One of the first, most important stages of a project's design comes in defining the project's requirements. Using the MoSCoW methodology along with some tips from Volere, identifying and prioritising requirements was performed in the initial planning phase of the SDLC. For each category in MoSCoW, functional and non-functional requirements were thought up; Volere was instrumental in instructing about the importance of non-functional requirements in software engineering. In this project, every attempt will be made to meet all the Must-Have and Should-Have requirements, and Could-Haves will be dealt with opportunistically, if there is time towards the end of a sprint when all more essential functionality has been created (and non-functional Must-Have and Should-Have requirements have been met, too). Indeed, the project will only be considered a success if all the Must- and Should-Have requirements have been met. Won't-Have requirements, for the purposes of this project at least, are being defined as requirements that will not make it into the dissertation, but would be nice-to-haves if the project were to be extended in future. They are mostly noted down here with some forethought to the evaluation phase.
 
-<div>
 <figure>
 **Must-Have:**  
 Functional:  
@@ -54,7 +53,7 @@ Non-functional:
 
 *	Lightweight
 *	Fast
-*	Attractive - Consistent User Experience (UX)
+*	Consistent aesthetic and User Experience (UX)
 *	Robust
 
 **Could-Have:**  
@@ -84,7 +83,6 @@ Non-functional:
 *	Payment information
 <figcaption>The MoSCoW functional and non-functional requirements of the project</figcaption>
 </figure>
-</div>
 
 While the features in the Could-Have and Won't-Have requirements are very desirable and would almost certainly have a higher, if not the highest, priority if this project were being developed for use in the real world, note that this software is meant as a proof-of-concept for remote media delivery, and as such features such as dealing with payment information are unnecessary to deem this project a success.
 
@@ -181,7 +179,7 @@ Once enough data was in the database, this sprint was complete.
 ###Sprint 2 - Account Management
 The second sprint could have been dedicated to writing either the web service or a part of the client application; the option not picked for the second sprint would be the third sprint, so the only thing that mattered was the order in which these were done. Both sprints were scheduled to last 10 days, so they were interchangeable. Having programmed some PHP already, for variety's sake it was decided to work on the Windows program for this sprint - written in C#.
 
-The part of the application scheduled for this sprint was the login and account management feature. The design for this consisted of a series of dialogs to allow a user to login, or, if they had no account, to create one. However, rather than opening a new form each time and causing the application to disappear and reappear, potentially in a different location on-screen, the design was for a single form window with changing contents. Before creating the User Interface (UI), though, there was some back-end work to do, namely creating an Object to hold Accounts.
+The part of the application scheduled for this sprint was the login and account management feature. The design for this consisted of a series of dialogs to allow a user to login, or, if they had no account, to create one. However, rather than opening a new form each time and causing the application to disappear and reappear, potentially in a different location on-screen, the design was for a single form window with changing contents. Before creating the UI, though, there was some back-end work to do, namely creating an Object to hold Accounts.
 
 <div>
 <figure>
@@ -205,9 +203,9 @@ public class Account
 </figure>
 </div>
 
-This basic object was then expanded to do more than just hold data (see [Appendix J](#Appendices-2-10)), including hashing and salting passwords and formatting dates. When creating a user account through the UI, an instance of this object is created to manipulate its details.
+This basic object was then expanded to do more than just hold data (see [Appendix H](#Appendices-3-17)), including hashing and salting passwords and formatting dates. When creating a user account through the UI, an instance of this object is created to manipulate its details.
 
-An issue encountered here was when hashing passwords. It turns out that some of the hashes that had been created using PHP were incompatible with their C# counterparts. This is because, by default, PHP hashes in lowercase, whereas C# uses uppercase characters in its hashes. To resolve this an argument needed to be passed to the method that converts the hash bytes to a string to format it correctly: <code>.ToString("x2")</code>.
+An issue encountered here was when hashing passwords. It turns out that some of the hashes that had been created using PHP's SHA512 hashing algorithm were incompatible with their C# counterparts. This is because, by default, PHP hashes in lowercase, whereas C# uses uppercase characters in its hashes. To resolve this an argument needed to be passed to the method that converts the each hash byte to a string to format it correctly: `.ToString("x2")`.
 
 The UI itself was easy to create using Visual Studio's built in WYSIWYG (What You See Is What You Get) editor. Following the design sensibilities that had been previously outlined, it turned out to look like the following:
 
@@ -218,9 +216,9 @@ The UI itself was easy to create using Visual Studio's built in WYSIWYG (What Yo
 </figure>
 </div>
 
-More screen captures of the implemented UI are available in [Appendix M](#Appendices-2-13).
+More screen captures of the implemented UI are available in [Appendix K](#Appendices-2-11).
 
-The final features to implement for the sprint were logging in and creating accounts. The hashing and salting algorithms were already written, so all that was needed to do was create a database class and hook everything up to the user interface. This went through with few problems and effectively passed black-box testing. The remaining feature was for auto-login: the application is designed to be started whenever Windows starts, so the user would not want to have to type a username and password every time they reboot. It was decided that the application should remember the last user to log in, and this user's information could be wiped with a logout button. Additionally, after creating a new account, the user would have to log in once more (for security purposes) before they would be remembered. This logic was fairly easy to implement, and so the sprint was completed without issue.
+The final features to implement for the sprint were logging in and creating accounts. The hashing and salting algorithms were already written, so all that was needed to do was create a database class and hook everything up to the user interface. Additionally, the IP address of the computer logging in needed to be reported and stored in the database so that downloads would know which IP to be transmitted to. IPs were converted to and stored as integers via the `INET_ATON()` function in MySQL. This went through with few problems and effectively passed black-box testing. The remaining feature was for auto-login: the application is designed to be started whenever Windows starts, so the user would not want to have to type a username and password every time they reboot. It was decided that the application should remember the last user to log in, and this user's information could be wiped with a logout button. Additionally, after creating a new account, the user would have to log in once more (for security purposes) before they would be remembered. This logic was fairly easy to implement, and so the sprint was completed without issue.
 
 ###Sprint 3 - Web Service
 Slated for this sprint was the web service and its methods. Once again, 10 days were allocated to this sprint. However, this sprint was not as without incident as the previous one.
@@ -234,19 +232,53 @@ Because of these four days or so of setback and minimal work being possible, the
 ###Sprint 4 - Downloading
 The work scheduled for this sprint was the 'meat' of the project: receiving an instruction to download a file and running the download. Fifteen days were allocated for this sprint.
 
+The first step here was implementing the TCPListener application, built as part of the Pilot Study seen in [chapter 3.3](#LiteratureReview-3-8), and getting it to listen to messages that were being sent from the web service. A test application was set up in PHP which sent messages, and the listener application code was reused from the pilot study. While the code worked, a problem was instantly spotted: when the listener server was running, the application's UI completely locked up. This was because the listener, which is essentially implemented on an infinite loop - `while(true) { /* listen */ }` - was blocking the entire thread the application was running on. After some research on multithreading and the BackgroundWorker class in .NET, this was overcome pretty easily. This class spawns a second, background thread that performs time-consuming operations without blocking other threads from functioning. 
 
+<div>
+<figure id="phptest">
+<pre class="prettyprint linenums">
+$host = "10.0.1.145";
+$port = 31337;
+set_time_limit(0);
 
-###Sprint 5
-Redownload & refactor
+if ($argc > 1) {
+  $id = md5($argv[1]);
+}
+else {
+  exit(1);
+}
+
+$socket = socket_create(AF_INET, SOCK_STREAM, 0) or die ("Could not create socket\n");
+$result = socket_connect($socket, $host, $port) or die ("Could not connect to address\n");
+if ($result !== false) {
+  echo "connected!\n";
+  socket_send($socket, $id, 1024, 0);
+}
+socket_close($socket);
+</pre>
+<figcaption>The PHP code used to test the application's TCPListener was functioning. If the message arrived, the application displayed the MD5 hash sent.</figcaption>
+</figure>
+</div>
+
+At this point, the application was successfully receiving instructions from the test PHP method (in the form of a `location_hash` from the database) but wasn't doing anything with them. The next step was to get it to work out where to find the file on the server, and then download it. A fairly convoluted algorithm in an attempt to add some Security by Obscurity (Stuttard, 2005) to the system is used to find the actual location of the file before an instance of the Download class is spawned to deal with the actual file transfer. Security by Obscurity, while no replacement for real security, is useful in this case because the resources available do not include any form of secure download, and the server, being managed hosting, does not allow for much encryption in the database or transfer.
+
+The transfer itself involved a decision. Firstly, the code was written so files were put up on the web host and downloaded using `file://` links. This was because of worry over more threading issues: .NET provides a method `WebClient.DownloadFileAsync` which downloads the file asynchronously, to prevent locking issues. However, after a few days working around this code, it was changed to download via FTP (File Transfer Protocol) instead. While there was no SFTP (Secure FTP) server available, FTP was still somewhat more secure because while the transfer wasn't secured, it was possible to set a password on the server, so that nobody could simply download the file via URL. Another BackgroundWorker was spawned for this case, so the download still doesn't block the main thread. It just required more code.
+
+The final part of this sprint was adding a method to MD5 checksum the file and check it against the hash stored on the server. MD5 hashes were chosen because, while not as secure as SHA512 which was used for the passwords, here it isn't an issue: the speed of the hashing algorithm is what matters most. The same issue with hash formatting was run into here as with the SHA512 hash in the Account section, but was resolved in the same way.
+
+###Sprint 5 - Re-download & Refactor
+The final sprint involved two parts. Firstly, five days were set aside to create the Redownload form. This is an interface to show all the products that had already been purchased by the logged-in user and allows them to download them again, in case the file was deleted or the download didn't complete for some reason. Creating the form itself was no problem. The issue came when trying to spawn an instance of Download: the security by obscurity built in proved to backfire and be confusing, and the logic wasn't quite right. The solution was to rewrite the method that found the actual location from the product's `location_hash` - the code to generate the FTP link had got convoluted, and while the security by obscurity was still retained, hopefully the logic would no longer confuse the person supposed to be developing the program.
+
+Partly because of this and partly because it was in the plan from the beginning, the next five days were spent rewriting the whole application logic in a major refactor effort. This helped lean out the system code, and also exposed several hitherto-unnoticed bugs. Refactoring is a great tool for tidying up after a project's completion.
 
 ##Testing
-In addition to going through all the program's and web service's features manually and checking the functionality was correct, basic unit tests were written which were intended to check that individual methods were working as expecting and giving valid results. These unit tests were written in the test franework built into the IDE: Visual Studio Test System (VSTS). This was chosen because, while not as feature-complete as the most popular .NET unit testing framework, NUnit, no additional software was required to create and run these tests, and besides it turned out the more complex features were not required in this instance anyway.
+In addition to going through all the program's and web service's features manually and checking the functionality was correct, basic unit tests were written which were intended to check that individual methods were working as expecting and giving valid results. These unit tests were written in the test framework built into the IDE: Visual Studio Test System (VSTS). This was chosen because, while not as feature-complete as the most popular .NET unit testing framework, NUnit, no additional software was required to create and run these tests, and besides it turned out the more complex features were not required in this instance anyway.
 
 Unit tests were written for the most complex methods with outputs that would be readable by the framework. These turned out to be in the Account and Database classes. For example, a unit test was written that checked what happened when various username and password strings were fed to the login method to ensure that the login system was as secure as possible. It would have been very difficult if not impossible to run unit tests to check the downloading feature (particularly as the methods returned void), so these features were left to black-box testing. Running all the unit tests resulted in a couple of fails, but after investigating it turned out the error was in the tests, not in the code. The tests that failed were when hashing, and comparing an expected hash to a method's output. The issue though was in a malformed 'expected' hash - the hash from the database which was pasted into the test case had not copied correctly and become truncated. After identifying and fixing both instances of this, all the test cases ran successfully.
 
 <div>
 <figure>
 <img src="img/unittests.png">
-<figcaption>All the unit tests for Account and DbConnect classes running successfully (full unit test code can be found in **APPENDIX**))</figcaption>
+<figcaption>All the unit tests for Account and DbConnect classes running successfully (full unit test code can be found in <a href="#Appendices-2-10">Appendix J</a>)</figcaption>
 </figure>
 </div>

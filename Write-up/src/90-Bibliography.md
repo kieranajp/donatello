@@ -25,6 +25,8 @@
 *	Schwaber, K., 1995. SCRUM Development Process. In: *Proceedings of the 10th Annual ACM Conference on Object Oriented Programming Systems, Languages, and Applications (OOPSLA '95).* Austin, Texas: 15-19 October 1995.
 *	Silverman, D., 2010. *Doing Qualitative Research.* 3rd ed. London: SAGE Publications Ltd., p.122-125
 *	Skelton, D. (n.d.) *Remembering the Gameline*. [online] Available at: [http://www.atariage.com/2600/archives/gameline.html?SystemID=2600](http://www.atariage.com/2600/archives/gameline.html?SystemID=2600)[Accessed: 28 Apr 2012].
-* Staelens, N. et al., 2010. Assessing Quality of Experience of IPTV and Video on Demand Services in Real-life Environments. In: *IEEE Transactions on Broadcasting*, 56 (4), pp. 458-466.
+*	Staelens, N. et al., 2010. Assessing Quality of Experience of IPTV and Video on Demand Services in Real-life Environments. In: *IEEE Transactions on Broadcasting*, 56 (4), pp. 458-466.
+*	Stuttard, D., 2005. Hidden Defences: Security & Obscurity. In: *Network Security*, 2005 (7), pp. 10-12.
+*	Toivonen, S. and Sotamaa, O., 2010. Digital Distribution of Games: The Players' Perspective. In: *Proceedings of the International Academic Conference on the Future of Game Design and Technology*. Toronto, Canada: 6-7 May 2010.
 *	Van den Broeck, W. et al., 2008. Confronting video-on-demand with television viewing practices. In: *Innovating for and by users*, Pierson, J., Mante-Meijer, E., Loos, E., and Sapio, B., Eds. Opoce, 2008. 
 *	Van Vliet, H., 2008. *Software Engineering: Principles and Practice*. 3rd ed. Chichester: Wiley & Sons, pp.49-71.

@@ -21,40 +21,40 @@ if ($do_app) {
 
 if ($handle = opendir('src')) {
   //markdown
-  while (false !== ($entry = readdir($handle))) {
-    if ($entry != "." && $entry != ".." && $entry != ".DS_Store" && !is_dir($file = 'src/'.$entry)) {
-      $info = pathinfo($file);
+	while (false !== ($entry = readdir($handle))) {
+		if ($entry != "." && $entry != ".." && $entry != ".DS_Store" && !is_dir($file = 'src/'.$entry)) {
+			$info = pathinfo($file);
       $name = mb_substr($info['filename'], 3);
       $html = "";
-      if ($info['extension'] == "md" || $info['extension'] == "markdown") {
-        $src = "# $name\r\n".file_get_contents($file);
+			if ($info['extension'] == "md" || $info['extension'] == "markdown") {
+				$src = "# $name\r\n".file_get_contents($file);
         $html = Markdown($src);
       }
       else if ($info['extension'] == "html") $html = file_get_contents($file);
-      //dont include invalid sections in body count
-      $body_count = (!in_array($name, array("Abstract", "References", "Appendices"))) ? word_count($html, true) : 0;
-      $words[$name] = array(word_count($html), $body_count);
-      if ($do_toc || $do_tof) {
-        $dom = new DOMDocument();
-        $dom->loadHTML($html);
+			//dont include invalid sections in body count
+			$body_count = (!in_array($name, array("Abstract", "References", "Appendices"))) ? word_count($html, true) : 0;
+			$words[$name] = array(word_count($html), $body_count);
+			if ($do_toc || $do_tof) {
+				$dom = new DOMDocument();
+				$dom->loadHTML($html);
 
-        //create unique id incase of duplicate heading names
-        $h2 = 0;
-        $h3 = 0;
+				//create unique id incase of duplicate heading names
+				$h2 = 0;
+				$h3 = 0;
 
         $section = str_replace(" ", "", $name);
-        //h1 is filename
-        if ($section != "") {
-          $toc[$section]['page'] = 0;
+				//h1 is filename
+				if ($section != "") {
+  				$toc[$section]['page'] = 0;
 
-          foreach($dom->getElementsByTagName('h2') as $h) {
-            ++$h2;
-            $toc[$section]["$section-2-$h2"] = 0;
-          }
-          foreach($dom->getElementsByTagName('h3') as $h) {
-            ++$h3;
-            $toc[$section]["$section-3-$h3"] = 0;
-          }
+  				foreach($dom->getElementsByTagName('h2') as $h) {
+  					++$h2;
+  					$toc[$section]["$section-2-$h2"] = 0;
+  				}
+  				foreach($dom->getElementsByTagName('h3') as $h) {
+  					++$h3;
+  					$toc[$section]["$section-3-$h3"] = 0;
+  				}
           foreach($dom->getElementsByTagName('figcaption') as $fig) {
             ++$f;
             //remove anything after [ or >60 chars
@@ -64,20 +64,20 @@ if ($handle = opendir('src')) {
           }      
         }     
       }
-    }
-  }
-  closedir($handle);
+		}
+	}
+	closedir($handle);
 
-  if ($do_html) {
-    //get 'compiled' version of print.php
-    exec("wget -O html/index.html http://10.0.1.49/~Kieran/Write-up/html/print.php");
-  }
-  if ($do_toc) {
-    //update table of contents
-    $fh = fopen("toc.json", "w");
-    fwrite($fh, json_encode($toc));
-    fclose($fh);
-  }
+	if ($do_html) {
+		//get 'compiled' version of print.php
+		exec("wget -O html/index.html http://10.0.1.49/~Kieran/Write-up/html/print.php");
+	}
+	if ($do_toc) {
+		//update table of contents
+		$fh = fopen("toc.json", "w");
+		fwrite($fh, json_encode($toc));
+		fclose($fh);
+	}
   if ($do_tof) {
     //update list of figures
     $fh = fopen("tof.json", "w");
@@ -85,20 +85,20 @@ if ($handle = opendir('src')) {
     fclose($fh);
   }
 
-  echo "\r\nCompiled ". sizeof($words) ." in ". round(microtime(true) - $start, 2) ." seconds.\r\n\r\nWord Counts:\r\n";
-  $total = 0;
-  $body = 0;
-  foreach ($words as $name => $w) {
-    echo "\r\n$name => ". $w[0] . " (body: +". $w[1] .")";
-    $total += $w[0];
-    $body += $w[1];
-  }
-  echo "\r\n\r\nBody Count = $body words\r\nTotal Count = $total words\r\n";
+	echo "\r\nCompiled ". sizeof($words) ." in ". round(microtime(true) - $start, 2) ." seconds.\r\n\r\nWord Counts:\r\n";
+	$total = 0;
+	$body = 0;
+	foreach ($words as $name => $w) {
+		echo "\r\n$name => ". $w[0] . " (body: +". $w[1] .")";
+		$total += $w[0];
+		$body += $w[1];
+	}
+	echo "\r\n\r\nBody Count = $body words\r\nTotal Count = $total words\r\n";
 
-  //write to words.json
-  $fh = fopen("words.json", "w");
-  fwrite($fh, json_encode(array("body"=>$body, "total"=>$total, "chapters"=>$words)));
-  fclose($fh);
+	//write to words.json
+	$fh = fopen("words.json", "w");
+	fwrite($fh, json_encode(array("body"=>$body, "total"=>$total, "chapters"=>$words)));
+	fclose($fh);
 }
 
 function word_count($src, $body = false) {
@@ -126,14 +126,17 @@ function get_dir($dir, $level = 2) {
         else {
           $info = pathinfo($dir.$entry);
           $name = $info['filename'];
+          //if image, just put in img element
           if (in_array($info['extension'], array("jpg", "jpeg", "png", "gif", "tiff"))) {
             $contents = "<img src=\"img/$entry\" />";
             $entry = substr($entry, 0, strrpos($entry, "."));
             $entry = str_replace("_", " ",$entry);
           }
+          //if html just grab contents
+          else if ($info['extension'] == "html" || $info['extension'] == "") $contents = file_get_contents("$dir/$entry");
           else {
             $contents = htmlspecialchars(file_get_contents("$dir/$entry"));
-            //if code put in pre block
+            //if code put in prettyprint block
             $contents = (in_array($info['extension'], array("php", "json", "css", "html", "js", "cs"))) ? "<pre class=\"prettyprint linenums\">". $contents ."</pre>" : "<pre>$contents</pre>";
           }
           $html .= "<h$level>$entry</h$level>$contents";

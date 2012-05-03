@@ -1,4 +1,17 @@
-<h2>Appendix A - Project Proposal</h2><h3>Proposal 1</h3><img src="img/Proposal_1.png" /><h3>Proposal 2</h3><img src="img/Proposal_2.png" /><h3>Proposal 3</h3><img src="img/Proposal_3.png" /><h3>Proposal 4</h3><img src="img/Proposal_4.png" /><h2>Appendix B - Forms</h2><h3>Mid Project Review</h3><img src="img/Mid_Project_Review.png" /><h2>Appendix C - TurnItIn Report</h2><h2>Appendix D - Use Cases</h2><h3>Use Case Drawing 1</h3><img src="img/Use_Case_Drawing_1.png" /><h3>Use Case Drawing 2</h3><img src="img/Use_Case_Drawing_2.png" /><h2>Appendix E - Risk Management Register</h2><h3>Risk Register Report</h3><img src="img/Risk_Register_Report.png" /><h2>Appendix F - Database Design</h2><h3>DFD drawing</h3><img src="img/DFD_drawing.png" /><h3>ERD drawing</h3><img src="img/ERD_drawing.png" /><h3>Final Database Structure</h3><img src="img/Final_Database_Structure.png" /><h2>Appendix G - Class Design</h2><h3>Class Drawing</h3><img src="img/Class_Drawing.png" /><h3>Components Classes</h3><img src="img/Components_Classes.png" /><h3>Forms Classes</h3><img src="img/Forms_Classes.png" /><h2>Appendix H - Contents of CD</h2><h2>Appendix I - UI Design</h2><h3>Login Wireframe</h3><img src="img/Login_Wireframe.png" /><h3>Redownload Wireframe</h3><img src="img/Redownload_Wireframe.png" /><h3>UI drawing</h3><img src="img/UI_drawing.png" /><h2>Appendix J - Windows Application Code</h2><h3>Account.cs</h3><pre class="prettyprint linenums">﻿using System;
+<h2>Appendix A - Project Proposal</h2><div style="page-break-after: always;">&nbsp;</div>
+<div style="page-break-after: always;">&nbsp;</div>
+<div style="page-break-after: always;">&nbsp;</div><h2>Appendix B - Use Cases</h2><h3>Use Case Drawing 1</h3><img src="img/Use_Case_Drawing_1.png" /><h3>Use Case Drawing 2</h3><img src="img/Use_Case_Drawing_2.png" /><h2>Appendix C - Risk Management Register</h2><h3>Risk Register Report</h3><img src="img/Risk_Register_Report.png" /><h2>Appendix D - Database Design</h2><h3>DFD drawing</h3><img src="img/DFD_drawing.png" /><h3>ERD drawing</h3><img src="img/ERD_drawing.png" /><h3>Final Database Structure</h3><img src="img/Final_Database_Structure.png" /><h2>Appendix E - Class Design</h2><h3>Class Drawing</h3><img src="img/Class_Drawing.png" /><h3>Components Classes</h3><img src="img/Components_Classes.png" /><h3>Forms Classes</h3><img src="img/Forms_Classes.png" /><h2>Appendix F - Contents of CD</h2><ul>
+  <li>Readme.html</li>
+  <li>Complete application code:
+    <li>Web Service (PHP)</li>
+    <li>Donatello (C#) - including unit test cases</li>
+  </li>
+  <li>Database schema (in the form of SQL queries)</li>
+  <li>Write-up:
+    <li>HTML view</li>
+    <li>PDF file</li>
+  </li>
+</ul><h2>Appendix G - UI Design</h2><h3>Login Wireframe</h3><img src="img/Login_Wireframe.png" /><h3>Redownload Wireframe</h3><img src="img/Redownload_Wireframe.png" /><h3>UI drawing</h3><img src="img/UI_drawing.png" /><h2>Appendix H - Windows Application Code</h2><h3>Account.cs</h3><pre class="prettyprint linenums">﻿using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -20,7 +33,7 @@ namespace Donatello
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;email&quot;&gt;String: Account email address. Also functions as unique identifier.&lt;/param&gt;
         /// &lt;param name=&quot;name&quot;&gt;String: User's name.&lt;/param&gt;
-        /// &lt;param name=&quot;password&quot;&gt;String: User's password. Only briefly stored in memory - very quickly hashed.&lt;/param&gt;
+        /// &lt;param name=&quot;password&quot;&gt;String: User's password or hash of password.&lt;/param&gt;
         /// &lt;param name=&quot;dob&quot;&gt;String: User's date of birth. Used for age verification when purchasing.&lt;/param&gt;
         public Account(string email, string name, string password, string dob)
         {
@@ -175,9 +188,11 @@ namespace Donatello
             InitializeComponent();
             this.Visible = false;
 
-            if (DbConnect.CheckLogin(Properties.Settings.Default.LastUsername, Properties.Settings.Default.LastPassword))
-            // if (1 == 2) // For testing purposes
+            if (Properties.Settings.Default.LastUsername != &quot;email@address.com&quot; &amp;&amp; DbConnect.CheckLogin(Properties.Settings.Default.LastUsername, Properties.Settings.Default.LastPassword))
             {
+                Account acc = DbConnect.GetAccount(Properties.Settings.Default.LastUsername);
+                Notification n = new Notification(&quot;Welcome, &quot; + acc.Name + &quot;!&quot;, false);
+
                 this.Hide();
                 DbConnect.SetClient(Properties.Settings.Default.LastUsername);
                 Listener li = new Listener();
@@ -219,10 +234,10 @@ namespace Donatello
 
                 Properties.Settings.Default.LastUsername = emailBox.Text;
                 Properties.Settings.Default.LastPassword = DbConnect.GetPassHash(emailBox.Text);
-
                 Properties.Settings.Default.Save();
 
-                Notification n = new Notification(&quot;Welcome to Donatello, &quot;, false);
+                Account acc = DbConnect.GetAccount(emailBox.Text);
+                Notification n = new Notification(&quot;Welcome, &quot; + acc.Name + &quot;!&quot;, false);
 
                 Listener li = new Listener();
                 li.Show();
@@ -321,8 +336,8 @@ namespace Donatello
 
             mail.From = new MailAddress(&quot;donatello@kajp.im&quot;);
             mail.To.Add(newUsername);
-            mail.Subject = &quot;Welcome to Donatello!&quot;;
-            mail.Body = &quot;Thanks for joining Donatello&quot;;
+            mail.Subject = newAccount.Name + &quot;, welcome to Donatello!&quot;;
+            mail.Body = &quot;Thanks for joining Donatello, &quot; + newAccount.Name + &quot;!&quot;;
 
             try
             {
@@ -330,7 +345,7 @@ namespace Donatello
             }
             catch (SmtpException) 
             { 
-                // Oh well, not the end of the world if the email doesn't send.
+                // In case the SMTP server is down. In which case, it's not the end of the world if the email doesn't send.
             }
 
             Properties.Settings.Default.LastUsername = newUsername;
@@ -373,15 +388,52 @@ namespace Donatello
             // Salt and hash acc.Password
             Dictionary&lt;string, string&gt; hashAndSalt = Account.ComputeHash(acc.Password, null);
             
-            // TODO: Escape account name and email
+            // TODO: Parametise account name and email
 
             using (MySqlConnection mcon = new MySqlConnection(connString))
             using (MySqlCommand cmd = mcon.CreateCommand())
             {
                 mcon.Open();
-                // TODO: The DOB isn't saving properly.
-                cmd.CommandText = &quot;INSERT INTO accounts (account_id, pass_hash, pass_salt, account_nm, account_dob) VALUES ('&quot; + acc.Email + &quot;', '&quot; + hashAndSalt[&quot;hash&quot;] + &quot;', '&quot; + hashAndSalt[&quot;salt&quot;] + &quot;', '&quot; + acc.Name + &quot;', &quot; + acc.Dob + &quot;);&quot;;
+                cmd.CommandText = &quot;INSERT INTO accounts (account_id, pass_hash, pass_salt, account_nm, account_dob) VALUES ('&quot; + acc.Email + &quot;', '&quot; + hashAndSalt[&quot;hash&quot;] + &quot;', '&quot; + hashAndSalt[&quot;salt&quot;] + &quot;', '&quot; + acc.Name + &quot;', '&quot; + acc.Dob + &quot;');&quot;;
                 cmd.ExecuteNonQuery();
+            }
+        }
+        /// &lt;summary&gt;
+        /// Retrieves an Account object by account_id
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;id&quot;&gt;String: The account_id to look up&lt;/param&gt;
+        /// &lt;returns&gt;Account: The full account details&lt;/returns&gt;
+        public static Account GetAccount(string id)
+        {
+            using (MySqlConnection mcon = new MySqlConnection(connString))
+            using (MySqlCommand cmd = mcon.CreateCommand())
+            {
+                mcon.Open();
+                cmd.CommandText = &quot;SELECT account_id, account_nm, pass_hash, DATE_FORMAT(account_dob, '%d-%m-%Y') AS account_dob FROM accounts WHERE account_id = '&quot; + id + &quot;';&quot;;
+                MySqlDataAdapter da = new MySqlDataAdapter(cmd);
+
+                List&lt;string&gt; list = new List&lt;string&gt;();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(reader.GetString(&quot;account_id&quot;));
+                        list.Add(reader.GetString(&quot;account_nm&quot;));
+                        list.Add(reader.GetString(&quot;pass_hash&quot;));
+                        list.Add(reader.GetString(&quot;account_dob&quot;));
+                    }
+                }
+                Account acc;
+                try 
+                { 
+                    acc = new Account(list[0], list[1], list[2], list[3]); 
+                }
+                catch 
+                { 
+                    throw new FormatException(); 
+                }
+                
+                return acc;
             }
         }
         /// &lt;summary&gt;
@@ -390,13 +442,12 @@ namespace Donatello
         /// &lt;param name=&quot;account&quot;&gt;String: The account_id to lock to this IP address.&lt;/param&gt;
         public static void SetClient(string account)
         {
-            // TODO: This method doesn't seem right.
             IPAddress[] IP = Dns.GetHostAddresses(Dns.GetHostName());
             using (MySqlConnection mcon = new MySqlConnection(connString))
             using (MySqlCommand cmd = mcon.CreateCommand())
             {
                 mcon.Open();
-                //cmd.CommandText = &quot;SELECT COUNT(*) FROM clients WHERE account_id = '&quot; + account + &quot;';&quot;;
+                cmd.CommandText = &quot;SELECT COUNT(*) FROM clients WHERE account_id = '&quot; + account + &quot;';&quot;;
 
                 // Find out the IP address. Here we are doing local addresses; if this were more than a proof-of-concept we'd be using full external addresses.
                 IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
@@ -511,21 +562,6 @@ namespace Donatello
             return false;
         }
         /// &lt;summary&gt;
-        /// Gets the user's name from the account_id.
-        /// &lt;/summary&gt;
-        /// &lt;param name=&quot;email&quot;&gt;String: The account_id to look up.&lt;/param&gt;
-        /// &lt;returns&gt;String: The user's name&lt;/returns&gt;
-        public static string GetUsersName(string email)
-        {
-            using (MySqlConnection mcon = new MySqlConnection(connString))
-            using (MySqlCommand cmd = mcon.CreateCommand())
-            {
-                mcon.Open();
-                cmd.CommandText = &quot;SELECT account_nm FROM accounts WHERE account_id = '&quot; + email + &quot;';&quot;;
-                return cmd.ExecuteScalar().ToString();
-            }
-        }
-        /// &lt;summary&gt;
         /// Gets the stored MD5 hash of the supplied product, for checksumming.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;product&quot;&gt;String: The product_id to get the hash of.&lt;/param&gt;
@@ -626,6 +662,10 @@ namespace Donatello
         /// &lt;returns&gt;String: The encrypted location of the file.&lt;/returns&gt;
         public static string GetLocation(int location)
         {
+            if (location &lt; 1)
+            {
+                throw new NullReferenceException();
+            }
             using (MySqlConnection mcon = new MySqlConnection(connString))
             using (MySqlCommand cmd = mcon.CreateCommand())
             {
@@ -661,32 +701,17 @@ namespace Donatello
         ///     The hashed location (found by running the GetLocation method) if a location was found.&lt;/returns&gt;
         public static string GetLocationFromProductId(int pid)
         {
+            if (pid &lt; 1)
+            {
+                throw new NullReferenceException();
+            }
             using (MySqlConnection mcon = new MySqlConnection(connString))
             using (MySqlCommand cmd = mcon.CreateCommand())
             {
                 mcon.Open();
                 cmd.CommandText = &quot;SELECT location_hash FROM products WHERE product_id = &quot; + pid + &quot;;&quot;;
 
-                string location_hash = cmd.ExecuteScalar().ToString();
-                int locs = DbConnect.CountLocations();
-                int decodedLocation = -1;
-
-                for (int i = 1; i &lt; locs + 1; i++)
-                {
-                    if (DbConnect.CalculateMD5(i.ToString()) == location_hash)
-                    {
-                        decodedLocation = i;
-                    }
-                }
-
-                if (decodedLocation != -1)
-                {
-                    return DbConnect.GetLocation(decodedLocation);
-                }
-                else
-                {
-                    return string.Empty;
-                }
+                return cmd.ExecuteScalar().ToString();
             }
         }
         #endregion
@@ -759,7 +784,10 @@ namespace Donatello
             // Pass the location_id to the database to get the actual location of the file we're after.
             string secretLoc = DbConnect.GetLocation(decodedLocation);
 
-            _location = new Uri(@&quot;ftp://kieranajp.co.uk/donatello/&quot; + secretLoc + @&quot;/&quot; + secretLoc + &quot;.file&quot;); // TODO: Dynamic file types
+            _location = new Uri(@&quot;ftp://kieranajp.co.uk/donatello/&quot; + secretLoc + @&quot;/&quot; + secretLoc + &quot;.file&quot;); // Could-Have: Dynamic file types
+
+
+            Notification n = new Notification(&quot;Download started!&quot;, false);
 
             // We're going to need to multithread this now.
             _bw = new BackgroundWorker { WorkerReportsProgress = true };
@@ -810,20 +838,19 @@ namespace Donatello
         {
             if (e.Error != null)
             {
-                // TODO: Why could there be an error?
+                // Why could there be an error? Probably wouldn't be.
+            }
+
+            if (!CheckMD5(Path.Combine(_target, String.Concat(CleanFileName(_product), &quot;.file&quot;)), _product))
+            {
+                Notification n = new Notification(&quot;Error: Checksum of &quot; + _product + &quot; failed :(&quot;, true);
+                // Could-Have: More graceful dealing with this (redownloading that product perhaps)
+                // Problem is, trying to do that simply could end up with a huge memory leak (millions of recursive threads, sort of fork bomb)
             }
             else
             {
-                if (!CheckMD5(Path.Combine(_target, String.Concat(CleanFileName(_product), &quot;.file&quot;)), _product))
-                {
-                    Notification n = new Notification(&quot;Error: Checksum of &quot; + _product + &quot; failed :(&quot;, true);
-                    // TODO: Work out how to deal with this
-                }
-                else
-                {
-                    Notification n = new Notification(&quot;Download complete!&quot;, false);
-                    // The downlad's complete!
-                }
+                Notification n = new Notification(&quot;Download complete!&quot;, true);
+                // The downlad's complete!
             }
         }
         #endregion
@@ -856,7 +883,11 @@ namespace Donatello
 
                 if (File.Exists(path))
                 {
-                    string bak = &quot;_backup&quot; + DateTime.Now.ToString();
+                    string bak = &quot;_backup&quot;;
+                    if (File.Exists(path + bak))
+                    {
+                        File.Delete(path + bak);
+                    }
                     File.Move(path, path + bak);
                 }
 
@@ -927,9 +958,14 @@ namespace Donatello
             byte[] retVal = md5.ComputeHash(fs);
             fs.Close();
 
-            string clientHash = Convert.ToBase64String(retVal);
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i &lt; retVal.Length; i++)
+            {
+                // Converting to hexadecimal lower-case representation (to match hashes generated in PHP where this is SO MUCH EASIER jeez.)
+                sb.Append(retVal[i].ToString(&quot;x2&quot;));
+            }
 
-            if (clientHash != serverHash)
+            if (sb.ToString() != serverHash)
             {
                 return false;
             }
@@ -967,18 +1003,20 @@ namespace Donatello
         public Listener()
         {
             InitializeComponent();
-
+            this.ShowInTaskbar = false;
             notifyIcon.Text = &quot;Donatello&quot;;
             notifyIcon.ContextMenu = new ContextMenu();
+            notifyIcon.ContextMenu.MenuItems.Add(new MenuItem(&quot;Show Donatello&quot;, new EventHandler(notifyIcon_DoubleClick)));
             notifyIcon.ContextMenu.MenuItems.Add(new MenuItem(&quot;Redownload Purchases&quot;, new EventHandler(notify_redownload)));
             notifyIcon.ContextMenu.MenuItems.Add(new MenuItem(&quot;Logout&quot;, new EventHandler(notify_logout)));
             notifyIcon.ContextMenu.MenuItems.Add(new MenuItem(&quot;Exit&quot;, new EventHandler(notify_exit)));
 
-            backgroundWorker.WorkerSupportsCancellation = true;
+            notifyIcon.DoubleClick += new EventHandler(notifyIcon_DoubleClick);
+
             backgroundWorker.RunWorkerAsync();
         }
         #endregion
-        #region notifyIcon EventHandlers
+        #region EventHandlers
         /// &lt;summary&gt;
         /// Called when the form is resized.
         /// If the form is minimised, moves the form to the notification area rather than the taskbar.
@@ -992,9 +1030,7 @@ namespace Donatello
                 notifyIcon.BalloonTipTitle = &quot;Donatello is still running&quot;;
                 notifyIcon.BalloonTipText = &quot;Right-click this icon for controls&quot;;
                 notifyIcon.ShowBalloonTip(2500);
-                // TODO: This is behaving weirdly.
-                // this.ShowInTaskbar = false;
-                // this.Hide(); 
+                this.ShowInTaskbar = false;
             }
         }
         /// &lt;summary&gt;
@@ -1005,8 +1041,7 @@ namespace Donatello
         /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
         private void notifyIcon_DoubleClick(object sender, EventArgs e)
         {
-            //this.ShowInTaskbar = true;
-            //this.ShowDialog();
+            WindowState = FormWindowState.Normal;
         }
         /// &lt;summary&gt;
         /// Called when the Exit button on the notifyIcon's right-click menu is clicked.
@@ -1016,7 +1051,6 @@ namespace Donatello
         /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
         private void notify_exit(object sender, EventArgs e)
         {
-            backgroundWorker.CancelAsync();
             notifyIcon.Visible = false;
             Application.Exit();
         }
@@ -1042,11 +1076,9 @@ namespace Donatello
             Properties.Settings.Default.LastUsername = null;
             Properties.Settings.Default.LastPassword = null;
             Properties.Settings.Default.Save();
-            backgroundWorker.CancelAsync();
             this.Hide();
             this.Dispose();
             Application.Restart();
-            // TODO: Restart application
         }
         #endregion
         #region Delegate functions
@@ -1063,7 +1095,7 @@ namespace Donatello
             }
             else
             {
-                this.txt_log.Text += add + Environment.NewLine;
+                this.txt_log.Text += System.DateTime.Now.ToString() + &quot; &quot; + add + Environment.NewLine;
             }
         }
         /// &lt;summary&gt;
@@ -1086,21 +1118,6 @@ namespace Donatello
         /// A delegate function to allow showing and hiding of this form from other threads.
         /// &lt;/summary&gt;
         /// &lt;param name=&quot;show&quot;&gt;Boolean: Whether to show or hide the form.&lt;/param&gt;
-        private delegate void AppearDelegate(bool show);
-        private void Appear(bool show)
-        {
-            if (this.InvokeRequired)
-            {
-                this.Invoke(new AppearDelegate(this.Appear), show);
-            }
-            else
-            {
-                if (show)
-                    this.Hide();
-                else
-                    this.Show();
-            }
-        }
         #endregion
         #region EventHandlers
         /// &lt;summary&gt;
@@ -1111,7 +1128,6 @@ namespace Donatello
         /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
         private void Listener_FormClosing(object sender, FormClosingEventArgs e)
         {
-            backgroundWorker.CancelAsync();
             Application.Exit();
         }
         /// &lt;summary&gt;
@@ -1130,8 +1146,6 @@ namespace Donatello
             serverSocket.Start();
             System.Threading.Thread.Sleep(500);
             WriteLog(&quot;Server started!&quot;);
-            Appear(false);
-            Notify(&quot;Server started!&quot;);
 
             while (true)
             {
@@ -1185,7 +1199,7 @@ namespace Donatello
         /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
         private void Suicide(object sender, EventArgs e)
         {
-            this.Dispose();
+            this.Hide();
         }
         #endregion
     }
@@ -1283,13 +1297,19 @@ namespace Donatello
         /// &lt;param name=&quot;e&quot;&gt;&lt;/param&gt;
         private void btn_Start_Click(object sender, EventArgs e)
         {
-            if (purchasedItems.SelectedIndices.Count == 0)
+            if (purchasedItems.SelectedIndices.Count &gt; 0)
             {
+                
                 string location = DbConnect.GetLocationFromProductId(lookup[purchasedItems.SelectedIndex]);
                 if (!String.IsNullOrEmpty(location))
                 {
                     Download d = new Download(location);
+                    this.Hide();
                 }
+            }
+            else
+            {
+                MessageBox.Show(&quot;Please select a product to download.&quot;);
             }
         }
         /// &lt;summary&gt;
@@ -1305,7 +1325,368 @@ namespace Donatello
         #endregion
     }
 }
-</pre><h2>Appendix K - Web Service Code</h2><h2>Appendix L - Unit Tests</h2><h3>AccountTest.cs</h3><pre class="prettyprint linenums">﻿using Donatello;
+</pre><h2>Appendix I - Web Service Code</h2><h3>API</h3><h3>api:Database.class.php</h3><pre class="prettyprint linenums">&lt;?php
+  class Database {
+    private $_connect;
+  
+    public function __construct() {
+      //$this-&gt;connect = mysql_connect(&quot;10.0.1.145&quot;, &quot;fypu&quot;, &quot;eijonu&quot;) or die (&quot;Error connecting to database server&quot;);
+      $this-&gt;connect = mysql_connect(&quot;127.0.0.1&quot;,&quot;root&quot;,&quot;&quot;) or die (&quot;Error connecting to database server&quot;);
+      mysql_select_db(&quot;fyp&quot;,$this-&gt;connect) or die (&quot;Error finding database&quot;);
+    }
+  
+    public function __destruct() {
+      mysql_close( $this-&gt;connect );
+    }
+  }</pre><h3>api:getAuthorisations.php</h3><pre class="prettyprint linenums">&lt;?php
+  require_once('Database.class.php');
+  
+  if(isset($_REQUEST['account'])) {
+    $query = &quot;SELECT * FROM authentications WHERE account_id = '&quot;.$_REQUEST['account'].&quot;';&quot;;
+  }
+  else {
+    return false;
+  }
+  
+  $db = new Database();
+  $result = mysql_query($query) or die ('Error in query: '.$query);
+
+  $auths = array();
+  if(mysql_num_rows($result)) {
+    while ($auth = mysql_fetch_assoc($result)) {
+      $auths[] = array('auth'=&gt;$auth);
+    }
+  }
+  header('Content-type: application/json');
+  echo json_encode(array('authorisations'=&gt;$auths));</pre><h3>api:getProducts.php</h3><pre class="prettyprint linenums">&lt;?php
+  require_once('Database.class.php');
+  
+  if(isset($_REQUEST['product']) &amp;&amp; intval($_REQUEST['product'])) {
+    $query = &quot;SELECT * FROM products WHERE product_id = &quot;.$_REQUEST['product'];
+  } elseif(isset($_REQUEST['type'])) {
+    $query = &quot;SELECT * FROM products WHERE product_type = &quot;.$_REQUEST['type'];
+  } else {
+    $query = &quot;SELECT * FROM products;&quot;;
+  }
+
+  $db = new Database();
+  $result = mysql_query($query) or die ('Error in query: '.$query);
+
+  $products = array();
+  if(mysql_num_rows($result)) {
+    while ($product = mysql_fetch_assoc($result)) {
+      $products[] = array('product'=&gt;$product);
+    }
+  }
+  header('Content-type: application/json');
+  echo json_encode(array('products'=&gt;$products));
+</pre><h3>api:insert.php</h3><pre class="prettyprint linenums">&lt;?php
+  require_once('Database.class.php');
+  $db = new Database();
+  
+  $i = $_POST['location_id'];
+  
+  $type = $_POST['type'];
+  $name = mysql_real_escape_string($_POST['title']);
+  $dtl = mysql_real_escape_string($_POST['description']);
+  $price = 2999;
+  $rating = 15;
+  // Sadly this feature had to be taken out
+  //$hash = md5_file('..');
+  $hash = $_POST['hash'];
+  $location_hash = md5((string)$i);
+  
+  $query = &quot;INSERT INTO products (product_type, product_nm, product_dtl, product_price, product_rating, product_hash, location_hash) VALUES ('$type', '$name', '$dtl', $price, $rating, '$hash', '$location_hash')&quot;;
+  
+  $result = mysql_query($query) or die('Error in query');
+  
+  $lochash = md5('$query');
+  
+  $query = &quot;INSERT INTO locations (location_id, location) VALUES ($i, '$lochash')&quot;;
+  $result = mysql_query($query) or die('Error in query');
+  
+  header('../insert_successful.php?location='.$lochash);
+?&gt;</pre><h3>api:purchase.php</h3><pre class="prettyprint linenums">&lt;?php
+  require_once('Database.class.php');
+
+  if(isset($_POST['product']) &amp;&amp; intval($_POST['product']) &amp;&amp; isset($_POST['account'])) {
+    // COULD-HAVE: and if valid token supplied?
+    $db = new Database();
+
+    $account = mysql_real_escape_string($_POST['account']);
+
+    $query = 'SELECT product_id FROM authentications WHERE account_id = &quot;'.$account.'&quot; AND product_id = '.$_POST['product'].';';
+    $result = mysql_query($query) or die ('Error in query: '.$query.' - '.mysql_error());
+    $purchased = mysql_num_rows($result);
+
+    if ($purchased != 0) {
+      // This product is already owned by that account
+      return false;
+    }
+
+    // Authenticate the product for the account
+    $query = 'INSERT INTO authentications (product_id, account_id) VALUES ('.$_POST['product'].', &quot;'.$account.'&quot;)';
+    $result = mysql_query($query) or die ('Error in query: '.$query.' - '.mysql_error());
+    
+    // Find the location of the file to download
+    $query = 'SELECT location_hash FROM products WHERE product_id ='.$_POST['product'];
+    $result = mysql_query($query) or die ('Error in query: '.$query.' - '.mysql_error());;
+    $loc_id = mysql_fetch_assoc($result);
+    var_dump($loc_id);
+    
+    $query = 'SELECT * FROM locations';
+    $result = mysql_query($query) or die ('Error in query: '.$query.' - '.mysql_error());;
+    
+    while ($row = mysql_fetch_array($result)) {
+      if ($hash = md5($row['location_id']) == $loc_id['location_hash']) {
+        $query = 'SELECT location FROM locations WHERE location_id = '.$row['location_id'];
+        break;
+      }
+    }
+    
+    if (strpos($query, 'WHERE') === false) {
+      return false;
+    }
+    
+    $result = mysql_query($query);
+    $loc = mysql_fetch_assoc($result);
+    $loc = $loc['location'];
+    
+    // Find the IP to send the download to
+    $query = 'SELECT client_ip FROM clients WHERE account_id = &quot;'.$account.'&quot;';
+    $result = mysql_query($query);
+    $ip = mysql_fetch_assoc($result);
+
+    // Send the download!
+    if ($ip != 0) {
+      $ip = inet_ntop($ip);
+      var_dump($ip);
+
+    	$port = 31337;
+    	set_time_limit(0);
+
+    	$socket = socket_create(AF_INET, SOCK_STREAM, 0) or die (&quot;Could not create socket\n&quot;);
+    	$result = socket_connect($socket, $ip, $port) or die (&quot;Could not connect to address\n&quot;);
+      
+    	// If a connection can't be made they'll have to download from the Redownloads screen.
+      if ($result !== false) {
+        echo &quot;connected!\n&quot;;
+        socket_send($socket, $id, 1024, 0);
+      }
+  
+      socket_close($socket);
+  	}
+
+    header('../purchase_complete.php');
+  } else {
+    return false;
+  }</pre><h3>api:revoke.php</h3><pre class="prettyprint linenums">&lt;?php
+  require_once('Database.class.php');
+
+  if(isset($_POST['product']) &amp;&amp; intval($_POST['product']) &amp;&amp; isset($_POST['account'])) {
+    $query = &quot;UPDATE authentications SET auth_rvkd = 1 WHERE product_id = &quot;.$_POST['product'].&quot; AND account_id = '&quot;.$_POST['account'].&quot;';&quot;;
+    
+    $result = mysql_query($query) or die('Error in query');
+    
+    header('Location: revoke_successful.php');
+  }</pre><h3>Demo API Calls</h3><h3>index.php</h3><pre class="prettyprint linenums">&lt;?php
+  require_once('api/Database.class.php');
+  $db = new Database();
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;meta name=&quot;Author&quot; content=&quot;Kieran Patel (i7869019)&quot;&gt;
+  &lt;title&gt;Donatello test dashboard&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Donatello Demos&lt;/h1&gt;
+  &lt;p&gt;This page demonstrates some functionality of the Donatello API.&lt;/p&gt;
+  &lt;h3&gt;Actions:&lt;/h3&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;button onClick=&quot;document.location.href='purchase.php';&quot;&gt;Purchase&lt;/button&gt;&lt;br&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;button onClick=&quot;document.location.href='insertProduct.php';&quot;&gt;Insert new product&lt;/button&gt;&lt;br&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;button onClick=&quot;document.location.href='revoke.php';&quot;&gt;Revoke authentication of a product&lt;/button&gt;&lt;br&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+  &lt;h3&gt;Data retrieval (JSON)&lt;/h3&gt;
+  &lt;ul&gt;
+    &lt;li&gt;
+      &lt;?php
+        echo '&lt;form action=&quot;api/getAuthorisations.php&quot; method=&quot;post&quot; accept-charset=&quot;utf-8&quot;&gt;';
+        echo '&lt;select name=&quot;account&quot;&gt;';
+        $query = 'SELECT * FROM accounts';
+        $result = mysql_query($query);
+        
+        while ($row = mysql_fetch_array($result)) {
+          echo '&lt;option value=&quot;'.$row['account_id'].'&quot;&gt;'.$row['account_id'].'&lt;/option&gt;';
+        }
+        echo '&lt;/select&gt;';
+        echo '&lt;input type=&quot;submit&quot; value=&quot;Get Authorisations for this account&quot;&gt;&lt;/form&gt;'
+      ?&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;?php
+        echo '&lt;form action=&quot;api/getProducts.php&quot; method=&quot;post&quot; accept-charset=&quot;utf-8&quot;&gt;';
+        echo '&lt;select name=&quot;product&quot;&gt;';
+        $query = 'SELECT * FROM products';
+        $result = mysql_query($query);
+        echo '&lt;option value=&quot;&quot;&gt;Get all products&lt;/option&gt;';
+        while ($row = mysql_fetch_array($result)) {
+          echo '&lt;option value='.$row['product_id'].'&gt;'.$row['product_nm'].'&lt;/option&gt;';
+        }
+        echo '&lt;/select&gt;';
+        echo '&lt;input type=&quot;submit&quot; value=&quot;Get Products&quot;&gt;&lt;/form&gt;'
+      ?&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;?php
+        echo '&lt;form action=&quot;api/getProducts.php&quot; method=&quot;post&quot; accept-charset=&quot;utf-8&quot;&gt;';
+        echo '&lt;select name=&quot;product&quot;&gt;';
+        $query = 'SELECT DISTINCT product_type FROM products';
+        $result = mysql_query($query);
+        echo '&lt;option value=&quot;&quot;&gt;Get all products&lt;/option&gt;';
+        while ($row = mysql_fetch_array($result)) {
+          echo '&lt;option value='.$row['product_type'].'&gt;'.$row['product_type'].'&lt;/option&gt;';
+        }
+        echo '&lt;/select&gt;';
+        echo '&lt;input type=&quot;submit&quot; value=&quot;Get Products by Type&quot;&gt;&lt;/form&gt;'
+      ?&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre><h3>insert_complete.php</h3><pre class="prettyprint linenums">&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Insertion complete!&lt;/h1&gt;
+  &lt;p&gt;Your location hash is &lt;pre&gt;&lt;?php echo $_GET['location']; ?&gt;&lt;/pre&gt;&lt;/p&gt;
+  &lt;p&gt;The file should be uploaded to the FTP in donatello/&lt;?php echo $_GET['location']; echo &quot;/&quot;; echo $_GET['location']; echo &quot;.file&quot;;?&gt;
+  &lt;a href=&quot;index.php&quot;&gt;Back to Dashboard&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre><h3>insertProduct.php</h3><pre class="prettyprint linenums">&lt;?php
+  require_once('api/Database.class.php');
+  $db = new Database();
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;title&gt;Example purchase page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;form action=&quot;api/insert.php&quot; method=&quot;post&quot; accept-charset=&quot;utf-8&quot;&gt;
+    &lt;?php
+      $query = &quot;SELECT * FROM locations&quot;;
+      $result = mysql_query($query) or die ('Error in query: '.$query.' - '.mysql_error());
+      $locs = mysql_num_rows($result);
+      
+      echo 'Location: &lt;input type=&quot;number&quot; name=&quot;location&quot; min=&quot;'.$locs.'&quot; value=&quot;'.$locs.'&quot;&gt;&lt;br&gt;';
+    ?&gt;
+    Type: &lt;select name=&quot;type&quot;&gt;
+      &lt;option value=&quot;movie&quot; selected=&quot;true&quot;&gt;Movie&lt;/option&gt;
+      &lt;option value=&quot;game&quot; selected=&quot;true&quot;&gt;Game&lt;/option&gt;
+      &lt;option value=&quot;software&quot; selected=&quot;true&quot;&gt;Software&lt;/option&gt;
+      &lt;option value=&quot;episode&quot; selected=&quot;true&quot;&gt;TV Series&lt;/option&gt;
+      &lt;option value=&quot;zip&quot; selected=&quot;true&quot;&gt;Zip archive&lt;/option&gt;
+    &lt;/select&gt;&lt;br&gt;
+    Title: &lt;input name=&quot;title&quot;&gt;&lt;br&gt;
+    Description: &lt;textarea rows=&quot;10&quot; cols=&quot;30&quot; name=&quot;description&quot;&gt;&lt;/textarea&gt;&lt;br&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;submit&quot;&gt;
+    Hash: &lt;input name=&quot;hash&quot;&gt;
+  &lt;/form&gt;
+&lt;/body&gt; 
+&lt;/html&gt;</pre><h3>purchase.php</h3><pre class="prettyprint linenums">&lt;?php
+  require_once('api/Database.class.php');
+  $db = new Database();
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;title&gt;Example purchase page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;form action=&quot;api/purchase.php&quot; method=&quot;post&quot; accept-charset=&quot;utf-8&quot;&gt;
+    &lt;select name=&quot;account&quot;&gt;
+    &lt;?php
+      $query = 'SELECT * FROM accounts';
+      $result = mysql_query($query);
+      
+      while ($row = mysql_fetch_array($result)) {
+        echo '&lt;option value=&quot;'.$row['account_id'].'&quot;&gt;'.$row['account_id'].'&lt;/option&gt;';
+      }
+      echo '&lt;/select&gt;';
+
+      echo '&lt;select name=&quot;product&quot;&gt;';
+
+      $query = 'SELECT * FROM products';
+      $result = mysql_query($query);
+
+      while ($row = mysql_fetch_array($result)) {
+        echo '&lt;option value='.$row['product_id'].'&gt;'.$row['product_nm'].'&lt;/option&gt;';
+      }
+
+      echo '&lt;/select&gt;';
+    ?&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;submit&quot;&gt;
+  &lt;/form&gt;
+&lt;/body&gt; 
+&lt;/html&gt;</pre><h3>purchase_complete.php</h3><pre class="prettyprint linenums">&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Purchase complete!&lt;/h1&gt;
+  &lt;a href=&quot;index.php&quot;&gt;Back to Dashboard&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre><h3>revoke.php</h3><pre class="prettyprint linenums">&lt;?php
+  require_once('api/Database.class.php');
+  $db = new Database();
+?&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;title&gt;Example purchase page&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;form action=&quot;api/revoke.php&quot; method=&quot;post&quot; accept-charset=&quot;utf-8&quot;&gt;
+    &lt;select name=&quot;account&quot;&gt;
+    &lt;?php
+      $query = 'SELECT * FROM accounts';
+      $result = mysql_query($query);
+      
+      while ($row = mysql_fetch_array($result)) {
+        echo '&lt;option value=&quot;'.$row['account_id'].'&quot;&gt;'.$row['account_id'].'&lt;/option&gt;';
+      }
+      echo '&lt;/select&gt;';
+
+      echo '&lt;select name=&quot;product&quot;&gt;';
+
+      $query = 'SELECT * FROM products';
+      $result = mysql_query($query);
+
+      while ($row = mysql_fetch_array($result)) {
+        echo '&lt;option value='.$row['product_id'].'&gt;'.$row['product_nm'].'&lt;/option&gt;';
+      }
+
+      echo '&lt;/select&gt;';
+    ?&gt;
+    &lt;input type=&quot;submit&quot; value=&quot;submit&quot;&gt;
+  &lt;/form&gt;
+&lt;/body&gt; 
+&lt;/html&gt;</pre><h3>revoke_complete.php</h3><pre class="prettyprint linenums">&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Revoke complete!&lt;/h1&gt;
+  &lt;a href=&quot;index.php&quot;&gt;Back to Dashboard&lt;/a&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre><h2>Appendix J - Unit Tests</h2><h3>AccountTest.cs</h3><pre class="prettyprint linenums">﻿using Donatello;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -1599,4 +1980,4 @@ namespace UnitTests
         }
     }
 }
-</pre><h2>Appendix M - Screen Captures</h2><h3>Screenshot 1 - Login</h3><img src="img/Screenshot_1_-_Login.png" /><h3>Screenshot 2 - Account Creation</h3><img src="img/Screenshot_2_-_Account_Creation.png" /><h3>Screenshot 3 - Account Management</h3><img src="img/Screenshot_3_-_Account_Management.png" /><h3>Screenshot 4 - Listener</h3><img src="img/Screenshot_4_-_Listener.png" /><h3>Screenshot 5 - Notification</h3><img src="img/Screenshot_5_-_Notification.png" />
+</pre><h2>Appendix K - Screen Captures</h2><h3>Screenshot 1 - Login</h3><img src="img/Screenshot_1_-_Login.png" /><h3>Screenshot 2 - Account Creation</h3><img src="img/Screenshot_2_-_Account_Creation.png" /><h3>Screenshot 3 - Account Management</h3><img src="img/Screenshot_3_-_Account_Management.png" /><h3>Screenshot 4 - Listener</h3><img src="img/Screenshot_4_-_Listener.png" /><h3>Screenshot 5 - Notification</h3><img src="img/Screenshot_5_-_Notification.png" /><h2>Appendix L - Mid-Project Review Form</h2><h2>Appendix M - Initial Research Ethics Checklist</h2>

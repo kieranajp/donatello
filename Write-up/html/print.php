@@ -139,7 +139,7 @@
         page-break-before: always;
       }
 
-      #Appendices h1, #Appendices h2, #Appendices h3 {
+      #Appendices h1, #Appendices h2 {
         page-break-before: always;
       }
 
@@ -248,6 +248,7 @@ if ($handle = opendir('../src')) {
           words = data;
           for(var chapter in data.chapters) $('#word_count table').append('<tr><td>' + chapter + '</td><td>' + data.chapters[chapter][0] + '</td><td>+' + data.chapters[chapter][1] + '</td></tr>');
           $('#word_count table').append('<tr><th>Total:</th><td>' + data['total'] + '</td><td>' + data['body'] + '</td></tr>');
+          $('section:last').prevAll('section').eq(1).append('<p style="text-align:center;"><em>Total word count, excluding appendices, figures, bibliography and table of contents, is ' + data['body'] + ' words.</em></p>');
         });
 
         //header events
@@ -299,7 +300,7 @@ if ($handle = opendir('../src')) {
         });
 
         //show first chapter
-        $('#chapter').text($('section').first().addClass("active").text());
+        $('#chapter').text($('section').first().addClass("active").children('h1').text());
 
         //prettify code
         prettyPrint();

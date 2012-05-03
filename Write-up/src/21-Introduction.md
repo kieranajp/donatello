@@ -1,30 +1,29 @@
-##Introduction
 There is a problem with the current systems of content delivery. The current methods fail to work for people and their hectic lifestyles. As physical media's scarcity increases and more and more rental stores shut down - even large chains such as Blockbuster have been shutting several retail outlets - the world seems to be moving steadily towards digital content distribution. However, many current use cases for these services are flawed.
 
-The purchase of 1080p movies or modern PC games - both files which would likely exceed 10GB in size - over the internet, is common. However, the issue is that these files can often take a large amount of time to download, particularly on connections with lower bandwidth. And on these connections, streaming of movies becomes almost impossible too - a stream with too-low bandwidth will often stutter, providing a poor viewing experience. This project proposes a solution to this problem, not by decreasing download times but by taking an alternative approach to this whole workflow of content delivery. The solution will be in the form of a software product which will allow files to be downloaded without any user intervention required at the PC the file ends up on. Downloads could instead be instantiated remotely, through a web interface or even mobile app.
+The purchase of 1080p movies or modern PC games - both files which could likely exceed 10GB in size - over the internet, is common. However, the issue is that these files can often take a large amount of time to download, particularly on connections with lower bandwidth. And on these connections, streaming of movies becomes almost impossible too - a stream with too-low bandwidth will often stutter, providing a poor viewing experience. This project proposes a solution to this problem, not by decreasing download times but by taking an alternative approach to this whole workflow of content delivery. The solution will be in the form of a software product which will allow files to be downloaded without any user intervention required at the PC the file ends up on. Downloads could instead be instantiated remotely, through a web interface or even mobile app.
 
-###Objectives
-The objective, then, is to develop an application that allows the above. The application will be developed in two parts: one part to initiate the download and the other part to process it. As the initiation of the download is meant to be possible from *anywhere*, there are two ways this part of the application could be done. The first way would be to create a website that allows the purchase of products that will download on the target PC. The other method would be the creation of a web service or API (Application Programming Interface) to allow third-party web stores (or mobile apps, or desktop applications, or any sort of program) to perform actions through the created system. For this part of the project, the decision has been made to go with the latter 
+##Objectives
+The main objective, then, is to develop an application that allows the above. The application will be developed in two parts: one part to initiate the download and the other part to process it. As the initiation of the download is meant to be possible from *anywhere*, there are two ways this part of the application could be done. The first way would be to create a website that allows the purchase of products that will download on the target PC. The other method would be the creation of a web service or API (Application Programming Interface) to allow third-party web stores (or mobile apps, or desktop applications, or any sort of program) to perform actions through the created system. For this part of the project, the decision has been made to go with the latter - the API. This is for a few reasons:
 
-<pre>
-The main objective is to develop a system that provides a means of developing and comparing different AI algorithms to solve a particular problem. How successful I am at this will be assessed based on three things:
+*	Don't have to deal with purchasing or payment information  
+Payment information is annoying to handle and must be kept very secure. Making an API means that the third parties who plug into it can deal with this.
+*	Don't have to worry about styling  
+It's possible to get caught up in the look of the application and waste time on this. With no web front-end comes no CSS styling, and thus the temptation of aesthetic perfectionism is removed.
+*	Websites are a dime a dozen  
+This developer can create websites with little effort, however has little experience with creating web services or the semantics required for other services to plug into them. The challenge of trying something new will be welcome, and any knowledge gained will be valuable.
 
-It’s ability to test different AI algorithm’s performance at a problem fairly
-The versatility in what different AI algorithms can be implemented
-The number of different AI algorithms implemented
-How level the playing field is for the test
-How well the system can be used to judge the relative effectiveness of each AI algorithm.
-How usable the data is to make an informed decision about each algorithm’s effectiveness
-How easily large numbers of tests can be ran and compared
-The overall effectiveness of the AI algorithm rated best by the system.
-Simply see how well the ‘chosen’ AI algorithm actually solves the problem
-</pre>
-###Intended Learning Outcomes
-<pre>
-AI Algorithms
+The other, and major, part of the project will be a client application running as a service. This means it will be unobtrusive with little or no user interface (UI), and will sit in the background waiting to receive something to download from the web service. It is this program that 
 
-I have no previous experience with AI so by the end of this project I hope to have learnt not only how AI is implemented in terms of problem solving and decision making, but also some actual techniques and algorithms used by AI Applications.
-*	RICHARD I WANT YOUR COCK PLZ.  NOW?  THX, --K XXXX
-Simulators/Test Beds
+The system's success will be defined later in this document, but considered in its level of success will be the following:
 
-I have had limited experience with using a software sandbox to model the outcome of scenarios or configurations (such as networking tools and HTML/CSS testing) but no experience with creating one myself so I hope to learn of the problems (technical or practical) involved in developing such a tool and ideally their solutions too.</pre>
+*	Its ability to download files.
+*	Its robustness and overall performance.
+*	The API commands it handles.
+*	How well it deals with errors in the communication or the download.
+*	Whether the finished product adheres to the original ideas and thought processes.
+
+###Boundaries
+This project is strictly a proof-of-concept. If it would be written as a real application for consumers, with third parties using the API and an extensive database of real data, many changes would be made, if not a complete rewrite. The security in the project is not sufficient for protection of real data, and there are no means of dealing with storing copyrighted files, to name but two examples of why a real release would not be possible. The system is also not very scalable; all these things are due to a lack of resources available in the form of servers, SSL certificates and so on. It is also important to note that the scope of the project does not cover any purchase system for the content. While the web service will facilitate and deal with purchases coming from third-party applications, having the ability to select and pay for items through this system is outside the project boundaries, through any means. E-commerce would be a whole second project again on top of this one, and it is not a challenge to be undertook in this timeframe.
+
+###Relation to Award
+This dissertation is the final assessment in a Computing, BSc. degree, which included the modules Advanced Development, Web Systems and Digital Media and Games. The work is definitely reflective of the contents of the former two modules - both dealt with development techniques, frameworks such as REST and Model-View-Controller (MVC) and communication between software components. The Digital Media and Games aspect comes in with the content that is to be delivered by the software artefact: literally, digital media and/or video games. Additionally, much programming knowledge and technique was picked up while performing an industrial placement at Intel as a part of the degree: the job was 13 months spent as an ASP.NET C# developer, giving experience not only in C#, the Model-View-Presenter (MVP) methodology and web application development, but in Agile software methodologies and in the project management techniques a huge Fortune 500 company use. Overall, the skills learned in the last few years will be essential to the successful completion of this project, but the choice of project is something that hasn't been documented as being done before, and as such will be a challenge as information specific to the domain will be difficult to find. Indeed, the main similar service that has been identified is Steam, which is a closed-source software platform made over a period of many years by Valve, a company with many thousands of times the resources and manpower of this operation. The project is going to provide a huge challenge and a great learning experience, and hopefully there will be a lot of knowledge gained to reflect on come its completion.

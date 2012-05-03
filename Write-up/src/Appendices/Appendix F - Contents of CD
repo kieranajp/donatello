@@ -1,0 +1,12 @@
+<ul>
+  <li>Readme.html</li>
+  <li>Complete application code:
+    <li>Web Service (PHP)</li>
+    <li>Donatello (C#) - including unit test cases</li>
+  </li>
+  <li>Database schema (in the form of SQL queries)</li>
+  <li>Write-up:
+    <li>HTML view</li>
+    <li>PDF file</li>
+  </li>
+</ul>
