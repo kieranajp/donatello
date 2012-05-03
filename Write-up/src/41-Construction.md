@@ -81,7 +81,7 @@ Non-functional:
 *	OAuth (or similar token-based) security
 *	Secure file transfers (using SSL / TLS / SFTP)
 *	Payment information
-<figcaption>The MoSCoW functional and non-functional requirements of the project</figcaption>
+<figcaption>MoSCoW functional and non-functional requirements</figcaption>
 </figure>
 
 While the features in the Could-Have and Won't-Have requirements are very desirable and would almost certainly have a higher, if not the highest, priority if this project were being developed for use in the real world, note that this software is meant as a proof-of-concept for remote media delivery, and as such features such as dealing with payment information are unnecessary to deem this project a success.

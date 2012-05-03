@@ -32,7 +32,7 @@ The main way of measuring a project's success, as previously stated, is through 
 		<td>Robust</td><td>Hit</td>
 	</tr>
 </table>
-<figcaption>The Must- and Should-Have requirements, and whether they were met or not.</figcaption>
+<figcaption>The Must- and Should-Have requirements.</figcaption>
 </figure>
 
 It can be seen here that all the requirements for the project's success were met, and therefore by definition the project must and will be considered a success. Due in particular to the setbacks encountered with the failed hard disk, however, not all the Could-Have requirements were met. The project was a success but some of the desirable features that would have been nice to implement didn't make it in - in particular the API didn't follow RESTful neat URL structures and didn't allow for file uploads. However, this is why Could-Have requirements exist, and it was more important that the strict rules of Scrum were followed for the sprint sections so that there was time for testing and writing. Prioritisation is important, and resisting the temptation to add fun features is difficult but is often the right decision for the success of a project and for meeting deadlines.
